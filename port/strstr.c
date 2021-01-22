@@ -13,7 +13,7 @@ CONST char *wanted;
 	register SIZET len;
 	register char firstc;
 	extern int strncmp();
-	extern SIZET strlen();
+	extern SIZET strlen(const char*);
 
 	/*
 	 * The odd placement of the two tests is so "" is findable.

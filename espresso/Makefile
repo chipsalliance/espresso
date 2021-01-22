@@ -79,7 +79,7 @@ LINKER = ${CC}
 
 # cute hack for the sequent
 #   setenv PARALLEL 8; make P="&" install
-P = 
+P =
 
 NAME	= espresso
 
@@ -87,7 +87,7 @@ NAME	= espresso
 REQUIRE	= utility mm port
 
 # tools required for this tool
-TOOLREQUIRE = 
+TOOLREQUIRE =
 
 SRC	= cofactor.c cols.c compl.c contain.c cubestr.c cvrin.c cvrm.c cvrmisc.c cvrout.c dominate.c equiv.c espresso.c essen.c exact.c expand.c gasp.c getopt.c gimpel.c globals.c hack.c indep.c irred.c main.c map.c matrix.c mincov.c opo.c pair.c part.c primes.c reduce.c rows.c set.c setc.c sharp.c sminterf.c solution.c sparse.c unate.c verify.c signature.c signature_exact.c util_signature.c black_white.c canonical.c essentiality.c sigma.c
 LSRC	= cofactor.c cols.c compl.c contain.c cubestr.c cvrin.c cvrm.c cvrmisc.c cvrout.c dominate.c equiv.c espresso.c essen.c exact.c expand.c gasp.c getopt.c gimpel.c globals.c hack.c indep.c irred.c main.c map.c matrix.c mincov.c opo.c pair.c part.c primes.c reduce.c rows.c set.c setc.c sharp.c sminterf.c solution.c sparse.c unate.c verify.c signature.c signature_exact.c util_signature.c black_white.c canonical.c essentiality.c sigma.c
@@ -117,7 +117,7 @@ PRINT	= lpr
 TROFF	= ptroff
 TBL	= tbl
 
-INCLUDE	= -I${CAD}/include 
+INCLUDE	= -I${CAD}/include
 CFLAGS	= ${COMPFLAG} ${INCLUDE} '-DCADROOT="${CADROOT}"'
 VERSION	= "-DCUR_DATE=\"`date | awk '{print $$2, $$3, $$6}'`\"" \
 	  "-DCUR_TIME=\"`date | awk '{print $$4}'`\""
@@ -238,8 +238,8 @@ test::
 clean::
 	rm -f test.out
 
-clean::
-	(cd examples; make clean)
+# clean::
+# 	(cd examples; make clean)
 
 
 #--DO NOT CHANGE ANYTHING AFTER THIS LINE

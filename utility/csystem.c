@@ -9,7 +9,7 @@ util_csystem(s)
 char *s;
 {
     register SIGNAL_FN (*istat)(), (*qstat)();
-    union wait status;
+    int status;
     int pid, w, retval;
 
     if ((pid = vfork()) == 0) {
@@ -26,7 +26,7 @@ char *s;
     if (w == -1) {		/* check for no children ?? */
 	retval = -1;
     } else {
-	retval = status.w_status;
+	retval = status;
     }
 
     /* Restore interrupt and quit signal handlers */

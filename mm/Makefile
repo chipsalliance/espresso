@@ -80,7 +80,7 @@ LINKER = ${CC}
 
 # cute hack for the sequent
 #   setenv PARALLEL 8; make P="&" install
-P = 
+P =
 
 NAME	= mm
 
@@ -88,7 +88,7 @@ NAME	= mm
 REQUIRE	= errtrap port
 
 # tools required for this tool
-TOOLREQUIRE = 
+TOOLREQUIRE =
 
 SRC	= mm.c
 LSRC	= mm.c
@@ -102,7 +102,7 @@ DRIVER	= $(NAME)-test
 
 CADBIN	= ${CAD}/bin
 
-PKGINSTALL= ${CAD}/lib/${LIB} ${CAD}/include/${EXPHDR} ${CAD}/lib/${LINTLIB} ${CAD}/doc/${DOC}
+PKGINSTALL= ${CAD}/lib/${LIB} ${CAD}/include/${EXPHDR} ${CAD}/doc/${DOC}
 INSTALL	= ${PKGINSTALL} ${TOOLINSTALL} ${CAD}/lib/lib${NAME}_p.a
 
 DISTDEST= ${CAD}/src/${NAME}
@@ -124,13 +124,13 @@ PRINT	= lpr
 TROFF	= ptroff
 TBL	= tbl
 
-INCLUDE	= -I${CAD}/include 
+INCLUDE	= -I${CAD}/include
 CFLAGS	= ${COMPFLAG} ${INCLUDE} '-DCADROOT="${CADROOT}"'
 VERSION	= "-DCUR_DATE=\"`date | awk '{print $$2, $$3, $$6}'`\"" \
 	  "-DCUR_TIME=\"`date | awk '{print $$4}'`\""
 LINTFLAGS= ${INCLUDE} '-DCADROOT="${CADROOT}"'
 LINTLIBFLAGS= ${INCLUDE} '-DCADROOT="${CADROOT}"'
-LDFLAGS	= 
+LDFLAGS	=
 
 #-----------------------------------------------------------------------
 

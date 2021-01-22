@@ -77,7 +77,7 @@ LINKER = ${CC}
 
 # cute hack for the sequent
 #   setenv PARALLEL 8; make P="&" install
-P = 
+P =
 
 NAME	= uprintf
 
@@ -85,7 +85,7 @@ NAME	= uprintf
 REQUIRE	= port
 
 # tools required for this tool
-TOOLREQUIRE = 
+TOOLREQUIRE =
 
 SRC	= uprintf.c
 LSRC	= uprintf.c
@@ -99,8 +99,8 @@ DRIVER	= $(NAME)-test
 
 CADBIN	= ${CAD}/bin
 
-PKGINSTALL= ${CAD}/lib/${LIB} ${CAD}/include/${EXPHDR} ${CAD}/lib/${LINTLIB} ${CAD}/doc/${DOC}
-INSTALL	= ${PKGINSTALL} ${TOOLINSTALL} 
+PKGINSTALL= ${CAD}/lib/${LIB} ${CAD}/include/${EXPHDR} ${CAD}/doc/${DOC}
+INSTALL	= ${PKGINSTALL} ${TOOLINSTALL}
 
 DISTDEST= ${CAD}/src/${NAME}
 DISTHOST= octtools@shambhala
@@ -121,7 +121,7 @@ PRINT	= lpr
 TROFF	= ptroff
 TBL	= tbl
 
-INCLUDE	= -I${CAD}/include 
+INCLUDE	= -I${CAD}/include
 CFLAGS	= ${COMPFLAG} ${INCLUDE} '-DCADROOT="${CADROOT}"'
 VERSION	= "-DCUR_DATE=\"`date | awk '{print $$2, $$3, $$6}'`\"" \
 	  "-DCUR_TIME=\"`date | awk '{print $$4}'`\""

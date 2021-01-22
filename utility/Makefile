@@ -77,7 +77,7 @@ LINKER = ${CC}
 
 # cute hack for the sequent
 #   setenv PARALLEL 8; make P="&" install
-P = 
+P =
 
 NAME	= utility
 
@@ -85,7 +85,7 @@ NAME	= utility
 REQUIRE	= st mm port
 
 # tools required for this tool
-TOOLREQUIRE = 
+TOOLREQUIRE =
 
 SRC	= cpu_time.c csystem.c pathsearch.c pipefork.c prtime.c strsav.c texpand.c tmpfile.c
 LSRC	= cpu_time.c csystem.c pathsearch.c pipefork.c prtime.c strsav.c texpand.c tmpfile.c
@@ -99,12 +99,12 @@ DRIVER	= $(NAME)-test
 
 CADBIN	= ${CAD}/bin
 
-PKGINSTALL= ${CAD}/lib/${LIB} ${CAD}/include/${EXPHDR} ${CAD}/lib/${LINTLIB} ${CAD}/doc/${DOC}
-INSTALL	= ${PKGINSTALL} ${TOOLINSTALL} 
+PKGINSTALL= ${CAD}/lib/${LIB} ${CAD}/include/${EXPHDR} ${CAD}/doc/${DOC}
+INSTALL	= ${PKGINSTALL} ${TOOLINSTALL}
 
 DISTDEST= ${CAD}/src/${NAME}
 DISTHOST= octtools@shambhala
-MISC	= Makefile Makefile.template 
+MISC	= Makefile Makefile.template
 
 LIBS	= $(CAD)/lib/libst$(COMPFLAG).a $(CAD)/lib/libmm$(COMPFLAG).a $(CAD)/lib/liberrtrap$(COMPFLAG).a $(CAD)/lib/libuprintf$(COMPFLAG).a $(CAD)/lib/libport$(COMPFLAG).a
 LINTLIBS= $(CAD)/lib/llib-lst.ln $(CAD)/lib/llib-lmm.ln $(CAD)/lib/llib-lport.ln
@@ -121,7 +121,7 @@ PRINT	= lpr
 TROFF	= ptroff
 TBL	= tbl
 
-INCLUDE	= -I${CAD}/include 
+INCLUDE	= -I${CAD}/include
 CFLAGS	= ${COMPFLAG} ${INCLUDE} '-DCADROOT="${CADROOT}"'
 VERSION	= "-DCUR_DATE=\"`date | awk '{print $$2, $$3, $$6}'`\"" \
 	  "-DCUR_TIME=\"`date | awk '{print $$4}'`\""

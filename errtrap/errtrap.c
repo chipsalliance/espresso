@@ -1,6 +1,6 @@
 #include "copyright.h"
 #include "port.h"
-#include <varargs.h>
+#include <stdarg.h>
 #include "uprintf.h"
 #include "errtrap.h"
 
@@ -55,42 +55,6 @@ void errPopHandler()
     }
     numHandlers--;
 }
-
-#ifdef lint
-/*ARGSUSED*/
-/*VARARGS3*/
-
-void errRaise(pkg, code, fmt, va_alist)
-char *pkg;
-int code;
-char *fmt;
-va_dcl
-
-#else	/*LINT*/
-void errRaise(va_alist)
-va_dcl
-#endif	/*LINT*/
-
-{
-    va_list ap;
-    char *format;
-    static void defaultHandler();
-
-    va_start(ap);
-    errPkg = va_arg(ap, char *);
-    errCode = va_arg(ap, int);
-    format = va_arg(ap, char *);
-    if (format != errMessage) {
-	(void) uprintf(errMessage, format, &ap);
-    }
-    va_end(ap);
-
-    curHandlerIdx = numHandlers;
-    while (curHandlerIdx > 0) {
-	(*handlerList[--curHandlerIdx])(errPkg, errCode, errMessage);
-    }
-    defaultHandler(errPkg, errCode, errMessage);
-}
 
 static void defaultHandler(pkgName, code, mesg)
 char *pkgName;
@@ -106,27 +70,37 @@ char *mesg;
 	exit(1);
     }
 }
-
-#ifdef lint
-/*ARGSUSED*/
-/*VARARGS1*/
 
-void errPass(fmt, va_alist)
-char *fmt;
-va_dcl
+void errRaise(char *pkg, int code, char *fmt, ...)
+{
+    va_list ap;
+    char *format;
+    /* static void defaultHandler(); */
 
-#else	/*LINT*/
-void errPass(va_alist)
-va_dcl
-#endif	/*LINT*/
+    va_start(ap, fmt);
+    errPkg = va_arg(ap, char *);
+    errCode = va_arg(ap, int);
+    format = va_arg(ap, char *);
+    if (format != errMessage) {
+	(void) uprintf(errMessage, format, &ap);
+    }
+    va_end(ap);
 
+    curHandlerIdx = numHandlers;
+    while (curHandlerIdx > 0) {
+	(*handlerList[--curHandlerIdx])(errPkg, errCode, errMessage);
+    }
+    defaultHandler(errPkg, errCode, errMessage);
+}
+
+void errPass(char *fmt, ...)
 {
     va_list ap;
     char *format;
     static char tmpBuffer[ERR_BUF_SIZE];
-    static void defaultHandler();
+    /* static void defaultHandler(); */
 
-    va_start(ap);
+    va_start(ap, fmt);
     format = va_arg(ap, char *);
     (void) uprintf(tmpBuffer, format, &ap);
     (void) strcpy(errMessage, tmpBuffer);
@@ -147,9 +121,22 @@ jmp_buf errJmpBuf;
 static jmp_buf jmpBufList[STACK_SIZE];
 static numJmpBufs = 0;
 
+/*ARGSUSED*/
+static void ignoreHandler(pkgName, code, message)
+char *pkgName;
+int code;
+char *message;
+{
+    if (numJmpBufs <= 0) {
+	errRaise(ERR_PKG_NAME, 0,
+	"errtrap internal error:  ERR_IGNORE handler called with no jmp_buf");
+    }
+    longjmp(jmpBufList[numJmpBufs - 1], 1);
+}
+
 void errIgnPush()
 {
-    static void ignoreHandler();
+    /* static void ignoreHandler(); */
 
     /* don't need to check for overflow, since errPushHandler will */
     errPushHandler(ignoreHandler);
@@ -167,19 +154,6 @@ void errIgnPop()
     }
     errPopHandler();
     numJmpBufs--;
-}
-
-/*ARGSUSED*/
-static void ignoreHandler(pkgName, code, message)
-char *pkgName;
-int code;
-char *message;
-{
-    if (numJmpBufs <= 0) {
-	errRaise(ERR_PKG_NAME, 0,
-	"errtrap internal error:  ERR_IGNORE handler called with no jmp_buf");
-    }
-    longjmp(jmpBufList[numJmpBufs - 1], 1);
 }
 
 int errStatus(pkgNamePtr, codePtr, messagePtr)
