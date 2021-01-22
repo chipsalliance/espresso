@@ -77,15 +77,15 @@ LINKER = ${CC}
 
 # cute hack for the sequent
 #   setenv PARALLEL 8; make P="&" install
-P = 
+P =
 
 NAME	= port
 
 # packages required for this package/tool
-REQUIRE	= 
+REQUIRE	=
 
 # tools required for this tool
-TOOLREQUIRE = 
+TOOLREQUIRE =
 
 SRC	= dummy.c memccpy.c memchr.c memcmp.c memcpy.c memset.c strcat.c strchr.c strcmp.c strcpy.c strcspn.c strerror.c strlen.c strncat.c strncmp.c strncpy.c strpbrk.c strrchr.c strspn.c strstr.c strtok.c
 LSRC	= dummy.c memccpy.c memchr.c memcmp.c memcpy.c memset.c strcat.c strchr.c strcmp.c strcpy.c strcspn.c strerror.c strlen.c strncat.c strncmp.c strncpy.c strpbrk.c strrchr.c strspn.c strstr.c strtok.c
@@ -99,15 +99,15 @@ DRIVER	= $(NAME)-test
 
 CADBIN	= ${CAD}/bin
 
-PKGINSTALL= ${CAD}/lib/${LIB} ${CAD}/include/${EXPHDR} ${CAD}/lib/${LINTLIB} ${CAD}/doc/${DOC}
+PKGINSTALL= ${CAD}/lib/${LIB} ${CAD}/include/${EXPHDR} ${CAD}/doc/${DOC}
 INSTALL	= ${PKGINSTALL} ${TOOLINSTALL} ${CAD}/include/copyright.h ${CAD}/include/stdlib.h ${CAD}/include/ansi.h
 
 DISTDEST= ${CAD}/src/${NAME}
 DISTHOST= octtools@shambhala
-MISC	= Makefile Makefile.template 
+MISC	= Makefile Makefile.template
 
-LIBS	= 
-LINTLIBS= 
+LIBS	=
+LINTLIBS=
 
 LIB	= lib${NAME}.a
 LIBPG	= lib${NAME}-pg.a
@@ -121,7 +121,7 @@ PRINT	= lpr
 TROFF	= ptroff
 TBL	= tbl
 
-INCLUDE	= -I${CAD}/include 
+INCLUDE	= -I${CAD}/include
 CFLAGS	= ${COMPFLAG} ${INCLUDE} '-DCADROOT="${CADROOT}"'
 VERSION	= "-DCUR_DATE=\"`date | awk '{print $$2, $$3, $$6}'`\"" \
 	  "-DCUR_TIME=\"`date | awk '{print $$4}'`\""

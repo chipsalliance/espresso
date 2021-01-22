@@ -12,7 +12,7 @@ extern char *realloc(char *, unsigned int);
 extern char *getenv(char *);
 
 /* should be in stdio.h */
-extern void perror(char *);
+extern void perror(const char *);
 
 #ifdef LINT
 #undef putc

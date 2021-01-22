@@ -13,6 +13,7 @@ register sm_row *prow;
     }
 }
 
+static int visit_col( sm_matrix *A, sm_col *pcol, int *rows_visited, int *cols_visited);
 
 static int
 visit_row(A, prow, rows_visited, cols_visited)

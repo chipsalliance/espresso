@@ -9,8 +9,8 @@ extern void errProgramName( /* char *progName */ );
 extern void errCore( /* int flag */ );
 extern void errPushHandler( /* void (*handler)() */ );
 extern void errPopHandler();
-extern void errRaise( /* char *pkgName, int code, char *format, ... */ );
-extern void errPass( /* char *format, ... */ );
+extern void errRaise(char *pkgName, int code, char *format, ...);
+extern void errPass(char *format, ...);
 
 #define ERR_IGNORE(expr)	\
     {					\

@@ -1,0 +1,7 @@
+*.a
+*.o
+espresso
+bin/
+doc/
+include/
+man/

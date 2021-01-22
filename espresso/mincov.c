@@ -7,9 +7,9 @@
 #define USE_GIMPEL
 #define USE_INDEP_SET
 
-extern int select_column();
-extern void select_essential();
-extern int verify_cover();
+static int select_column();
+static void select_essential();
+static int verify_cover();
 
 #define fail(why) {\
     (void) fprintf(stderr, "Fatal error: file %s, line %d\n%s\n",\
@@ -78,7 +78,7 @@ int debug_level;	/* how deep in the recursion to provide info */
 		A->nrows, A->ncols, nelem, sparsity * 100.0);
 	(void) printf("cover size = %d elements\n", best->row->length);
 	(void) printf("cover cost = %d\n", best->cost);
-	(void) printf("time       = %s\n", 
+	(void) printf("time       = %s\n",
 			util_print_time(util_cpu_time() - stats.start_time));
 	(void) printf("components = %d\n", stats.comp_count);
 	(void) printf("gimpel     = %d\n", stats.gimpel_count);
@@ -103,7 +103,7 @@ int debug_level;	/* how deep in the recursion to provide info */
  *      and can be returned without further work.
  */
 
-solution_t * 
+solution_t *
 sm_mincov(A, select, weight, lb, bound, depth, stats)
 sm_matrix *A;
 solution_t *select;
@@ -158,8 +158,8 @@ stats_t *stats;
     if (debug) {
         (void) printf("ABSMIN[%2d]%s", depth, stats->component ? "*" : " ");
         (void) printf(" %3dx%3d sel=%3d bnd=%3d lb=%3d %12s ",
-            A->nrows, A->ncols, select->cost + stats->gimpel, 
-	    bound + stats->gimpel, lb_new + stats->gimpel, 
+            A->nrows, A->ncols, select->cost + stats->gimpel,
+	    bound + stats->gimpel, lb_new + stats->gimpel,
 	    util_print_time(util_cpu_time()-stats->start_time));
     }
 
@@ -174,8 +174,8 @@ stats_t *stats;
 	best = solution_dup(select);
 	if (debug) (void) printf("BEST\n");
 	if (stats->debug && stats->component == 0) {
-            (void) printf("new 'best' solution %d at level %d (time is %s)\n", 
-		best->cost + stats->gimpel, depth, 
+            (void) printf("new 'best' solution %d at level %d (time is %s)\n",
+		best->cost + stats->gimpel, depth,
 		util_print_time(util_cpu_time() - stats->start_time));
         }
 
@@ -194,7 +194,7 @@ stats_t *stats;
 	/* Solve problem for L */
 	select1 = solution_alloc();
 	stats->component++;
-	best1 = sm_mincov(L, select1, weight, 0, 
+	best1 = sm_mincov(L, select1, weight, 0,
 				    bound-select->cost, depth+1, stats);
 	stats->component--;
 	solution_free(select1);
@@ -255,7 +255,7 @@ stats_t *stats;
     return best;
 }
 
-static int 
+static int
 select_column(A, weight, indep)
 sm_matrix *A;
 int *weight;
@@ -312,7 +312,7 @@ solution_t *indep;
     return best_col;
 }
 
-static void 
+static void
 select_essential(A, select, weight, bound)
 sm_matrix *A;
 solution_t *select;
@@ -353,7 +353,7 @@ int bound;			/* must beat this solution */
     } while (delcols > 0 || delrows > 0 || essen_count > 0);
 }
 
-static int 
+static int
 verify_cover(A, cover)
 sm_matrix *A;
 sm_row *cover;

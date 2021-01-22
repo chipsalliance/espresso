@@ -95,7 +95,7 @@ typedef int int16;
 #	define	UNSCHAR(c)	((c)&CHARBITS)
 #endif
 
-#define SIZET int
+#define SIZET size_t
 
 #ifdef __STDC__
 #define CONST const
