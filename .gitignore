@@ -1,3 +1,4 @@
+# make
 *.a
 *.o
 espresso
@@ -5,3 +6,11 @@ bin/
 doc/
 include/
 man/
+# cmake
+CMakeCache.txt
+CMakeFiles/
+build/
+cmake_install.cmake
+# clion
+.idea/
+cmake-build-debug/
