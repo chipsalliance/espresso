@@ -1,9 +1,6 @@
 #include "mincov_int.h"
 
-
-solution_t *
-solution_alloc()
-{
+solution_t *solution_alloc() {
     solution_t *sol;
 
     sol = ALLOC(solution_t, 1);
@@ -12,19 +9,13 @@ solution_alloc()
     return sol;
 }
 
-
-void
-solution_free(sol)
-solution_t *sol;
+void solution_free(sol) solution_t *sol;
 {
     sm_row_free(sol->row);
     FREE(sol);
 }
 
-
-solution_t *
-solution_dup(sol)
-solution_t *sol;
+solution_t *solution_dup(sol) solution_t *sol;
 {
     solution_t *new_sol;
 
@@ -34,21 +25,15 @@ solution_t *sol;
     return new_sol;
 }
 
-
-void 
-solution_add(sol, weight, col)
-solution_t *sol;
+void solution_add(sol, weight, col) solution_t *sol;
 int *weight;
 int col;
 {
-    (void) sm_row_insert(sol->row, col);
+    (void)sm_row_insert(sol->row, col);
     sol->cost += WEIGHT(weight, col);
 }
 
-
-void 
-solution_accept(sol, A, weight, col)
-solution_t *sol;
+void solution_accept(sol, A, weight, col) solution_t *sol;
 sm_matrix *A;
 int *weight;
 int col;
@@ -60,46 +45,38 @@ int col;
 
     /* delete rows covered by this column */
     pcol = sm_get_col(A, col);
-    for(p = pcol->first_row; p != 0; p = pnext) {
-	pnext = p->next_row;		/* grab it before it disappears */
-	sm_delrow(A, p->row_num);
+    for (p = pcol->first_row; p != 0; p = pnext) {
+        pnext = p->next_row; /* grab it before it disappears */
+        sm_delrow(A, p->row_num);
     }
 }
 
-
 /* ARGSUSED */
-void 
-solution_reject(sol, A, weight, col)
-solution_t *sol;
+void solution_reject(sol, A, weight, col) solution_t *sol;
 sm_matrix *A;
 int *weight;
 int col;
-{
-    sm_delcol(A, col);
-}
+{ sm_delcol(A, col); }
 
-
-solution_t *
-solution_choose_best(best1, best2)
-solution_t *best1, *best2;
+solution_t *solution_choose_best(best1, best2) solution_t *best1, *best2;
 {
     if (best1 != NIL(solution_t)) {
-	if (best2 != NIL(solution_t)) {
-	    if (best1->cost <= best2->cost) {
-		solution_free(best2);
-		return best1;
-	    } else {
-		solution_free(best1);
-		return best2;
-	    }
-	} else {
-	    return best1;
-	}
+        if (best2 != NIL(solution_t)) {
+            if (best1->cost <= best2->cost) {
+                solution_free(best2);
+                return best1;
+            } else {
+                solution_free(best1);
+                return best2;
+            }
+        } else {
+            return best1;
+        }
     } else {
-	if (best2 != NIL(solution_t)) {
-	    return best2;
-	} else {
-	    return NIL(solution_t);
-	}
+        if (best2 != NIL(solution_t)) {
+            return best2;
+        } else {
+            return NIL(solution_t);
+        }
     }
 }

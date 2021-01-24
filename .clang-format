@@ -1,0 +1,9 @@
+BasedOnStyle: Google
+IndentWidth: 4
+DerivePointerAlignment: false
+PointerAlignment: Right # char *xx
+AllowShortFunctionsOnASingleLine: false # foreach_set
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlignConsecutiveMacros: true
+SortIncludes: false # or it won't compile

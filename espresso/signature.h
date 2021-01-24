@@ -1,8 +1,8 @@
 #if BPI == 16
-#define ODD_MASK 0xaaaa
+#define ODD_MASK  0xaaaa
 #define EVEN_MASK 0x5555
 #else
-#define ODD_MASK 0xaaaaaaaa
+#define ODD_MASK  0xaaaaaaaa
 #define EVEN_MASK 0x55555555
 #endif
 
@@ -10,7 +10,7 @@
 #define NEGATIVE 0
 
 #define PRESENT 1
-#define ABSENT 0
+#define ABSENT  0
 
 #define RAISED 2
 

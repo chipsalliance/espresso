@@ -17,8 +17,7 @@
 
 /* Function prototypes */
 #ifdef __STDC__
-#define ARGS(args)	args
+#define ARGS(args) args
 #else
-#define ARGS(args)	()
+#define ARGS(args) ()
 #endif
-
