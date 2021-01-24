@@ -1,3 +1,6 @@
+project(espresso C)
+cmake_minimum_required(VERSION 3.19)
+
 add_library(utility utility/cpu_time.c utility/prtime.c utility/strsav.c)
 
 add_executable(
