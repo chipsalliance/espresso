@@ -2,10 +2,6 @@ project(espresso C)
 cmake_minimum_required(VERSION 3.19)
 
 add_library(utility utility/cpu_time.c utility/prtime.c utility/strsav.c)
-target_include_directories(
-  utility
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/port
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/st)
 
 add_executable(
   espresso
@@ -57,7 +53,4 @@ add_executable(
   espresso/essentiality.c
   espresso/sigma.c)
 target_link_libraries(espresso utility)
-target_include_directories(
-  espresso
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/port
-  PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utility)
+target_include_directories(espresso PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utility)
