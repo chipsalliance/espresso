@@ -7,7 +7,7 @@
 #include "espresso.h"
 static pset_family set_family_garbage = NULL;
 
-static int intcpy(d, s, n) register unsigned int *d, *s;
+static void intcpy(d, s, n) register unsigned int *d, *s;
 register long n;
 {
     register int i;

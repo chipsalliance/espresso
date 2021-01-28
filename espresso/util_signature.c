@@ -27,7 +27,7 @@ void set_time_limit(seconds) int seconds;
     setrlimit(RLIMIT_CPU, rlp);
 }
 
-int print_cover(F, name) pcover F;
+void print_cover(F, name) pcover F;
 char *name;
 {
     pcube last, p;
