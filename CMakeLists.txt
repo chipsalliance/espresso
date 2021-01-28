@@ -1,6 +1,9 @@
 project(espresso C)
 cmake_minimum_required(VERSION 3.19)
 
+# MSVC?
+set(CMAKE_C_FLAGS "-std=c99 -Wpedantic -Wall -Werror")
+
 add_library(utility utility/cpu_time.c utility/prtime.c utility/strsav.c)
 
 add_executable(
