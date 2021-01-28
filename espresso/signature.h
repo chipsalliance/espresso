@@ -39,7 +39,6 @@
 /* util_signature.c */ void set_time_limit();
 /* util_signature.c */ int print_cover();
 /* util_signature.c */ int sf_equal();
-/* util_signature.c */ int mem_usage();
 /* util_signature.c */ int time_usage();
 /* util_signature.c */ void s_totals();
 /* util_signature.c */ void s_runtime();

@@ -8,9 +8,6 @@
  *	 checks equlaity of two set families.
  * int print_cover():
  *	prints cover.
- * int mem_usage():
- *	current Memory usage.
- *	Initialized on the first call.
  * int time_usage():
  *	current time usage.
  *	Initialized on the first call.
@@ -62,27 +59,6 @@ int sf_equal(F1, F2) pcover F1, F2;
     }
 
     return TRUE;
-}
-
-/* mem_usage:
- * 	Initialized on first call. Prints current memory usage.
- */
-int mem_usage(name) char *name;
-{
-    static int memory_init;
-    int memory_current;
-    static int flag = 1;
-
-    if (flag) {
-        memory_init = sbrk(0);
-        flag = 0;
-    }
-
-    memory_current = sbrk(0);
-
-    printf("Memory %s\t %d\n", name, memory_current - memory_init);
-
-    return memory_current;
 }
 
 /* time_usage:
