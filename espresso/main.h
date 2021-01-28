@@ -156,3 +156,16 @@ struct {
     TRUE,
     0,
 };
+
+void getPLA(int opt, int argc, char *argv[], int option, pPLA *PLA,
+            int out_type);
+void runtime();
+void init_runtime();
+void usage();
+void backward_compatibility_hack(int *argc, char **argv, int *option,
+                                 int *out_type);
+void delete_arg(int *argc, register char *argv[], int num);
+bool check_arg(int *argc, register char *argv[], register char *s);
+
+// hack.c
+extern void disassemble_fsm(pPLA PLA, int verbose_mode);
