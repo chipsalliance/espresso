@@ -687,7 +687,7 @@ extern struct cdata_struct cdata, temp_cdata_save;
 /* cvrout.c */ extern void print_cube();
 /* cvrout.c */ extern void print_expanded_cube();
 /* cvrout.c */ extern void sf_debug_print();
-/* equiv.c */ extern find_equiv_outputs();
+/* equiv.c */ extern void find_equiv_outputs();
 /* equiv.c */ extern int check_equiv();
 /* espresso.c */ extern pcover espresso();
 /* essen.c */ extern bool essen_cube();
