@@ -153,7 +153,7 @@ void massive_count(T) IN pcube *T;
         register pcube p, cof = T[0], full = cube.fullset;
         for (T1 = T + 2; (p = *T1++) != NULL;)
             for (i = LOOP(p); i > 0; i--)
-                if (val = full[i] & ~(p[i] | cof[i])) {
+                if ((val = full[i] & ~(p[i] | cof[i]))) {
                     cnt = count + ((i - 1) << LOGBPI);
 #if BPI == 32
                     if (val & 0xFF000000) {
