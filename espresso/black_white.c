@@ -13,7 +13,7 @@ static int free_list();
 static int init_list();
 static int delete ();
 static int insert();
-static int print_links();
+static void print_links();
 int print_bw();
 
 static int alloc_stack();
@@ -110,7 +110,7 @@ int merge_list() {
     }
 }
 
-static int print_links(size, list) int size, *list;
+static void print_links(size, list) int size, *list;
 {
     int i;
     for (i = 0; i < size; i++) {
@@ -239,7 +239,7 @@ int black_white() {
     return TRUE;
 }
 
-reset_black_list() {
+void reset_black_list() {
     black_head = black_tail = -1;
 }
 
@@ -275,8 +275,8 @@ int variable_list_alloc(size) int size;
     }
 }
 
-int variable_list_init(reduced_c_free_count,
-                       reduced_c_free_list) int reduced_c_free_count;
+void variable_list_init(reduced_c_free_count,
+                        reduced_c_free_list) int reduced_c_free_count;
 int *reduced_c_free_list;
 {
     int i;
@@ -387,7 +387,7 @@ pcover R;
     *pphase = max_phase;
 }
 
-print_variable_list() {
+void print_variable_list() {
     printf("Variable_Forward_Chain:\n");
     print_links(cube.num_binary_vars, variable_forward_chain);
     printf("Variable_Backward_Chain:\n");

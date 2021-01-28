@@ -219,7 +219,7 @@ int ascending(p1, p2) VAR *p1, *p2;
  *	E: Extended don't care set. DC + identified ESC;
  *	R: OFFSET cover;
  */
-int aux_etr_order(F, E, R, c, d) pcover F, E, R;
+void aux_etr_order(F, E, R, c, d) pcover F, E, R;
 pcube c, d;
 {
     pcover minterms;
@@ -292,8 +292,6 @@ pcube c, d;
     set_insert(d, e0);
 
     variable_head--;
-
-    return;
 }
 
 pcover get_mins(c) pcube c;
@@ -319,7 +317,7 @@ pcover get_mins(c) pcube c;
     return minterms;
 }
 
-print_list(n, x, name) int n;
+void print_list(n, x, name) int n;
 int *x;
 char *name;
 {
