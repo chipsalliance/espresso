@@ -506,6 +506,8 @@ char *argv[];
             sf_free(E);
             break;
         }
+        case KEY_unknown: /* only used to remove warning */
+            break;
     }
 
     /* Print a runtime summary if trace mode enabled */
