@@ -394,7 +394,7 @@ pcover cubeunlist(A1) pcube *A1;
     return A;
 }
 
-simplify_cubelist(T) pcube *T;
+void simplify_cubelist(T) pcube *T;
 {
     register pcube *Tdest;
     register int i, ncubes;
