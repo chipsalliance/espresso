@@ -416,7 +416,7 @@ int makeup_labels(PLA) pPLA PLA;
         }
 }
 
-kiss_output(fp, PLA) FILE *fp;
+void kiss_output(fp, PLA) FILE *fp;
 pPLA PLA;
 {
     register pset last, p;
@@ -429,7 +429,7 @@ pPLA PLA;
     }
 }
 
-kiss_print_cube(fp, PLA, p, out_string) FILE *fp;
+void kiss_print_cube(fp, PLA, p, out_string) FILE *fp;
 pPLA PLA;
 pcube p;
 char *out_string;
@@ -475,7 +475,7 @@ char *out_string;
     putc('\n', fp);
 }
 
-output_symbolic_constraints(fp, PLA, output_symbolic) FILE *fp;
+void output_symbolic_constraints(fp, PLA, output_symbolic) FILE *fp;
 pPLA PLA;
 int output_symbolic;
 {
