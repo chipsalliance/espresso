@@ -19,7 +19,7 @@
 static FILE *last_fp;
 static int input_type = FD_type;
 
-main(argc, argv) int argc;
+int main(argc, argv) int argc;
 char *argv[];
 {
     int i, j, first, last, strategy, out_type, option;
@@ -538,7 +538,7 @@ char *argv[];
     exit(0);
 }
 
-getPLA(opt, argc, argv, option, PLA, out_type) int opt;
+void getPLA(opt, argc, argv, option, PLA, out_type) int opt;
 int argc;
 char *argv[];
 int option;
@@ -580,7 +580,7 @@ int out_type;
     last_fp = fp;
 }
 
-runtime() {
+void runtime() {
     int i;
     long total = 1, temp;
 
@@ -597,7 +597,7 @@ runtime() {
     }
 }
 
-init_runtime() {
+void init_runtime() {
     total_name[READ_TIME] = "READ       ";
     total_name[WRITE_TIME] = "WRITE      ";
     total_name[COMPL_TIME] = "COMPL      ";
@@ -615,7 +615,7 @@ init_runtime() {
     total_name[MINCOV_TIME] = "MINCOV     ";
 }
 
-subcommands() {
+void subcommands() {
     int i, col;
     printf("                ");
     col = 16;
@@ -632,7 +632,7 @@ subcommands() {
     printf("\n");
 }
 
-usage() {
+void usage() {
     printf("%s\n\n", VERSION);
     printf("SYNOPSIS: espresso [options] [file]\n\n");
     printf("  -d        Enable debugging\n");
@@ -665,7 +665,7 @@ usage() {
  *  Hack for backward compatibility (ACK! )
  */
 
-backward_compatibility_hack(argc, argv, option, out_type) int *argc;
+void backward_compatibility_hack(argc, argv, option, out_type) int *argc;
 char **argv;
 int *option;
 int *out_type;
@@ -731,7 +731,7 @@ int *out_type;
 }
 
 /* delete_arg -- delete an argument from the argument list */
-delete_arg(argc, argv, num) int *argc, num;
+void delete_arg(argc, argv, num) int *argc, num;
 register char *argv[];
 {
     register int i;
