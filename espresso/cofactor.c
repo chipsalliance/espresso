@@ -273,7 +273,7 @@ void massive_count(T) IN pcube *T;
             if (active > mostactive)
                 best = var, mostactive = active,
                 mostzero = cdata.var_zeros[best], mostbalanced = maxactive;
-            else if (active == mostactive)
+            else if (active == mostactive) {
                 /* secondary condition is to maximize the number zeros */
                 /* for binary variables, this is the same as minimum # of 2's */
                 if (cdata.var_zeros[var] > mostzero)
@@ -285,6 +285,7 @@ void massive_count(T) IN pcube *T;
                      */
                     if (maxactive < mostbalanced)
                         best = var, mostbalanced = maxactive;
+            }
 
             cdata.parts_active[var] = active;
             cdata.is_unate[var] = (active == 1);
