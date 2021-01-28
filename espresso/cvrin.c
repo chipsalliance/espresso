@@ -660,7 +660,7 @@ pPLA new_PLA() {
     return PLA;
 }
 
-PLA_labels(PLA) pPLA PLA;
+void PLA_labels(PLA) pPLA PLA;
 {
     int i;
 
