@@ -638,7 +638,7 @@ extern struct cdata_struct cdata, temp_cdata_save;
 /* cvrin.c */ extern void parse_pla();
 /* cvrin.c */ extern void read_cube();
 /* cvrin.c */ extern void skip_line();
-/* cvrm.c */ extern foreach_output_function();
+/* cvrm.c */ extern void foreach_output_function();
 /* cvrm.c */ extern int cubelist_partition();
 /* cvrm.c */ extern int so_both_do_espresso();
 /* cvrm.c */ extern int so_both_do_exact();
