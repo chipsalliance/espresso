@@ -733,7 +733,7 @@ extern struct cdata_struct cdata, temp_cdata_save;
 /* map.c */ extern pset minterms();
 /* map.c */ extern void explode();
 /* map.c */ extern void map();
-/* opo.c */ extern output_phase_setup();
+/* opo.c */ extern void output_phase_setup();
 /* opo.c */ extern pPLA set_phase();
 /* opo.c */ extern pcover opo();
 /* opo.c */ extern pcube find_phase();

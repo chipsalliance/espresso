@@ -393,7 +393,7 @@ int n;
  *  duplicated in the output part
  */
 
-output_phase_setup(PLA, first_output) INOUT pPLA PLA;
+void output_phase_setup(PLA, first_output) INOUT pPLA PLA;
 int first_output;
 {
     pcover F, R, D;
