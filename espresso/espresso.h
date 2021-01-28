@@ -722,6 +722,7 @@ extern struct cdata_struct cdata, temp_cdata_save;
 /* hack.c */ extern map_symbolic();
 /* hack.c */ extern pcover map_symbolic_cover();
 /* hack.c */ extern symbolic_hack_labels();
+/* hack.c */ extern void disassemble_fsm(pPLA PLA, int verbose_mode);
 /* irred.c */ extern bool cube_is_covered();
 /* irred.c */ extern bool taut_special_cases();
 /* irred.c */ extern bool tautology();
