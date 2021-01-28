@@ -23,11 +23,12 @@ void explode(var, z) int var, z;
     int i, last = cube.last_part[var];
     for (i = cube.first_part[var], z *= cube.part_size[var]; i <= last;
          i++, z++)
-        if (is_in_set(Gcube, i))
+        if (is_in_set(Gcube, i)) {
             if (var == 0)
                 set_insert(Gminterm, z);
             else
                 explode(var - 1, z);
+        }
 }
 
 static int mapindex[16][16] = {
