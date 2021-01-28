@@ -1,5 +1,5 @@
 /*
-/* Module:essentiality.c
+ * Module:essentiality.c
  *	contains routines for performing essentiality test and reduction
  * Routines:
  * pcover ess_test_and_reduction():
