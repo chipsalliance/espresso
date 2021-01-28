@@ -1,6 +1,6 @@
 #include "espresso.h"
 
-map_dcset(PLA) pPLA PLA;
+void map_dcset(PLA) pPLA PLA;
 {
     int var, i;
     pcover Tplus, Tminus, Tplusbar, Tminusbar;
@@ -73,7 +73,7 @@ map_dcset(PLA) pPLA PLA;
     PLA->D = sf_delc(PLA->D, 2 * var, 2 * var + 1);
 }
 
-map_output_symbolic(PLA) pPLA PLA;
+void map_output_symbolic(PLA) pPLA PLA;
 {
     pset_family newF, newD;
     pset compress;
@@ -181,7 +181,7 @@ map_output_symbolic(PLA) pPLA PLA;
     set_free(compress);
 }
 
-find_inputs(A, PLA, list, base, value, newF, newD) pcover A;
+void find_inputs(A, PLA, list, base, value, newF, newD) pcover A;
 pPLA PLA;
 symbolic_list_t *list;
 int base, value;
@@ -274,7 +274,7 @@ pcover *newF, *newD;
 }
 #endif
 
-map_symbolic(PLA) pPLA PLA;
+void map_symbolic(PLA) pPLA PLA;
 {
     symbolic_t *p1;
     symbolic_list_t *p2;
@@ -367,11 +367,11 @@ int base;
     return T;
 }
 
-form_bitvector(p, base, value,
-               list) pset p; /* old cube, looking at binary variables */
-int base;                    /* where in mv cube the new variable starts */
-int value;                   /* current value for this recursion */
-symbolic_list_t *list;       /* current place in the symbolic list */
+void form_bitvector(p, base, value,
+                    list) pset p; /* old cube, looking at binary variables */
+int base;                         /* where in mv cube the new variable starts */
+int value;                        /* current value for this recursion */
+symbolic_list_t *list;            /* current place in the symbolic list */
 {
     if (list == NIL(symbolic_list_t)) {
         set_insert(p, base + value);
@@ -393,8 +393,8 @@ symbolic_list_t *list;       /* current place in the symbolic list */
     }
 }
 
-symbolic_hack_labels(PLA, list, compress, new_size, old_size,
-                     size_added) pPLA PLA;
+void symbolic_hack_labels(PLA, list, compress, new_size, old_size,
+                          size_added) pPLA PLA;
 symbolic_t *list;
 pset compress;
 int new_size, old_size, size_added;
@@ -463,7 +463,7 @@ static pcover fsm_simplify(F) pcover F;
     return F;
 }
 
-disassemble_fsm(PLA, verbose_mode) pPLA PLA;
+void disassemble_fsm(PLA, verbose_mode) pPLA PLA;
 int verbose_mode;
 {
     int nin, nstates, nout;
