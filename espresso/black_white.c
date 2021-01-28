@@ -13,7 +13,6 @@ static void print_links();
 static void alloc_stack();
 static void free_stack();
 static void clear();
-static void print_stack();
 
 static int white_head, white_tail;
 static int black_head, black_tail;
@@ -148,19 +147,6 @@ void pop_black_list() {
 
 static void clear() {
     stack_p = 0;
-}
-
-static void print_stack() {
-    int i;
-    printf("head\n");
-    for (i = stack_p - 1; i >= 0; i--) {
-        printf("%d%c", stack_head[i], i % 10 ? '\t' : '\n');
-    }
-    printf("\ntail\n");
-    for (i = stack_p - 1; i >= 0; i--) {
-        printf("%d%c", stack_tail[i], i % 10 ? '\t' : '\n');
-    }
-    printf("\n");
 }
 
 void setup_bw(R, c) pcover R;
