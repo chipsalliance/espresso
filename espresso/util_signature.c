@@ -35,7 +35,7 @@ char *name;
     foreach_set(F, last, p) {
         print_cube(stdout, p, "~0");
     }
-    printf("\n\n", name);
+    printf("\n\n");
 }
 
 /* sf_equal: Check equality of two set families */
@@ -78,7 +78,7 @@ int time_usage(name) char *name;
 
     time_current = ptime();
 
-    printf("%s\t %ld\n", name, (time_current - time_init) / 1000);
+    printf("%s\t %d\n", name, (time_current - time_init) / 1000);
 
     return time_current;
 }
