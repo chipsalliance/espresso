@@ -627,7 +627,7 @@ extern struct cdata_struct cdata, temp_cdata_save;
 /* cubestr.c */ extern void restore_cube_struct();
 /* cubestr.c */ extern void save_cube_struct();
 /* cubestr.c */ extern void setdown_cube();
-/* cvrin.c */ extern PLA_labels();
+/* cvrin.c */ extern void PLA_labels();
 /* cvrin.c */ extern char *get_word();
 /* cvrin.c */ extern int label_index();
 /* cvrin.c */ extern int read_pla();
