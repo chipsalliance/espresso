@@ -212,12 +212,12 @@ pcube RAISE, FREESET;
             dist = 0;
             if ((last = cube.inword) != -1) {
                 x = p[last] & r[last];
-                if (x = ~(x | x >> 1) & cube.inmask)
+                if ((x = ~(x | x >> 1) & cube.inmask))
                     if ((dist = count_ones(x)) > 1)
                         goto exit_if;
                 for (w = 1; w < last; w++) {
                     x = p[w] & r[w];
-                    if (x = ~(x | x >> 1) & DISJOINT)
+                    if ((x = ~(x | x >> 1) & DISJOINT))
                         if (dist == 1 || (dist += count_ones(x)) > 1)
                             goto exit_if;
                 }
@@ -556,12 +556,12 @@ pcube c, RAISE, new_lower;
             dist = 0;
             if ((last = cube.inword) != -1) {
                 x = p[last] & r[last];
-                if (x = ~(x | x >> 1) & cube.inmask)
+                if ((x = ~(x | x >> 1) & cube.inmask))
                     if ((dist = count_ones(x)) > 1)
                         goto exit_if;
                 for (w = 1; w < last; w++) {
                     x = p[w] & r[w];
-                    if (x = ~(x | x >> 1) & DISJOINT)
+                    if ((x = ~(x | x >> 1) & DISJOINT))
                         if (dist == 1 || (dist += count_ones(x)) > 1)
                             goto exit_if;
                 }
