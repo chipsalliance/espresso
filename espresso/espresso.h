@@ -847,8 +847,6 @@ extern struct cdata_struct cdata, temp_cdata_save;
 /* sminterf.c */ pset do_sm_minimum_cover();
 /* sparse.c */ extern pcover make_sparse();
 /* sparse.c */ extern pcover mv_reduce();
-/* ucbqsort.c */ extern qsort();
-/* ucbqsort.c */ extern qst();
 /* unate.c */ extern pcover find_all_minimal_covers_petrick();
 /* unate.c */ extern pcover map_cover_to_unate();
 /* unate.c */ extern pcover map_unate_to_cover();
