@@ -14,22 +14,22 @@
 
 #define RAISED 2
 
-/* black_white.c */ int setup_bw();
-/* black_white.c */ int free_bw();
-/* black_white.c */ int black_white();
-/* black_white.c */ int split_list();
-/* black_white.c */ int merge_list();
-/* black_white.c */ int print_bw();
-/* black_white.c */ int variable_list_alloc();
+/* black_white.c */ void setup_bw();
+/* black_white.c */ void free_bw();
+/* black_white.c */ bool black_white();
+/* black_white.c */ void split_list();
+/* black_white.c */ void merge_list();
+/* black_white.c */ void print_bw();
+/* black_white.c */ void variable_list_alloc();
 /* black_white.c */ void variable_list_init();
-/* black_white.c */ int variable_list_delete();
-/* black_white.c */ int variable_list_insert();
-/* black_white.c */ int variable_list_empty();
-/* black_white.c */ int get_next_variable();
+/* black_white.c */ void variable_list_delete();
+/* black_white.c */ void variable_list_insert();
+/* black_white.c */ bool variable_list_empty();
+/* black_white.c */ void get_next_variable();
 /* black_white.c */ void print_variable_list();
 /* black_white.c */ extern void reset_black_list();
-/* black_white.c */ extern int push_black_list();
-/* black_white.c */ extern int pop_black_list();
+/* black_white.c */ extern void push_black_list();
+/* black_white.c */ extern void pop_black_list();
 /* canonical.c */ int is_minterm();
 /* canonical.c */ pcover find_canonical_cover();
 /* essentiality.c */ pcover etr_order();
@@ -37,7 +37,7 @@
 /* essentiality.c */ pcover get_mins();
 /* essentiality.c */ int ascending();
 /* util_signature.c */ void set_time_limit();
-/* util_signature.c */ int print_cover();
+/* util_signature.c */ void print_cover();
 /* util_signature.c */ int sf_equal();
 /* util_signature.c */ int time_usage();
 /* util_signature.c */ void s_totals();

@@ -411,7 +411,7 @@ ppair pair_best_cost(cost_array_local) int **cost_array_local;
     return best_pair;
 }
 
-int find_best_cost(pair) register ppair pair;
+void find_best_cost(pair) register ppair pair;
 {
     register int i, cost;
 
@@ -478,7 +478,7 @@ int pair_strategy;
 /*
  *  minimize_pair -- called as each pair is generated
  */
-int minimize_pair(pair) ppair pair;
+void minimize_pair(pair) ppair pair;
 {
     pcover Fsave, Dsave, Rsave;
     int i, xnum_binary_vars, xnum_vars, *xpart_size;
@@ -638,7 +638,7 @@ register int n;
     return pair1;
 }
 
-int pair_free(pair) register ppair pair;
+void pair_free(pair) register ppair pair;
 {
     FREE(pair->var1);
     FREE(pair->var2);

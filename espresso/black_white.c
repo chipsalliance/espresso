@@ -3,23 +3,17 @@
 #include "espresso.h"
 #include "signature.h"
 
-int setup_bw();
-int black_white();
-int split_list();
-int merge_list();
-
-static int alloc_list();
-static int free_list();
-static int init_list();
-static int delete ();
-static int insert();
+static void alloc_list();
+static void free_list();
+static void init_list();
+static void delete ();
+static void insert();
 static void print_links();
-int print_bw();
 
-static int alloc_stack();
-static int free_stack();
-static int clear();
-static int print_stack();
+static void alloc_stack();
+static void free_stack();
+static void clear();
+static void print_stack();
 
 static int white_head, white_tail;
 static int black_head, black_tail;
@@ -30,7 +24,7 @@ static int *stack_head, *stack_tail, stack_p;
 
 static pcover BB;
 
-static int alloc_list(size) int size;
+static void alloc_list(size) int size;
 {
     forward = (int *)calloc(size, sizeof(int));
     backward = (int *)calloc(size, sizeof(int));
@@ -40,12 +34,12 @@ static int alloc_list(size) int size;
     }
 }
 
-static int free_list() {
+static void free_list() {
     free(forward);
     free(backward);
 }
 
-static int init_list(size) int size;
+static void init_list(size) int size;
 {
     int i;
     for (i = 0; i < size; i++) {
@@ -60,7 +54,7 @@ static int init_list(size) int size;
     black_tail = -1;
 }
 
-static int delete (element) int element;
+static void delete (element) int element;
 {
     forward_link = forward[element];
     backward_link = backward[element];
@@ -82,7 +76,7 @@ static int delete (element) int element;
     }
 }
 
-static int insert(element) int element;
+static void insert(element) int element;
 {
     if (black_head != -1) {
         forward[element] = black_head;
@@ -95,7 +89,7 @@ static int insert(element) int element;
     }
 }
 
-int merge_list() {
+void merge_list() {
     if (white_head != -1) {
         if (black_head != -1) {
             forward[white_tail] = black_head;
@@ -119,7 +113,7 @@ static void print_links(size, list) int size, *list;
     printf("\n");
 }
 
-int print_bw(size) int size;
+void print_bw(size) int size;
 {
     printf("white_head %d\twhite_tail %d\tblack_head %d\tblack_tail %d\n",
            white_head, white_tail, black_head, black_tail);
@@ -127,7 +121,7 @@ int print_bw(size) int size;
     print_links(size, backward);
 }
 
-static int alloc_stack(size) int size;
+static void alloc_stack(size) int size;
 {
     stack_head = (int *)calloc(size, sizeof(int));
     stack_tail = (int *)calloc(size, sizeof(int));
@@ -137,26 +131,26 @@ static int alloc_stack(size) int size;
     }
 }
 
-static int free_stack() {
+static void free_stack() {
     free(stack_head);
     free(stack_tail);
 }
 
-int push_black_list() {
+void push_black_list() {
     stack_head[stack_p] = black_head;
     stack_tail[stack_p++] = black_tail;
 }
 
-int pop_black_list() {
+void pop_black_list() {
     black_head = stack_head[--stack_p];
     black_tail = stack_tail[stack_p];
 }
 
-static int clear() {
+static void clear() {
     stack_p = 0;
 }
 
-static int print_stack() {
+static void print_stack() {
     int i;
     printf("head\n");
     for (i = stack_p - 1; i >= 0; i--) {
@@ -169,7 +163,7 @@ static int print_stack() {
     printf("\n");
 }
 
-int setup_bw(R, c) pcover R;
+void setup_bw(R, c) pcover R;
 pcube c;
 {
     pcube out_part_r;
@@ -215,13 +209,13 @@ pcube c;
     free_cube(out_part_r);
 }
 
-int free_bw() {
+void free_bw() {
     free_list();
     free_stack();
     free_cover(BB);
 }
 
-int black_white() {
+bool black_white() {
     int b_index, w_index;
     int containment;
     for (b_index = black_head; b_index != -1; b_index = forward[b_index]) {
@@ -243,7 +237,7 @@ void reset_black_list() {
     black_head = black_tail = -1;
 }
 
-int split_list(R, v) pcover R;
+void split_list(R, v) pcover R;
 int v;
 {
     int index, next_index;
@@ -265,7 +259,7 @@ static int *variable_backward_chain; /* Previous */
 static int variable_head;            /* first element in the list */
 static int variable_tail;            /* last element in the list */
 
-int variable_list_alloc(size) int size;
+void variable_list_alloc(size) int size;
 {
     variable_forward_chain = (int *)calloc(size, sizeof(int));
     variable_backward_chain = (int *)calloc(size, sizeof(int));
@@ -301,7 +295,7 @@ int *reduced_c_free_list;
     }
 }
 
-int variable_list_delete(element) int element;
+void variable_list_delete(element) int element;
 {
     variable_count--;
     forward_link = variable_forward_chain[element];
@@ -324,7 +318,7 @@ int variable_list_delete(element) int element;
     }
 }
 
-int variable_list_insert(element) int element;
+void variable_list_insert(element) int element;
 {
     variable_count++;
     if (variable_head != -1) {
@@ -339,11 +333,11 @@ int variable_list_insert(element) int element;
     }
 }
 
-int variable_list_empty() {
+bool variable_list_empty() {
     return variable_count ? FALSE : TRUE;
 }
 
-int get_next_variable(pv, pphase, R) int *pv, *pphase;
+void get_next_variable(pv, pphase, R) int *pv, *pphase;
 pcover R;
 {
     int v, e0, e1;

@@ -393,7 +393,7 @@ void cprint(T) pcover T;
     foreach_set(T, last, p) printf("%s\n", pc1(p));
 }
 
-int makeup_labels(PLA) pPLA PLA;
+void makeup_labels(PLA) pPLA PLA;
 {
     int var, i, ind;
 
