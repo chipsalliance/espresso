@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - run: |
+          sudo apt update
+          sudo apt install gcc-aarch64-linux-gnu ninja-build
+      - uses: actions/checkout@v2
+      - name: Build for Linux X86_64
+        run: |
+          cmake -G Ninja -B build
+          ninja -C build
+          strip build/espresso
+          mv build/espresso x86_64-linux-gnu-espresso
+          rm -rf build
+      - name: Build for Linux aarch64
+        run: |
+          cmake -G Ninja -B build -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc
+          ninja -C build
+          aarch64-linux-gnu-strip build/espresso
+          mv build/espresso aarch64-linux-gnu-espresso
+          rm -rf build
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*espresso"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          draft: true
