@@ -55,3 +55,8 @@ add_executable(
 target_link_libraries(espresso utility)
 target_include_directories(espresso PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utility)
 set_property(TARGET espresso PROPERTY C_STANDARD 99)
+
+include(GNUInstallDirs)
+install(TARGETS espresso RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES man/espresso.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
+install(FILES man/espresso.5 DESTINATION ${CMAKE_INSTALL_MANDIR}/man5)
