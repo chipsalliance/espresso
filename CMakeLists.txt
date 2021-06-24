@@ -1,9 +1,6 @@
 project(espresso C)
 cmake_minimum_required(VERSION 3.19)
 
-# MSVC?
-set(CMAKE_C_FLAGS "-std=c99 -Wpedantic -Wall -Werror")
-
 add_library(utility utility/cpu_time.c utility/prtime.c utility/strsav.c)
 
 add_executable(
@@ -57,3 +54,4 @@ add_executable(
   espresso/sigma.c)
 target_link_libraries(espresso utility)
 target_include_directories(espresso PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/utility)
+set_property(TARGET espresso PROPERTY C_STANDARD 99)
