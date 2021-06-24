@@ -15,6 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build
-        run: cmake -B build && make -C build
+        run: env CFLAGS="-Wpedantic -Wall -Werror" cmake -B build && make -C build
         env:
           CC: /usr/bin/${{ matrix.cc }}
