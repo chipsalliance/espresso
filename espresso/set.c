@@ -1,5 +1,5 @@
 /*
- *   set.c -- routines for maniuplating sets and set families
+ *   set.c -- routines for manipulating sets and set families
  */
 
 /* LINTLIBRARY */
