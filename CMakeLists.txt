@@ -58,8 +58,36 @@ set_property(TARGET espresso PROPERTY C_STANDARD 99)
 
 include(GNUInstallDirs)
 install(TARGETS espresso RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES man/espresso.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1)
-install(FILES man/espresso.5 DESTINATION ${CMAKE_INSTALL_MANDIR}/man5)
+
+# documentation
+option(BUILD_DOC "Build documentation." ON)
+
+if(BUILD_DOC)
+  find_program(ASCIIDOCTOR_EXE asciidoctor)
+  if(NOT ASCIIDOCTOR_EXE)
+    message(SEND_ERROR "asciidoctor not found, cannot create man pages")
+  endif()
+
+  set(DOCDIR ${CMAKE_CURRENT_SOURCE_DIR}/doc)
+  set(A2M ${ASCIIDOCTOR_EXE} -b manpage)
+
+  macro(add_man SRC DST SECT)
+    add_custom_command(
+      OUTPUT ${DST}.${SECT}
+      COMMAND ${A2M} -o ${DST}.${SECT} ${DOCDIR}/${SRC}.adoc
+      MAIN_DEPENDENCY ${DOCDIR}/${SRC}.adoc)
+
+    set(MANS ${MANS} ${DST}.${SECT})
+
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DST}.${SECT}
+            DESTINATION ${CMAKE_INSTALL_MANDIR}/man${SECT})
+  endmacro(add_man)
+
+  add_man(espresso espresso 1)
+  add_man(pla espresso 5)
+
+  add_custom_target(doc ALL DEPENDS ${MANS})
+endif()
 
 enable_testing()
 foreach(
