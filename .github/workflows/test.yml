@@ -26,3 +26,15 @@ jobs:
         run: cmake -B build && make -C build
       - name: Test
         run: cd build && ctest
+  format-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install formatters
+        run: |
+          npm install -g prettier
+          pip install cmakelang
+          sudo snap install shfmt
+      - run: ./format.sh
+      - name: Check changes
+        run: git diff --quiet
