@@ -7,8 +7,7 @@
  *  verify -- check that all minterms of F are contained in (Fold u Dold)
  *  and that all minterms of Fold are contained in (F u Dold).
  */
-bool verify(F, Fold, Dold) pcover F, Fold, Dold;
-{
+bool verify(pcover F, pcover Fold, pcover Dold) {
     pcube p, last, *FD;
     bool verify_error = FALSE;
 
@@ -46,8 +45,7 @@ bool verify(F, Fold, Dold) pcover F, Fold, Dold;
  *  the comparison meaningful.
  *
  */
-bool PLA_verify(PLA1, PLA2) pPLA PLA1, PLA2;
-{
+bool PLA_verify(pPLA PLA1, pPLA PLA2) {
     /* Check if both have names given; if so, attempt to permute to
      * match the names
      */
@@ -72,10 +70,9 @@ bool PLA_verify(PLA1, PLA2) pPLA PLA1, PLA2;
  *  Discard any columns of PLA1 which are not in PLA2
  *  Association is strictly by the names of the columns of the cover.
  */
-void PLA_permute(PLA1, PLA2) pPLA PLA1, PLA2;
-{
-    register int i, j, *permute, npermute;
-    register char *labi;
+void PLA_permute(pPLA PLA1, pPLA PLA2) {
+    int i, j, *permute, npermute;
+    char *labi;
     char **label;
     int strcmp();
 
@@ -123,8 +120,7 @@ void PLA_permute(PLA1, PLA2) pPLA PLA1, PLA2;
  *  check_consistency -- test that the ON-set, OFF-set and DC-set form
  *  a partition of the boolean space.
  */
-bool check_consistency(PLA) pPLA PLA;
-{
+bool check_consistency(pPLA PLA) {
     bool verify_error = FALSE;
     pcover T;
 

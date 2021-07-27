@@ -10,8 +10,7 @@ static int Rp_current;
  *   irredundant -- Return a minimal subset of F
  */
 
-pcover irredundant(F, D) pcover F, D;
-{
+pcover irredundant(pcover F, pcover D) {
     mark_irredundant(F, D);
     return sf_inactive(F);
 }
@@ -20,8 +19,7 @@ pcover irredundant(F, D) pcover F, D;
  *   mark_irredundant -- find redundant cubes, and mark them "INACTIVE"
  */
 
-void mark_irredundant(F, D) pcover F, D;
-{
+void mark_irredundant(pcover F, pcover D) {
     pcover E, Rt, Rp;
     pset p, p1, last;
     sm_matrix *table;
@@ -70,11 +68,9 @@ void mark_irredundant(F, D) pcover F, D;
  *	Rp  -- partially redundant cubes
  */
 
-void irred_split_cover(F, D, E, Rt, Rp) pcover F, D;
-pcover *E, *Rt, *Rp;
-{
-    register pcube p, last;
-    register int index;
+void irred_split_cover(pcover F, pcover D, pcover *E, pcover *Rt, pcover *Rp) {
+    pcube p, last;
+    int index;
     pcover R;
     pcube *FD, *ED;
 
@@ -132,9 +128,8 @@ pcover *E, *Rt, *Rp;
  *  possible selections of primes to cover Rp.
  */
 
-sm_matrix *irred_derive_table(D, E, Rp) pcover D, E, Rp;
-{
-    register pcube last, p, *list;
+sm_matrix *irred_derive_table(pcover D, pcover E, pcover Rp) {
+    pcube last, p, *list;
     sm_matrix *table;
     int size_last_dominance, i;
 
@@ -182,14 +177,15 @@ sm_matrix *irred_derive_table(D, E, Rp) pcover D, E, Rp;
 }
 
 /* cube_is_covered -- determine if a cubelist "covers" a single cube */
-bool cube_is_covered(T, c) pcube *T, c;
-{ return tautology(cofactor(T, c)); }
+bool cube_is_covered(pcube *T, pcube c) {
+    return tautology(cofactor(T, c));
+}
 
 /* tautology -- answer the tautology question for T */
-bool tautology(T) pcube *T; /* T will be disposed of */
-{
-    register pcube cl, cr;
-    register int best, result;
+bool tautology(pcube *T /* T will be disposed of */
+) {
+    pcube cl, cr;
+    int best, result;
     static int taut_level = 0;
 
     if (debug & TAUT) {
@@ -217,10 +213,9 @@ bool tautology(T) pcube *T; /* T will be disposed of */
  *  taut_special_cases -- check special cases for tautology
  */
 
-bool taut_special_cases(
-    T) pcube *T; /* will be disposed if answer is determined */
-{
-    register pcube *T1, *Tsave, p, ceil = cube.temp[0], temp = cube.temp[1];
+bool taut_special_cases(pcube *T /* will be disposed if answer is determined */
+) {
+    pcube *T1, *Tsave, p, ceil = cube.temp[0], temp = cube.temp[1];
     pcube *A, *B;
     int var;
 
@@ -302,16 +297,15 @@ start:
 }
 
 /* fcube_is_covered -- determine exactly how a cubelist "covers" a cube */
-static void fcube_is_covered(T, c, table) pcube *T, c;
-sm_matrix *table;
-{ ftautology(cofactor(T, c), table); }
+static void fcube_is_covered(pcube *T, pcube c, sm_matrix *table) {
+    ftautology(cofactor(T, c), table);
+}
 
 /* ftautology -- find ways to make a tautology */
-static void ftautology(T, table) pcube *T; /* T will be disposed of */
-sm_matrix *table;
-{
-    register pcube cl, cr;
-    register int best;
+static void ftautology(pcube *T, /* T will be disposed of */
+                       sm_matrix *table) {
+    pcube cl, cr;
+    int best;
     static int ftaut_level = 0;
 
     if (debug & TAUT) {
@@ -338,10 +332,9 @@ sm_matrix *table;
 }
 
 static bool ftaut_special_cases(
-    T, table) pcube *T; /* will be disposed if answer is determined */
-sm_matrix *table;
-{
-    register pcube *T1, *Tsave, p, temp = cube.temp[0], ceil = cube.temp[1];
+    pcube *T, /* will be disposed if answer is determined */
+    sm_matrix *table) {
+    pcube *T1, *Tsave, p, temp = cube.temp[0], ceil = cube.temp[1];
     int var, rownum;
 
     /* Check for a row of all 1's in the essential cubes */

@@ -30,11 +30,6 @@ static int r_head;       /* current position in  the list above */
 static int *reduced_c_free_list; /* c_free_list - r_free_list */
 static int reduced_c_free_count; /* active size of the above list */
 
-typedef struct {
-    int variable;
-    int free_count;
-} VAR;
-
 static VAR *unate_list; /* List of unate variables in the reduced_c_free_list */
 static int unate_count; /* active size of the above list */
 
@@ -72,9 +67,7 @@ pcover COVER; /* A global bag to collect the signature cubes in the cover
  *		2. Freer Unate
  *		3. Freer Binate
  */
-pcover etr_order(F, E, R, c, d) pcover F, E, R;
-pcube c, d;
-{
+pcover etr_order(pcover F, pcover E, pcover R, pcube c, pcube d) {
     static int num_binary_vars;
     int v, e0, e1;
     int i, free_var;
@@ -163,8 +156,10 @@ pcube c, d;
         }
     }
 
-    qsort(unate_list, unate_count, sizeof(VAR), ascending);
-    qsort(binate_list, binate_count, sizeof(VAR), ascending);
+    qsort(unate_list, unate_count, sizeof(VAR),
+          (int (*)(const void *, const void *))ascending);
+    qsort(binate_list, binate_count, sizeof(VAR),
+          (int (*)(const void *, const void *))ascending);
 
     variable_head = 0;
     variable_count = 0;
@@ -195,8 +190,7 @@ pcube c, d;
     return COVER;
 }
 
-int ascending(p1, p2) VAR *p1, *p2;
-{
+int ascending(VAR *p1, VAR *p2) {
     int f1 = p1->free_count;
     int f2 = p2->free_count;
 
@@ -219,9 +213,7 @@ int ascending(p1, p2) VAR *p1, *p2;
  *	E: Extended don't care set. DC + identified ESC;
  *	R: OFFSET cover;
  */
-void aux_etr_order(F, E, R, c, d) pcover F, E, R;
-pcube c, d;
-{
+void aux_etr_order(pcover F, pcover E, pcover R, pcube c, pcube d) {
     pcover minterms;
     pcube d_minterm;
     pcube sigma_d;
@@ -294,8 +286,7 @@ pcube c, d;
     variable_head--;
 }
 
-pcover get_mins(c) pcube c;
-{
+pcover get_mins(pcube c) {
     pcover minterms;
     pcube d_minterm;
     int i, j;
@@ -317,10 +308,7 @@ pcover get_mins(c) pcube c;
     return minterms;
 }
 
-void print_list(n, x, name) int n;
-int *x;
-char *name;
-{
+void print_list(int n, int *x, char *name) {
     int i;
     printf("%s:\n", name);
     for (i = 0; i < n; i++) {

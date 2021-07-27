@@ -13,19 +13,11 @@
  *		 0       0      R
  */
 
-int gimpel_reduce(A, select, weight, lb, bound, depth, stats,
-                  best) sm_matrix *A;
-solution_t *select;
-int *weight;
-int lb;
-int bound;
-int depth;
-stats_t *stats;
-solution_t **best;
-{
-    register sm_row *prow, *save_sec;
-    register sm_col *c1, *c2;
-    register sm_element *p, *p1;
+int gimpel_reduce(sm_matrix *A, solution_t *select, int *weight, int lb,
+                  int bound, int depth, stats_t *stats, solution_t **best) {
+    sm_row *prow, *save_sec;
+    sm_col *c1, *c2;
+    sm_element *p, *p1;
     int c1_col_num, c2_col_num, primary_row_num, secondary_row_num;
     int reduce_it;
 

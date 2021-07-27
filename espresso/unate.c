@@ -8,10 +8,9 @@ static pset_family abs_covered();
 static pset_family abs_covered_many();
 static int abs_select_restricted();
 
-pcover map_cover_to_unate(T) pcube *T;
-{
-    register unsigned int word_test, word_set, bit_test, bit_set;
-    register pcube p, pA;
+pcover map_cover_to_unate(pcube *T) {
+    unsigned int word_test, word_set, bit_test, bit_set;
+    pcube p, pA;
     pset_family A;
     pcube *T1;
     int ncol, i;
@@ -48,10 +47,9 @@ pcover map_cover_to_unate(T) pcube *T;
     return A;
 }
 
-pcover map_unate_to_cover(A) pset_family A;
-{
-    register int i, ncol, lp;
-    register pcube p, pB;
+pcover map_unate_to_cover(pset_family A) {
+    int i, ncol, lp;
+    pcube p, pB;
     int var, nunate, *unate;
     pcube last;
     pset_family B;
@@ -99,9 +97,8 @@ pcover map_unate_to_cover(A) pset_family A;
  *  unate_compl
  */
 
-pset_family unate_compl(A) pset_family A;
-{
-    register pset p, last;
+pset_family unate_compl(pset_family A) {
+    pset p, last;
 
     /* Make sure A is single-cube containment minimal */
     /*    A = sf_rev_contain(A);*/
@@ -121,11 +118,11 @@ pset_family unate_compl(A) pset_family A;
 /*
  *  Assume SIZE(p) records the size of each set
  */
-pset_family unate_complement(A) pset_family A; /* disposes of A */
-{
+pset_family unate_complement(pset_family A /* disposes of A */
+) {
     pset_family Abar;
-    register pset p, p1, _restrict;
-    register int i;
+    pset p, p1, _restrict;
+    int i;
     int max_i, min_set_ord, j;
 
     /* Check for no sets in the matrix -- complement is the universe */
@@ -205,10 +202,9 @@ pset_family unate_complement(A) pset_family A; /* disposes of A */
     return Abar;
 }
 
-pset_family exact_minimum_cover(T) IN pset_family T;
-{
-    register pset p, last, p1;
-    register int i, n;
+pset_family exact_minimum_cover(pset_family T) {
+    pset p, last, p1;
+    int i, n;
     int lev, lvl;
     pset nlast;
     pset_family temp;
@@ -283,10 +279,8 @@ pset_family exact_minimum_cover(T) IN pset_family T;
 
 #define MAGIC 500 /* save 500 cubes before containment */
 
-pset_family unate_intersect(A, B, largest_only) pset_family A, B;
-bool largest_only;
-{
-    register pset pi, pj, lasti, lastj, pt;
+pset_family unate_intersect(pset_family A, pset_family B, bool largest_only) {
+    pset pi, pj, lasti, lastj, pt;
     pset_family T, Tsave;
     bool save;
     int maxord, ord;
@@ -344,11 +338,9 @@ bool largest_only;
  *  abs_covered -- after selecting a new column for the selected set,
  *  create a new matrix which is only those rows which are still uncovered
  */
-static pset_family abs_covered(A, pick) pset_family A;
-register int pick;
-{
-    register pset last, p, pdest;
-    register pset_family Aprime;
+static pset_family abs_covered(pset_family A, int pick) {
+    pset last, p, pdest;
+    pset_family Aprime;
 
     Aprime = sf_new(A->count, A->sf_size);
     pdest = Aprime->data;
@@ -364,11 +356,9 @@ register int pick;
  *  abs_covered_many -- after selecting many columns for ther selected set,
  *  create a new matrix which is only those rows which are still uncovered
  */
-static pset_family abs_covered_many(A, pick_set) pset_family A;
-register pset pick_set;
-{
-    register pset last, p, pdest;
-    register pset_family Aprime;
+static pset_family abs_covered_many(pset_family A, pset pick_set) {
+    pset last, p, pdest;
+    pset_family Aprime;
 
     Aprime = sf_new(A->count, A->sf_size);
     pdest = Aprime->data;
@@ -385,10 +375,8 @@ register pset pick_set;
  *  also belongs to the set "restrict"; weight each column of a set as
  *  1 / (set_ord(p) - 1).
  */
-static int abs_select_restricted(A, _restrict) pset_family A;
-pset _restrict;
-{
-    register int i, best_var, best_count, *count;
+static int abs_select_restricted(pset_family A, pset _restrict) {
+    int i, best_var, best_count, *count;
 
     /* Sum the elements in these columns */
     count = sf_count_restricted(A, _restrict);

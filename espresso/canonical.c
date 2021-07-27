@@ -22,8 +22,7 @@
  * Output:
  *	Return canonical cover of the essential signature cube
  */
-pcover find_canonical_cover(F1, D, R) pcover F1, D, R;
-{
+pcover find_canonical_cover(pcover F1, pcover D, pcover R) {
     pcover F;
     pcover E, ESC;
     pcover COVER;

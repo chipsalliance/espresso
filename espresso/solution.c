@@ -9,14 +9,12 @@ solution_t *solution_alloc() {
     return sol;
 }
 
-void solution_free(sol) solution_t *sol;
-{
+void solution_free(solution_t *sol) {
     sm_row_free(sol->row);
     FREE(sol);
 }
 
-solution_t *solution_dup(sol) solution_t *sol;
-{
+solution_t *solution_dup(solution_t *sol) {
     solution_t *new_sol;
 
     new_sol = ALLOC(solution_t, 1);
@@ -25,20 +23,13 @@ solution_t *solution_dup(sol) solution_t *sol;
     return new_sol;
 }
 
-void solution_add(sol, weight, col) solution_t *sol;
-int *weight;
-int col;
-{
+void solution_add(solution_t *sol, int *weight, int col) {
     (void)sm_row_insert(sol->row, col);
     sol->cost += WEIGHT(weight, col);
 }
 
-void solution_accept(sol, A, weight, col) solution_t *sol;
-sm_matrix *A;
-int *weight;
-int col;
-{
-    register sm_element *p, *pnext;
+void solution_accept(solution_t *sol, sm_matrix *A, int *weight, int col) {
+    sm_element *p, *pnext;
     sm_col *pcol;
 
     solution_add(sol, weight, col);
@@ -52,14 +43,11 @@ int col;
 }
 
 /* ARGSUSED */
-void solution_reject(sol, A, weight, col) solution_t *sol;
-sm_matrix *A;
-int *weight;
-int col;
-{ sm_delcol(A, col); }
+void solution_reject(solution_t *sol, sm_matrix *A, int *weight, int col) {
+    sm_delcol(A, col);
+}
 
-solution_t *solution_choose_best(best1, best2) solution_t *best1, *best2;
-{
+solution_t *solution_choose_best(solution_t *best1, solution_t *best2) {
     if (best1 != NIL(solution_t)) {
         if (best2 != NIL(solution_t)) {
             if (best1->cost <= best2->cost) {

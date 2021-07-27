@@ -1,7 +1,6 @@
 #include "espresso.h"
 
-void map_dcset(PLA) pPLA PLA;
-{
+void map_dcset(pPLA PLA) {
     int var, i;
     pcover Tplus, Tminus, Tplusbar, Tminusbar;
     pcover newf, term1, term2, dcset, dcsetbar;
@@ -73,8 +72,7 @@ void map_dcset(PLA) pPLA PLA;
     PLA->D = sf_delc(PLA->D, 2 * var, 2 * var + 1);
 }
 
-void map_output_symbolic(PLA) pPLA PLA;
-{
+void map_output_symbolic(pPLA PLA) {
     pset_family newF, newD;
     pset compress;
     symbolic_t *p1;
@@ -181,14 +179,10 @@ void map_output_symbolic(PLA) pPLA PLA;
     set_free(compress);
 }
 
-void find_inputs(A, PLA, list, base, value, newF, newD) pcover A;
-pPLA PLA;
-symbolic_list_t *list;
-int base, value;
-pcover *newF, *newD;
-{
+void find_inputs(pcover A, pPLA PLA, symbolic_list_t *list, int base, int value,
+                 pcover *newF, pcover *newD) {
     pcover S, S1;
-    register pset last, p;
+    pset last, p;
 
     /*
      *  A represents th 'input' values for which the outputs assume
@@ -235,16 +229,12 @@ pcover *newF, *newD;
 }
 
 #if 0
-find_dc_inputs(PLA, list, base, maxval, newF, newD)
-pPLA PLA;
-symbolic_list_t *list;
-int base, maxval;
-pcover *newF, *newD;
+int find_dc_inputs (pPLA PLA, symbolic_list_t *list, int base, int maxval, pcover *newF, pcover *newD)
 {
     pcover A, S, S1;
     symbolic_list_t *p2;
-    register pset p, last;
-    register int i;
+    pset p, last;
+    int i;
 
     /* painfully find the points for which the symbolic output is dc */
     A = NIL(set_family_t);
@@ -274,8 +264,7 @@ pcover *newF, *newD;
 }
 #endif
 
-void map_symbolic(PLA) pPLA PLA;
-{
+void map_symbolic(pPLA PLA) {
     symbolic_t *p1;
     symbolic_list_t *p2;
     int var, base, num_vars, num_binary_vars, *new_part_size;
@@ -356,10 +345,7 @@ void map_symbolic(PLA) pPLA PLA;
     set_free(compress);
 }
 
-pcover map_symbolic_cover(T, list, base) pcover T;
-symbolic_list_t *list;
-int base;
-{
+pcover map_symbolic_cover(pcover T, symbolic_list_t *list, int base) {
     pset last, p;
     foreach_set(T, last, p) {
         form_bitvector(p, base, 0, list);
@@ -367,12 +353,12 @@ int base;
     return T;
 }
 
-void form_bitvector(p, base, value,
-                    list) pset p; /* old cube, looking at binary variables */
-int base;                         /* where in mv cube the new variable starts */
-int value;                        /* current value for this recursion */
-symbolic_list_t *list;            /* current place in the symbolic list */
-{
+void form_bitvector(
+    pset p,               /* old cube, looking at binary variables */
+    int base,             /* where in mv cube the new variable starts */
+    int value,            /* current value for this recursion */
+    symbolic_list_t *list /* current place in the symbolic list */
+) {
     if (list == NIL(symbolic_list_t)) {
         set_insert(p, base + value);
     } else {
@@ -393,12 +379,8 @@ symbolic_list_t *list;            /* current place in the symbolic list */
     }
 }
 
-void symbolic_hack_labels(PLA, list, compress, new_size, old_size,
-                          size_added) pPLA PLA;
-symbolic_t *list;
-pset compress;
-int new_size, old_size, size_added;
-{
+void symbolic_hack_labels(pPLA PLA, symbolic_t *list, pset compress,
+                          int new_size, int old_size, int size_added) {
     int i, base;
     char **oldlabel;
     symbolic_t *p1;
@@ -452,8 +434,7 @@ int new_size, old_size, size_added;
     FREE(oldlabel);
 }
 
-static pcover fsm_simplify(F) pcover F;
-{
+static pcover fsm_simplify(pcover F) {
     pcover D, R;
     D = new_cover(0);
     R = complement(cube1list(F));
@@ -463,9 +444,7 @@ static pcover fsm_simplify(F) pcover F;
     return F;
 }
 
-void disassemble_fsm(PLA, verbose_mode) pPLA PLA;
-int verbose_mode;
-{
+void disassemble_fsm(pPLA PLA, int verbose_mode) {
     int nin, nstates, nout;
     int before, after, present_state, next_state, i, j;
     pcube next_state_mask, present_state_mask, state_mask, p, p1, last;

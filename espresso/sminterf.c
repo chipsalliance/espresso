@@ -1,14 +1,13 @@
 #include "espresso.h"
 
-pset do_sm_minimum_cover(A) pset_family A;
-{
+pset do_sm_minimum_cover(pset_family A) {
     sm_matrix *M;
     sm_row *sparse_cover;
     sm_element *pe;
     pset cover;
-    register int i, base, rownum;
-    register unsigned val;
-    register pset last, p;
+    int i, base, rownum;
+    unsigned val;
+    pset last, p;
 
     M = sm_alloc();
     rownum = 0;

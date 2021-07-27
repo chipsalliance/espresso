@@ -8,10 +8,8 @@
 static bool line_length_error;
 static int lineno;
 
-void skip_line(fpin, fpout, echo) register FILE *fpin, *fpout;
-register bool echo;
-{
-    register int ch;
+void skip_line(FILE *fpin, FILE *fpout, bool echo) {
+    int ch;
     while ((ch = getc(fpin)) != EOF && ch != '\n')
         if (echo)
             putc(ch, fpout);
@@ -20,10 +18,8 @@ register bool echo;
     lineno++;
 }
 
-char *get_word(fp, word) register FILE *fp;
-register char *word;
-{
-    register int ch, i = 0;
+char *get_word(FILE *fp, char *word) {
+    int ch, i = 0;
     while ((ch = getc(fp)) != EOF && isspace(ch))
         ;
     word[i++] = ch;
@@ -36,10 +32,8 @@ register char *word;
 /*
  *  Yes, I know this routine is a mess
  */
-void read_cube(fp, PLA) register FILE *fp;
-pPLA PLA;
-{
-    register int var, i;
+void read_cube(FILE *fp, pPLA PLA) {
+    int var, i;
     pcube cf = cube.temp[0], cr = cube.temp[1], cd = cube.temp[2];
     bool savef = FALSE, saved = FALSE, saver = FALSE;
     char token[256];               /* for kiss read hack */
@@ -204,9 +198,7 @@ bad_char:
     skip_line(fp, stdout, TRUE);
     return;
 }
-void parse_pla(fp, PLA) IN FILE *fp;
-INOUT pPLA PLA;
-{
+void parse_pla(FILE *fp, pPLA PLA) {
     int i, var, ch, np, last;
     char word[256];
 
@@ -490,11 +482,8 @@ loop:
         > 0	 : Operation successful
 */
 
-int read_pla(fp, needs_dcset, needs_offset, pla_type, PLA_return) IN FILE *fp;
-IN bool needs_dcset, needs_offset;
-IN int pla_type;
-OUT pPLA *PLA_return;
-{
+int read_pla(FILE *fp, bool needs_dcset, bool needs_offset, int pla_type,
+             pPLA *PLA_return) {
     pPLA PLA;
     int i, second, third;
     long time;
@@ -594,8 +583,7 @@ OUT pPLA *PLA_return;
     return 1;
 }
 
-void PLA_summary(PLA) pPLA PLA;
-{
+void PLA_summary(pPLA PLA) {
     int var, i;
     symbolic_list_t *p2;
     symbolic_t *p1;
@@ -660,8 +648,7 @@ pPLA new_PLA() {
     return PLA;
 }
 
-void PLA_labels(PLA) pPLA PLA;
-{
+void PLA_labels(pPLA PLA) {
     int i;
 
     PLA->label = ALLOC(char *, cube.size);
@@ -669,8 +656,7 @@ void PLA_labels(PLA) pPLA PLA;
         PLA->label[i] = (char *)NULL;
 }
 
-void free_PLA(PLA) pPLA PLA;
-{
+void free_PLA(pPLA PLA) {
     symbolic_list_t *p2, *p2next;
     symbolic_t *p1, *p1next;
     int i;
@@ -718,11 +704,8 @@ void free_PLA(PLA) pPLA PLA;
     FREE(PLA);
 }
 
-int read_symbolic(fp, PLA, word, retval) FILE *fp;
-pPLA PLA;
-char *word; /* scratch string for words */
-symbolic_t **retval;
-{
+int read_symbolic(FILE *fp, pPLA PLA, char *word, /* scratch string for words */
+                  symbolic_t **retval) {
     symbolic_list_t *listp, *prev_listp;
     symbolic_label_t *labelp, *prev_labelp;
     symbolic_t *newlist;
@@ -778,11 +761,7 @@ symbolic_t **retval;
     return TRUE;
 }
 
-int label_index(PLA, word, varp, ip) pPLA PLA;
-char *word;
-int *varp;
-int *ip;
-{
+int label_index(pPLA PLA, char *word, int *varp, int *ip) {
     int var, i;
 
     if (PLA->label == NIL(char *) || PLA->label[0] == NIL(char)) {

@@ -5,12 +5,9 @@
 
 #include "espresso.h"
 
-void fprint_pla(fp, PLA, output_type) INOUT FILE *fp;
-IN pPLA PLA;
-IN int output_type;
-{
+void fprint_pla(FILE *fp, pPLA PLA, int output_type) {
     int num;
-    register pcube last, p;
+    pcube last, p;
 
     if ((output_type & CONSTRAINTS_type) != 0) {
         output_symbolic_constraints(fp, PLA, 0);
@@ -73,11 +70,8 @@ IN int output_type;
     }
 }
 
-void fpr_header(fp, PLA, output_type) FILE *fp;
-pPLA PLA;
-int output_type;
-{
-    register int i, var;
+void fpr_header(FILE *fp, pPLA PLA, int output_type) {
+    int i, var;
     int first, last;
 
     /* .type keyword gives logical type */
@@ -146,9 +140,8 @@ int output_type;
     }
 }
 
-void pls_output(PLA) IN pPLA PLA;
-{
-    register pcube last, p;
+void pls_output(pPLA PLA) {
+    pcube last, p;
 
     printf(".option unmerged\n");
     makeup_labels(PLA);
@@ -161,9 +154,7 @@ void pls_output(PLA) IN pPLA PLA;
     printf(".end\n");
 }
 
-void pls_group(PLA, fp) pPLA PLA;
-FILE *fp;
-{
+void pls_group(pPLA PLA, FILE *fp) {
     int var, i, col, len;
 
     fprintf(fp, "\n.group");
@@ -183,9 +174,7 @@ FILE *fp;
     fprintf(fp, "\n");
 }
 
-void pls_label(PLA, fp) pPLA PLA;
-FILE *fp;
-{
+void pls_label(pPLA PLA, FILE *fp) {
     int var, i, col, len;
 
     fprintf(fp, ".label");
@@ -204,10 +193,9 @@ FILE *fp;
 /*
     eqntott output mode -- output algebraic equations
 */
-void eqn_output(PLA) pPLA PLA;
-{
-    register pcube p, last;
-    register int i, var, col, len;
+void eqn_output(pPLA PLA) {
+    pcube p, last;
+    int i, var, col, len;
     int x;
     bool firstand, firstor;
 
@@ -252,10 +240,8 @@ void eqn_output(PLA) pPLA PLA;
     }
 }
 
-char *fmt_cube(c, out_map, s) register pcube c;
-register char *out_map, *s;
-{
-    register int i, var, last, len = 0;
+char *fmt_cube(pcube c, char *out_map, char *s) {
+    int i, var, last, len = 0;
 
     for (var = 0; var < cube.num_binary_vars; var++) {
         s[len++] = "?01-"[GETINPUT(c, var)];
@@ -277,11 +263,8 @@ register char *out_map, *s;
     return s;
 }
 
-void print_cube(fp, c, out_map) register FILE *fp;
-register pcube c;
-register char *out_map;
-{
-    register int i, var, ch;
+void print_cube(FILE *fp, pcube c, char *out_map) {
+    int i, var, ch;
     int last;
 
     for (var = 0; var < cube.num_binary_vars; var++) {
@@ -306,11 +289,8 @@ register char *out_map;
     putc('\n', fp);
 }
 
-void print_expanded_cube(fp, c, phase) register FILE *fp;
-register pcube c;
-pcube phase;
-{
-    register int i, var, ch;
+void print_expanded_cube(FILE *fp, pcube c, pcube phase) {
+    int i, var, ch;
     char *out_map;
 
     for (var = 0; var < cube.num_binary_vars; var++) {
@@ -341,23 +321,18 @@ pcube phase;
     putc('\n', fp);
 }
 
-char *pc1(c) pcube c;
-{
+char *pc1(pcube c) {
     static char s1[256];
     return fmt_cube(c, "01", s1);
 }
-char *pc2(c) pcube c;
-{
+char *pc2(pcube c) {
     static char s2[256];
     return fmt_cube(c, "01", s2);
 }
 
-void debug_print(T, name, level) pcube *T;
-char *name;
-int level;
-{
-    register pcube *T1, p, temp;
-    register int cnt;
+void debug_print(pcube *T, char *name, int level) {
+    pcube *T1, p, temp;
+    int cnt;
 
     cnt = CUBELISTSIZE(T);
     temp = new_cube();
@@ -372,12 +347,9 @@ int level;
     free_cube(temp);
 }
 
-void debug1_print(T, name, num) pcover T;
-char *name;
-int num;
-{
-    register int cnt = 1;
-    register pcube p, last;
+void debug1_print(pcover T, char *name, int num) {
+    int cnt = 1;
+    pcube p, last;
 
     if (verbose_debug && num == 0)
         printf("\n");
@@ -386,15 +358,13 @@ int num;
         foreach_set(T, last, p) printf("%4d. %s\n", cnt++, pc1(p));
 }
 
-void cprint(T) pcover T;
-{
-    register pcube p, last;
+void cprint(pcover T) {
+    pcube p, last;
 
     foreach_set(T, last, p) printf("%s\n", pc1(p));
 }
 
-void makeup_labels(PLA) pPLA PLA;
-{
+void makeup_labels(pPLA PLA) {
     int var, i, ind;
 
     if (PLA->label == (char **)NULL)
@@ -416,10 +386,8 @@ void makeup_labels(PLA) pPLA PLA;
         }
 }
 
-void kiss_output(fp, PLA) FILE *fp;
-pPLA PLA;
-{
-    register pset last, p;
+void kiss_output(FILE *fp, pPLA PLA) {
+    pset last, p;
 
     foreach_set(PLA->F, last, p) {
         kiss_print_cube(fp, PLA, p, "~1");
@@ -429,12 +397,8 @@ pPLA PLA;
     }
 }
 
-void kiss_print_cube(fp, PLA, p, out_string) FILE *fp;
-pPLA PLA;
-pcube p;
-char *out_string;
-{
-    register int i, var;
+void kiss_print_cube(FILE *fp, pPLA PLA, pcube p, char *out_string) {
+    int i, var;
     int part, x;
 
     for (var = 0; var < cube.num_binary_vars; var++) {
@@ -475,12 +439,9 @@ char *out_string;
     putc('\n', fp);
 }
 
-void output_symbolic_constraints(fp, PLA, output_symbolic) FILE *fp;
-pPLA PLA;
-int output_symbolic;
-{
+void output_symbolic_constraints(FILE *fp, pPLA PLA, int output_symbolic) {
     pset_family A;
-    register int i, j;
+    int i, j;
     int size, var, npermute, *permute, *weight, noweight;
 
     if ((cube.num_vars - cube.num_binary_vars) <= 1) {
