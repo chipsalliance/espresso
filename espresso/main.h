@@ -162,5 +162,5 @@ void init_runtime();
 void usage();
 void backward_compatibility_hack(int *argc, char **argv, int *option,
                                  int *out_type);
-void delete_arg(int *argc, register char *argv[], int num);
-bool check_arg(int *argc, register char *argv[], register char *s);
+void delete_arg(int *argc, char *argv[], int num);
+bool check_arg(int *argc, char *argv[], char *s);

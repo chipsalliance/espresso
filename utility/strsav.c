@@ -1,4 +1,3 @@
-/* LINTLIBRARY */
 #include "copyright.h"
 #include "port.h"
 #include "utility.h"

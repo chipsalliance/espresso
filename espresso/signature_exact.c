@@ -13,8 +13,7 @@
  *	COVER: exact cover
  */
 
-pcover signature_minimize_exact(ESCubes, ESSet) pcover ESCubes, ESSet;
-{
+pcover signature_minimize_exact(pcover ESCubes, pcover ESSet) {
     pcube p;
     sm_matrix *table;
     sm_row *cover;
@@ -53,8 +52,7 @@ pcover signature_minimize_exact(ESCubes, ESSet) pcover ESCubes, ESSet;
     return COVER;
 }
 
-sm_matrix *signature_form_table(ESCubes, ESSet) pcover ESCubes, ESSet;
-{
+sm_matrix *signature_form_table(pcover ESCubes, pcover ESSet) {
     sm_matrix *table;
     int row, column;
     pcube c, p;

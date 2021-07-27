@@ -19,9 +19,7 @@
 static FILE *last_fp;
 static int input_type = FD_type;
 
-int main(argc, argv) int argc;
-char *argv[];
-{
+int main(int argc, char *argv[]) {
     int i, j, first, last, strategy, out_type, option;
     pPLA PLA, PLA1;
     pcover F, Fold, Dold;
@@ -540,13 +538,8 @@ char *argv[];
     exit(0);
 }
 
-void getPLA(opt, argc, argv, option, PLA, out_type) int opt;
-int argc;
-char *argv[];
-int option;
-pPLA *PLA;
-int out_type;
-{
+void getPLA(int opt, int argc, char *argv[], int option, pPLA *PLA,
+            int out_type) {
     FILE *fp;
     int needs_dcset, needs_offset;
     char *fname;
@@ -611,7 +604,7 @@ void init_runtime() {
     total_name[GEXPAND_TIME] = "EXPAND_GASP";
     total_name[GIRRED_TIME] = "IRRED_GASP ";
     total_name[MV_REDUCE_TIME] = "MV_REDUCE  ";
-    total_name[RAISE_IN_TIME] = "RAISE_IN   ";
+    total_name[RAISE_IN_TIME] = "RAISE_  ";
     total_name[VERIFY_TIME] = "VERIFY     ";
     total_name[PRIMES_TIME] = "PRIMES     ";
     total_name[MINCOV_TIME] = "MINCOV     ";
@@ -667,11 +660,8 @@ void usage() {
  *  Hack for backward compatibility (ACK! )
  */
 
-void backward_compatibility_hack(argc, argv, option, out_type) int *argc;
-char **argv;
-int *option;
-int *out_type;
-{
+void backward_compatibility_hack(int *argc, char **argv, int *option,
+                                 int *out_type) {
     int i, j;
 
     /* Scan the argument list for something to do (default is ESPRESSO) */
@@ -733,10 +723,8 @@ int *out_type;
 }
 
 /* delete_arg -- delete an argument from the argument list */
-void delete_arg(argc, argv, num) int *argc, num;
-register char *argv[];
-{
-    register int i;
+void delete_arg(int *argc, char *argv[], int num) {
+    int i;
     (*argc)--;
     for (i = num; i < *argc; i++) {
         argv[i] = argv[i + 1];
@@ -744,10 +732,8 @@ register char *argv[];
 }
 
 /* check_arg -- scan argv for an argument, and return TRUE if found */
-bool check_arg(argc, argv, s) int *argc;
-register char *argv[], *s;
-{
-    register int i;
+bool check_arg(int *argc, char *argv[], char *s) {
+    int i;
     for (i = 1; i < *argc; i++) {
         if (strcmp(argv[i], s) == 0) {
             delete_arg(argc, argv, i);

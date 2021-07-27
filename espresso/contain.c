@@ -21,8 +21,8 @@
     made about A, and the result will be returned in decreasing order of
     set size.
 */
-pset_family sf_contain(A) INOUT pset_family A; /* disposes of A */
-{
+pset_family sf_contain(pset_family A /* disposes of A */
+) {
     int cnt;
     pset *A1;
     pset_family R;
@@ -40,8 +40,8 @@ pset_family sf_contain(A) INOUT pset_family A; /* disposes of A */
     contain some smaller set in the family).  No assumptions are made about
     A, and the result will be returned in increasing order of set size
 */
-pset_family sf_rev_contain(A) INOUT pset_family A; /* disposes of A */
-{
+pset_family sf_rev_contain(pset_family A /* disposes of A */
+) {
     int cnt;
     pset *A1;
     pset_family R;
@@ -61,10 +61,9 @@ pset_family sf_rev_contain(A) INOUT pset_family A; /* disposes of A */
     set size.  Also maintains a set of row_indices to track which rows
     disappear and how the rows end up permuted.
 */
-pset_family sf_ind_contain(A,
-                           row_indices) INOUT pset_family A; /* disposes of A */
-INOUT int *row_indices; /* updated with the new values */
-{
+pset_family sf_ind_contain(pset_family A,   /* disposes of A */
+                           int *row_indices /* updated with the new values */
+) {
     int cnt;
     pset *A1;
     pset_family R;
@@ -78,10 +77,10 @@ INOUT int *row_indices; /* updated with the new values */
 }
 
 /* sf_dupl -- delete duplicate sets in a set family */
-pset_family sf_dupl(A) INOUT pset_family A; /* disposes of A */
-{
-    register int cnt;
-    register pset *A1;
+pset_family sf_dupl(pset_family A /* disposes of A */
+) {
+    int cnt;
+    pset *A1;
     pset_family R;
 
     A1 = sf_sort(A, descend);           /* sort the set family */
@@ -98,8 +97,8 @@ pset_family sf_dupl(A) INOUT pset_family A; /* disposes of A */
     the SIZE field is assumed to contain the set size), and the result
     will be returned sorted likewise.
 */
-pset_family sf_union(A, B) INOUT pset_family A, B; /* disposes of A and B */
-{
+pset_family sf_union(pset_family A, pset_family B /* disposes of A and B */
+) {
     int cnt;
     pset_family R;
     pset *A1 = sf_list(A), *B1 = sf_list(B), *E1;
@@ -117,9 +116,9 @@ pset_family sf_union(A, B) INOUT pset_family A, B; /* disposes of A and B */
     dist_merge -- consider all sets to be "or"-ed with "mask" and then
     delete duplicates from the set family.
 */
-pset_family dist_merge(A, mask) INOUT pset_family A; /* disposes of A */
-IN pset mask; /* defines variables to mask out */
-{
+pset_family dist_merge(pset_family A, /* disposes of A */
+                       pset mask      /* defines variables to mask out */
+) {
     pset *A1;
     int cnt;
     pset_family R;
@@ -135,15 +134,16 @@ IN pset mask; /* defines variables to mask out */
 /*
     d1merge -- perform an efficient distance-1 merge of cubes of A
 */
-pset_family d1merge(A, var) INOUT pset_family A; /* disposes of A */
-IN int var;
-{ return dist_merge(A, cube.var_mask[var]); }
+pset_family d1merge(pset_family A, /* disposes of A */
+                    int var) {
+    return dist_merge(A, cube.var_mask[var]);
+}
 
 /* d1_rm_equal -- distance-1 merge (merge cubes which are equal under a mask) */
-int d1_rm_equal(A1, compare) register pset *A1; /* array of set pointers */
-int (*compare)();                               /* comparison function */
-{
-    register int i, j, dest;
+int d1_rm_equal(pset *A1,                      /* array of set pointers */
+                int (*compare)(pset *, pset *) /* comparison function */
+) {
+    int i, j, dest;
 
     dest = 0;
     if (A1[0] != (pcube)NULL) {
@@ -163,10 +163,9 @@ int (*compare)();                               /* comparison function */
 }
 
 /* rm_equal -- scan a sorted array of set pointers for duplicate sets */
-int rm_equal(A1, compare) INOUT pset *A1; /* updated in place */
-IN int (*compare)();
-{
-    register pset *p, *pdest = A1;
+int rm_equal(pset *A1, /* updated in place */
+             int (*compare)(pset *, pset *)) {
+    pset *p, *pdest = A1;
 
     if (*A1 != NULL) { /* If more than one set */
         for (p = A1 + 1; *p != NULL; p++)
@@ -179,9 +178,9 @@ IN int (*compare)();
 }
 
 /* rm_contain -- perform containment over a sorted array of set pointers */
-int rm_contain(A1) INOUT pset *A1; /* updated in place */
-{
-    register pset *pa, *pb, *pcheck, a, b;
+int rm_contain(pset *A1 /* updated in place */
+) {
+    pset *pa, *pb, *pcheck, a, b;
     pset *pdest = A1;
     int last_size = -1;
 
@@ -205,9 +204,9 @@ int rm_contain(A1) INOUT pset *A1; /* updated in place */
 }
 
 /* rm_rev_contain -- perform rcontainment over a sorted array of set pointers */
-int rm_rev_contain(A1) INOUT pset *A1; /* updated in place */
-{
-    register pset *pa, *pb, *pcheck, a, b;
+int rm_rev_contain(pset *A1 /* updated in place */
+) {
+    pset *pa, *pb, *pcheck, a, b;
     pset *pdest = A1;
     int last_size = -1;
 
@@ -231,12 +230,9 @@ int rm_rev_contain(A1) INOUT pset *A1; /* updated in place */
 }
 
 /* rm2_equal -- check two sorted arrays of set pointers for equal cubes */
-int rm2_equal(A1, B1, E1, compare) INOUT register pset *A1,
-    *B1; /* updated in place */
-OUT pset *E1;
-IN int (*compare)();
-{
-    register pset *pda = A1, *pdb = B1, *pde = E1;
+int rm2_equal(pset *A1, pset *B1, /* updated in place */
+              pset *E1, int (*compare)(pset *, pset *)) {
+    pset *pda = A1, *pdb = B1, *pde = E1;
 
     /* Walk through the arrays advancing pointer to larger cube */
     for (; *A1 != NULL && *B1 != NULL;)
@@ -264,10 +260,10 @@ IN int (*compare)();
 }
 
 /* rm2_contain -- perform containment between two arrays of set pointers */
-int rm2_contain(A1, B1) INOUT pset *A1; /* updated in place */
-IN pset *B1;                            /* unchanged */
-{
-    register pset *pa, *pb, a, b, *pdest = A1;
+int rm2_contain(pset *A1, /* updated in place */
+                pset *B1  /* unchanged */
+) {
+    pset *pa, *pb, a, b, *pdest = A1;
 
     /* for each set in the first array ... */
     for (pa = A1; (a = *pa++) != NULL;) {
@@ -287,10 +283,8 @@ IN pset *B1;                            /* unchanged */
 }
 
 /* sf_sort -- sort the sets of A */
-pset *sf_sort(A, compare) IN pset_family A;
-IN int (*compare)();
-{
-    register pset p, last, *pdest, *A1;
+pset *sf_sort(pset_family A, int (*compare)(pset *, pset *)) {
+    pset p, last, *pdest, *A1;
 
     /* Create a single array pointing to each cube of A */
     pdest = A1 = ALLOC(pset, A->count + 1);
@@ -301,14 +295,14 @@ IN int (*compare)();
     *pdest = NULL; /* Sentinel -- never seen by sort */
 
     /* Sort cubes by size */
-    qsort((char *)A1, A->count, sizeof(pset), compare);
+    qsort((char *)A1, A->count, sizeof(pset),
+          (int (*)(const void *, const void *))compare);
     return A1;
 }
 
 /* sf_list -- make a list of pointers to the sets in a set family */
-pset *sf_list(A) IN register pset_family A;
-{
-    register pset p, last, *pdest, *A1;
+pset *sf_list(pset_family A) {
+    pset p, last, *pdest, *A1;
 
     /* Create a single array pointing to each cube of A */
     pdest = A1 = ALLOC(pset, A->count + 1);
@@ -318,10 +312,8 @@ pset *sf_list(A) IN register pset_family A;
 }
 
 /* sf_unlist -- make a set family out of a list of pointers to sets */
-pset_family sf_unlist(A1, totcnt, size) IN pset *A1;
-IN int totcnt, size;
-{
-    register pset pr, p, *pa;
+pset_family sf_unlist(pset *A1, int totcnt, int size) {
+    pset pr, p, *pa;
     pset_family R = sf_new(totcnt, size);
 
     R->count = totcnt;
@@ -332,13 +324,10 @@ IN int totcnt, size;
 }
 
 /* sf_ind_unlist -- make a set family out of a list of pointers to sets */
-pset_family sf_ind_unlist(A1, totcnt, size, row_indices, pfirst) IN pset *A1;
-IN int totcnt, size;
-INOUT int *row_indices;
-IN register pset pfirst;
-{
-    register pset pr, p, *pa;
-    register int i, *new_row_indices;
+pset_family sf_ind_unlist(pset *A1, int totcnt, int size, int *row_indices,
+                          pset pfirst) {
+    pset pr, p, *pa;
+    int i, *new_row_indices;
     pset_family R = sf_new(totcnt, size);
 
     R->count = totcnt;
@@ -356,11 +345,9 @@ IN register pset pfirst;
 }
 
 /* sf_merge -- merge three sorted lists of set pointers */
-pset_family sf_merge(A1, B1, E1, totcnt, size) INOUT pset *A1, *B1,
-    *E1; /* will be disposed of */
-IN int totcnt, size;
-{
-    register pset pr, ps, *pmin, *pmid, *pmax;
+pset_family sf_merge(pset *A1, pset *B1, pset *E1, /* will be disposed of */
+                     int totcnt, int size) {
+    pset pr, ps, *pmin, *pmid, *pmax;
     pset_family R;
     pset *temp[3], *swap;
     int i, j, n;

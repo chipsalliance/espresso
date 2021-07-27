@@ -11,8 +11,7 @@
 
 #include "espresso.h"
 
-pcover make_sparse(F, D, R) pcover F, D, R;
-{
+pcover make_sparse(pcover F, pcover D, pcover R) {
     cost_t cost, best_cost;
 
     cover_cost(F, &best_cost);
@@ -46,10 +45,9 @@ pcover make_sparse(F, D, R) pcover F, D, R;
     checked for and such cubes will be deleted)
 */
 
-pcover mv_reduce(F, D) pcover F, D;
-{
-    register int i, var;
-    register pcube p, p1, last;
+pcover mv_reduce(pcover F, pcover D) {
+    int i, var;
+    pcube p, p1, last;
     int index;
     pcover F1, D1;
     pcube *F_cube_table;

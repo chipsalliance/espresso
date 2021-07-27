@@ -5,10 +5,10 @@ static pcover primes_consensus_merge();
 static pcover and_with_cofactor();
 
 /* primes_consensus -- generate primes using consensus */
-pcover primes_consensus(T) pcube *T; /* T will be disposed of */
-{
-    register pcube cl, cr;
-    register int best;
+pcover primes_consensus(pcube *T /* T will be disposed of */
+) {
+    pcube cl, cr;
+    int best;
     pcover Tnew, Tl, Tr;
 
     if (primes_consensus_special_cases(T, &Tnew) == MAYBE) {
@@ -29,10 +29,10 @@ pcover primes_consensus(T) pcube *T; /* T will be disposed of */
 }
 
 static bool primes_consensus_special_cases(
-    T, Tnew) pcube *T; /* will be disposed if answer is determined */
-pcover *Tnew;          /* returned only if answer determined */
-{
-    register pcube *T1, p, ceil, cof = T[0];
+    pcube *T,    /* will be disposed if answer is determined */
+    pcover *Tnew /* returned only if answer determined */
+) {
+    pcube *T1, p, ceil, cof = T[0];
     pcube last;
     pcover A;
 
@@ -102,10 +102,8 @@ pcover *Tnew;          /* returned only if answer determined */
     }
 }
 
-static pcover primes_consensus_merge(Tl, Tr, cl, cr) pcover Tl, Tr;
-pcube cl, cr;
-{
-    register pcube pl, pr, lastl, lastr, pt;
+static pcover primes_consensus_merge(pcover Tl, pcover Tr, pcube cl, pcube cr) {
+    pcube pl, pr, lastl, lastr, pt;
     pcover T, Tsave;
 
     Tl = and_with_cofactor(Tl, cl);
@@ -136,10 +134,8 @@ pcube cl, cr;
     return Tsave;
 }
 
-static pcover and_with_cofactor(A, cof) pset_family A;
-register pset cof;
-{
-    register pset last, p;
+static pcover and_with_cofactor(pset_family A, pset cof) {
+    pset last, p;
 
     foreach_set(A, last, p) {
         INLINEset_and(p, p, cof);

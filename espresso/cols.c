@@ -5,7 +5,7 @@
  *  allocate a new col vector
  */
 sm_col *sm_col_alloc() {
-    register sm_col *pcol;
+    sm_col *pcol;
 
 #ifdef FAST_AND_LOOSE
     if (sm_col_freelist == NIL(sm_col)) {
@@ -33,8 +33,7 @@ sm_col *sm_col_alloc() {
  *  the elements one-by-one; that is the only use for the extra '-DCOLS'
  *  compile flag ...
  */
-void sm_col_free(pcol) register sm_col *pcol;
-{
+void sm_col_free(sm_col *pcol) {
 #if defined(FAST_AND_LOOSE) && !defined(COLS)
     if (pcol->first_row != NIL(sm_element)) {
         /* Add the linked list of col items to the free list */
@@ -46,7 +45,7 @@ void sm_col_free(pcol) register sm_col *pcol;
     pcol->next_col = sm_col_freelist;
     sm_col_freelist = pcol;
 #else
-    register sm_element *p, *pnext;
+    sm_element *p, *pnext;
 
     for (p = pcol->first_row; p != 0; p = pnext) {
         pnext = p->next_row;
@@ -59,10 +58,9 @@ void sm_col_free(pcol) register sm_col *pcol;
 /*
  *  duplicate an existing col
  */
-sm_col *sm_col_dup(pcol) register sm_col *pcol;
-{
-    register sm_col *pnew;
-    register sm_element *p;
+sm_col *sm_col_dup(sm_col *pcol) {
+    sm_col *pnew;
+    sm_element *p;
 
     pnew = sm_col_alloc();
     for (p = pcol->first_row; p != 0; p = p->next_row) {
@@ -74,10 +72,8 @@ sm_col *sm_col_dup(pcol) register sm_col *pcol;
 /*
  *  insert an element into a col vector
  */
-sm_element *sm_col_insert(pcol, row) register sm_col *pcol;
-register int row;
-{
-    register sm_element *test, *element;
+sm_element *sm_col_insert(sm_col *pcol, int row) {
+    sm_element *test, *element;
 
     /* get a new item, save its address */
     sm_element_alloc(element);
@@ -97,10 +93,8 @@ register int row;
 /*
  *  remove an element from a col vector
  */
-void sm_col_remove(pcol, row) register sm_col *pcol;
-register int row;
-{
-    register sm_element *p;
+void sm_col_remove(sm_col *pcol, int row) {
+    sm_element *p;
 
     for (p = pcol->first_row; p != 0 && p->row_num < row; p = p->next_row)
         ;
@@ -114,10 +108,8 @@ register int row;
 /*
  *  find an element (if it is in the col vector)
  */
-sm_element *sm_col_find(pcol, row) sm_col *pcol;
-int row;
-{
-    register sm_element *p;
+sm_element *sm_col_find(sm_col *pcol, int row) {
+    sm_element *p;
 
     for (p = pcol->first_row; p != 0 && p->row_num < row; p = p->next_row)
         ;
@@ -131,9 +123,8 @@ int row;
 /*
  *  return 1 if col p2 contains col p1; 0 otherwise
  */
-int sm_col_contains(p1, p2) sm_col *p1, *p2;
-{
-    register sm_element *q1, *q2;
+int sm_col_contains(sm_col *p1, sm_col *p2) {
+    sm_element *q1, *q2;
 
     q1 = p1->first_row;
     q2 = p2->first_row;
@@ -153,9 +144,8 @@ int sm_col_contains(p1, p2) sm_col *p1, *p2;
 /*
  *  return 1 if col p1 and col p2 share an element in common
  */
-int sm_col_intersects(p1, p2) sm_col *p1, *p2;
-{
-    register sm_element *q1, *q2;
+int sm_col_intersects(sm_col *p1, sm_col *p2) {
+    sm_element *q1, *q2;
 
     q1 = p1->first_row;
     q2 = p2->first_row;
@@ -179,9 +169,8 @@ int sm_col_intersects(p1, p2) sm_col *p1, *p2;
 /*
  *  compare two cols, lexical ordering
  */
-int sm_col_compare(p1, p2) sm_col *p1, *p2;
-{
-    register sm_element *q1, *q2;
+int sm_col_compare(sm_col *p1, sm_col *p2) {
+    sm_element *q1, *q2;
 
     q1 = p1->first_row;
     q2 = p2->first_row;
@@ -205,10 +194,9 @@ int sm_col_compare(p1, p2) sm_col *p1, *p2;
 /*
  *  return the intersection
  */
-sm_col *sm_col_and(p1, p2) sm_col *p1, *p2;
-{
-    register sm_element *q1, *q2;
-    register sm_col *result;
+sm_col *sm_col_and(sm_col *p1, sm_col *p2) {
+    sm_element *q1, *q2;
+    sm_col *result;
 
     result = sm_col_alloc();
     q1 = p1->first_row;
@@ -236,11 +224,9 @@ sm_col *sm_col_and(p1, p2) sm_col *p1, *p2;
     }
 }
 
-int sm_col_hash(pcol, modulus) sm_col *pcol;
-int modulus;
-{
-    register int sum;
-    register sm_element *p;
+int sm_col_hash(sm_col *pcol, int modulus) {
+    int sum;
+    sm_element *p;
 
     sum = 0;
     for (p = pcol->first_row; p != 0; p = p->next_row) {
@@ -252,17 +238,13 @@ int modulus;
 /*
  *  remove an element from a col vector (given a pointer to the element)
  */
-void sm_col_remove_element(pcol, p) register sm_col *pcol;
-register sm_element *p;
-{
+void sm_col_remove_element(sm_col *pcol, sm_element *p) {
     dll_unlink(p, pcol->first_row, pcol->last_row, next_row, prev_row,
                pcol->length);
     sm_element_free(p);
 }
 
-void sm_col_print(fp, pcol) FILE *fp;
-sm_col *pcol;
-{
+void sm_col_print(FILE *fp, sm_col *pcol) {
     sm_element *p;
 
     for (p = pcol->first_row; p != 0; p = p->next_row) {
