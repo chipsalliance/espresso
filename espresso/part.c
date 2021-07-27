@@ -1,9 +1,7 @@
 #include "mincov_int.h"
 
-static void copy_row(A, prow) register sm_matrix *A;
-register sm_row *prow;
-{
-    register sm_element *p;
+static void copy_row(sm_matrix *A, sm_row *prow) {
+    sm_element *p;
 
     for (p = prow->first_col; p != 0; p = p->next_col) {
         (void)sm_insert(A, p->row_num, p->col_num);
@@ -13,11 +11,8 @@ register sm_row *prow;
 static int visit_col(sm_matrix *A, sm_col *pcol, int *rows_visited,
                      int *cols_visited);
 
-static int visit_row(A, prow, rows_visited, cols_visited) sm_matrix *A;
-sm_row *prow;
-int *rows_visited;
-int *cols_visited;
-{
+static int visit_row(sm_matrix *A, sm_row *prow, int *rows_visited,
+                     int *cols_visited) {
     sm_element *p;
     sm_col *pcol;
 
@@ -39,11 +34,8 @@ int *cols_visited;
     return 0;
 }
 
-static int visit_col(A, pcol, rows_visited, cols_visited) sm_matrix *A;
-sm_col *pcol;
-int *rows_visited;
-int *cols_visited;
-{
+static int visit_col(sm_matrix *A, sm_col *pcol, int *rows_visited,
+                     int *cols_visited) {
     sm_element *p;
     sm_row *prow;
 
@@ -65,12 +57,10 @@ int *cols_visited;
     return 0;
 }
 
-int sm_block_partition(A, L, R) sm_matrix *A;
-sm_matrix **L, **R;
-{
+int sm_block_partition(sm_matrix *A, sm_matrix **L, sm_matrix **R) {
     int cols_visited, rows_visited;
-    register sm_row *prow;
-    register sm_col *pcol;
+    sm_row *prow;
+    sm_col *pcol;
 
     /* Avoid the trivial case */
     if (A->nrows == 0) {

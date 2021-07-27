@@ -99,7 +99,5 @@ extern sm_col *sm_col_freelist;
 #define sm_element_free(e) FREE(e)
 #endif
 
-extern void sm_row_remove_element();
-extern void sm_col_remove_element();
-
-/* LINTLIBRARY */
+void sm_row_remove_element(sm_row *prow, sm_element *p);
+void sm_col_remove_element(sm_col *pcol, sm_element *p);

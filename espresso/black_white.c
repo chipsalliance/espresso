@@ -23,8 +23,7 @@ static int *stack_head, *stack_tail, stack_p;
 
 static pcover BB;
 
-static void alloc_list(size) int size;
-{
+static void alloc_list(int size) {
     forward = (int *)calloc(size, sizeof(int));
     backward = (int *)calloc(size, sizeof(int));
     if (!forward || !backward) {
@@ -38,8 +37,7 @@ static void free_list() {
     free(backward);
 }
 
-static void init_list(size) int size;
-{
+static void init_list(int size) {
     int i;
     for (i = 0; i < size; i++) {
         forward[i] = i + 1;
@@ -53,8 +51,7 @@ static void init_list(size) int size;
     black_tail = -1;
 }
 
-static void delete (element) int element;
-{
+static void delete (int element) {
     forward_link = forward[element];
     backward_link = backward[element];
     if (forward_link != -1) {
@@ -75,8 +72,7 @@ static void delete (element) int element;
     }
 }
 
-static void insert(element) int element;
-{
+static void insert(int element) {
     if (black_head != -1) {
         forward[element] = black_head;
         backward[element] = -1;
@@ -103,8 +99,7 @@ void merge_list() {
     }
 }
 
-static void print_links(size, list) int size, *list;
-{
+static void print_links(int size, int *list) {
     int i;
     for (i = 0; i < size; i++) {
         printf("%d%c", list[i], (i + 1) % 10 ? '\t' : '\n');
@@ -112,16 +107,14 @@ static void print_links(size, list) int size, *list;
     printf("\n");
 }
 
-void print_bw(size) int size;
-{
+void print_bw(int size) {
     printf("white_head %d\twhite_tail %d\tblack_head %d\tblack_tail %d\n",
            white_head, white_tail, black_head, black_tail);
     print_links(size, forward);
     print_links(size, backward);
 }
 
-static void alloc_stack(size) int size;
-{
+static void alloc_stack(int size) {
     stack_head = (int *)calloc(size, sizeof(int));
     stack_tail = (int *)calloc(size, sizeof(int));
     if (!stack_head || !stack_tail) {
@@ -149,15 +142,13 @@ static void clear() {
     stack_p = 0;
 }
 
-void setup_bw(R, c) pcover R;
-pcube c;
-{
+void setup_bw(pcover R, pcube c) {
     pcube out_part_r;
     int size = R->count;
-    register int i;
+    int i;
     pcube b, r;
-    register int w, last;
-    register unsigned int x;
+    int w, last;
+    unsigned int x;
 
     /* Allocate memory */
     alloc_list(size);
@@ -223,9 +214,7 @@ void reset_black_list() {
     black_head = black_tail = -1;
 }
 
-void split_list(R, v) pcover R;
-int v;
-{
+void split_list(pcover R, int v) {
     int index, next_index;
     ;
 
@@ -245,8 +234,7 @@ static int *variable_backward_chain; /* Previous */
 static int variable_head;            /* first element in the list */
 static int variable_tail;            /* last element in the list */
 
-void variable_list_alloc(size) int size;
-{
+void variable_list_alloc(int size) {
     variable_forward_chain = (int *)calloc(size, sizeof(int));
     variable_backward_chain = (int *)calloc(size, sizeof(int));
     if (!variable_forward_chain || !variable_backward_chain) {
@@ -255,10 +243,7 @@ void variable_list_alloc(size) int size;
     }
 }
 
-void variable_list_init(reduced_c_free_count,
-                        reduced_c_free_list) int reduced_c_free_count;
-int *reduced_c_free_list;
-{
+void variable_list_init(int reduced_c_free_count, int *reduced_c_free_list) {
     int i;
     int v, next_v;
 
@@ -281,8 +266,7 @@ int *reduced_c_free_list;
     }
 }
 
-void variable_list_delete(element) int element;
-{
+void variable_list_delete(int element) {
     variable_count--;
     forward_link = variable_forward_chain[element];
     backward_link = variable_backward_chain[element];
@@ -304,8 +288,7 @@ void variable_list_delete(element) int element;
     }
 }
 
-void variable_list_insert(element) int element;
-{
+void variable_list_insert(int element) {
     variable_count++;
     if (variable_head != -1) {
         variable_forward_chain[element] = variable_head;
@@ -323,9 +306,7 @@ bool variable_list_empty() {
     return variable_count ? FALSE : TRUE;
 }
 
-void get_next_variable(pv, pphase, R) int *pv, *pphase;
-pcover R;
-{
+void get_next_variable(int *pv, int *pphase, pcover R) {
     int v, e0, e1;
     int e0_black_count, e1_black_count;
     int w_index;

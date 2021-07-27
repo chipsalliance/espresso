@@ -20,15 +20,13 @@
  * Output:
  * 	signature cube
  */
-pcube get_sigma(R, c) pcover R;
-register pcube c;
-{
+pcube get_sigma(pcover R, pcube c) {
     pcover BB;
     pcube out_part_r, s;
-    register pcube r, b;
-    register int i;
-    register int w, last;
-    register unsigned int x;
+    pcube r, b;
+    int i;
+    int w, last;
+    unsigned int x;
 
     out_part_r = new_cube();
     s = new_cube();
@@ -70,5 +68,6 @@ register pcube c;
 }
 
 /* set_not: flip 0 to 1 and 1 to 0 */
-void set_not(c) pcube c;
-{ INLINEset_diff(c, cube.fullset, c); }
+void set_not(pcube c) {
+    INLINEset_diff(c, cube.fullset, c);
+}

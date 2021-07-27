@@ -17,8 +17,7 @@
 
 static long start_time; /* yuk */
 
-pcover signature(F1, D1, R1) pcover F1, D1, R1;
-{
+pcover signature(pcover F1, pcover D1, pcover R1) {
     pcover ESC, ESSet, ESSENTIAL;
     pcover F, D, R;
     pcube last, p;
@@ -32,7 +31,7 @@ pcover signature(F1, D1, R1) pcover F1, D1, R1;
     R = unravel(R, cube.num_binary_vars);
     R = sf_contain(R);
 
-    signal(SIGXCPU, cleanup);
+    signal(SIGXCPU, (__sighandler_t)cleanup);
     start_time = ptime();
 
     /* Initial expand and irredundant */
@@ -74,14 +73,13 @@ pcover signature(F1, D1, R1) pcover F1, D1, R1;
     return F;
 }
 
-pcover generate_primes(F, R) pcover F, R;
-{
+pcover generate_primes(pcover F, pcover R) {
     pcube c, r, lastc, b, lastb;
     pcover BB, PRIMES;
     pcube odd, even, out_part_r;
-    register int i;
-    register int w, last;
-    register unsigned int x;
+    int i;
+    int w, last;
+    unsigned int x;
     int count;
 
     out_part_r = new_cube();

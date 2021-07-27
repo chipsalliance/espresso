@@ -9,12 +9,9 @@
 char *optarg;   /* Global argument pointer. */
 int optind = 0; /* Global argv index. */
 
-int getopt(argc, argv, optstring) int argc;
-char *argv[];
-char *optstring;
-{
-    register int c;
-    register char *place;
+int getopt(int argc, char *argv[], char *optstring) {
+    int c;
+    char *place;
     static char *scan = NullS; /* Private scan pointer. */
 
     optarg = NullS;

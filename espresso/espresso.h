@@ -181,24 +181,24 @@ typedef struct set_family {
 
 #else
 
-#define INLINEset_copy(r, a)           \
-    {                                  \
-        register int i_ = LOOPCOPY(a); \
-        do                             \
-            r[i_] = a[i_];             \
-        while (--i_ >= 0);             \
+#define INLINEset_copy(r, a)  \
+    {                         \
+        int i_ = LOOPCOPY(a); \
+        do                    \
+            r[i_] = a[i_];    \
+        while (--i_ >= 0);    \
     }
-#define INLINEset_clear(r, size)          \
-    {                                     \
-        register int i_ = LOOPINIT(size); \
-        *r = i_;                          \
-        do                                \
-            r[i_] = 0;                    \
-        while (--i_ > 0);                 \
+#define INLINEset_clear(r, size) \
+    {                            \
+        int i_ = LOOPINIT(size); \
+        *r = i_;                 \
+        do                       \
+            r[i_] = 0;           \
+        while (--i_ > 0);        \
     }
 #define INLINEset_fill(r, size)                            \
     {                                                      \
-        register int i_ = LOOPINIT(size);                  \
+        int i_ = LOOPINIT(size);                           \
         *r = i_;                                           \
         r[i_] = ((unsigned int)(~0)) >> (i_ * BPI - size); \
         while (--i_ > 0)                                   \
@@ -206,7 +206,7 @@ typedef struct set_family {
     }
 #define INLINEset_and(r, a, b)     \
     {                              \
-        register int i_ = LOOP(a); \
+        int i_ = LOOP(a);          \
         PUTLOOP(r, i_);            \
         do                         \
             r[i_] = a[i_] & b[i_]; \
@@ -214,7 +214,7 @@ typedef struct set_family {
     }
 #define INLINEset_or(r, a, b)      \
     {                              \
-        register int i_ = LOOP(a); \
+        int i_ = LOOP(a);          \
         PUTLOOP(r, i_);            \
         do                         \
             r[i_] = a[i_] | b[i_]; \
@@ -222,7 +222,7 @@ typedef struct set_family {
     }
 #define INLINEset_diff(r, a, b)     \
     {                               \
-        register int i_ = LOOP(a);  \
+        int i_ = LOOP(a);           \
         PUTLOOP(r, i_);             \
         do                          \
             r[i_] = a[i_] & ~b[i_]; \
@@ -230,7 +230,7 @@ typedef struct set_family {
     }
 #define INLINEset_ndiff(r, a, b, fullset)           \
     {                                               \
-        register int i_ = LOOP(a);                  \
+        int i_ = LOOP(a);                           \
         PUTLOOP(r, i_);                             \
         do                                          \
             r[i_] = fullset[i_] & (a[i_] | ~b[i_]); \
@@ -242,7 +242,7 @@ typedef struct set_family {
 #else
 #define INLINEset_xor(r, a, b)     \
     {                              \
-        register int i_ = LOOP(a); \
+        int i_ = LOOP(a);          \
         PUTLOOP(r, i_);            \
         do                         \
             r[i_] = a[i_] ^ b[i_]; \
@@ -250,7 +250,7 @@ typedef struct set_family {
     }
 #define INLINEset_xnor(r, a, b, fullset)            \
     {                                               \
-        register int i_ = LOOP(a);                  \
+        int i_ = LOOP(a);                           \
         PUTLOOP(r, i_);                             \
         do                                          \
             r[i_] = fullset[i_] & ~(a[i_] ^ b[i_]); \
@@ -259,7 +259,7 @@ typedef struct set_family {
 #endif
 #define INLINEset_merge(r, a, b, mask)                        \
     {                                                         \
-        register int i_ = LOOP(a);                            \
+        int i_ = LOOP(a);                                     \
         PUTLOOP(r, i_);                                       \
         do                                                    \
             r[i_] = (a[i_] & mask[i_]) | (b[i_] & ~mask[i_]); \
@@ -267,7 +267,7 @@ typedef struct set_family {
     }
 #define INLINEsetp_implies(a, b, when_false) \
     {                                        \
-        register int i_ = LOOP(a);           \
+        int i_ = LOOP(a);                    \
         do                                   \
             if (a[i_] & ~b[i_])              \
                 break;                       \
@@ -277,7 +277,7 @@ typedef struct set_family {
     }
 #define INLINEsetp_disjoint(a, b, when_false) \
     {                                         \
-        register int i_ = LOOP(a);            \
+        int i_ = LOOP(a);                     \
         do                                    \
             if (a[i_] & b[i_])                \
                 break;                        \
@@ -287,7 +287,7 @@ typedef struct set_family {
     }
 #define INLINEsetp_equal(a, b, when_false) \
     {                                      \
-        register int i_ = LOOP(a);         \
+        int i_ = LOOP(a);                  \
         do                                 \
             if (a[i_] != b[i_])            \
                 break;                     \
@@ -582,280 +582,315 @@ extern struct pla_types_struct pla_types[];
 extern struct cube_struct cube, temp_cube_save;
 extern struct cdata_struct cdata, temp_cdata_save;
 
-#ifdef lint
-#define DISJOINT 0x5555
-#else
 #if BPI == 32
 #define DISJOINT 0x55555555
 #else
 #define DISJOINT 0x5555
 #endif
-#endif
 
 /* function declarations */
-
-/* cofactor.c */ extern int binate_split_select();
-/* cofactor.c */ extern pcover cubeunlist();
-/* cofactor.c */ extern pcube *cofactor();
-/* cofactor.c */ extern pcube *cube1list();
-/* cofactor.c */ extern pcube *cube2list();
-/* cofactor.c */ extern pcube *cube3list();
-/* cofactor.c */ extern pcube *scofactor();
-/* cofactor.c */ extern void massive_count();
-/* compl.c */ extern pcover complement();
-/* compl.c */ extern pcover simplify();
-/* compl.c */ extern void simp_comp();
-/* contain.c */ extern int d1_rm_equal();
-/* contain.c */ extern int rm2_contain();
-/* contain.c */ extern int rm2_equal();
-/* contain.c */ extern int rm_contain();
-/* contain.c */ extern int rm_equal();
-/* contain.c */ extern int rm_rev_contain();
-/* contain.c */ extern pset *sf_list();
-/* contain.c */ extern pset *sf_sort();
-/* contain.c */ extern pset_family d1merge();
-/* contain.c */ extern pset_family dist_merge();
-/* contain.c */ extern pset_family sf_contain();
-/* contain.c */ extern pset_family sf_dupl();
-/* contain.c */ extern pset_family sf_ind_contain();
-/* contain.c */ extern pset_family sf_ind_unlist();
-/* contain.c */ extern pset_family sf_merge();
-/* contain.c */ extern pset_family sf_rev_contain();
-/* contain.c */ extern pset_family sf_union();
-/* contain.c */ extern pset_family sf_unlist();
-/* cubestr.c */ extern void cube_setup();
-/* cubestr.c */ extern void restore_cube_struct();
-/* cubestr.c */ extern void save_cube_struct();
-/* cubestr.c */ extern void setdown_cube();
-/* cvrin.c */ extern void PLA_labels();
-/* cvrin.c */ extern char *get_word();
-/* cvrin.c */ extern int label_index();
-/* cvrin.c */ extern int read_pla();
-/* cvrin.c */ extern int read_symbolic();
-/* cvrin.c */ extern pPLA new_PLA();
-/* cvrin.c */ extern void PLA_summary();
-/* cvrin.c */ extern void free_PLA();
-/* cvrin.c */ extern void parse_pla();
-/* cvrin.c */ extern void read_cube();
-/* cvrin.c */ extern void skip_line();
-/* cvrm.c */ extern void foreach_output_function();
-/* cvrm.c */ extern int cubelist_partition();
-/* cvrm.c */ extern int so_both_do_espresso();
-/* cvrm.c */ extern int so_both_do_exact();
-/* cvrm.c */ extern int so_both_save();
-/* cvrm.c */ extern int so_do_espresso();
-/* cvrm.c */ extern int so_do_exact();
-/* cvrm.c */ extern int so_save();
-/* cvrm.c */ extern pcover cof_output();
-/* cvrm.c */ extern pcover lex_sort();
-/* cvrm.c */ extern pcover mini_sort();
-/* cvrm.c */ extern pcover random_order();
-/* cvrm.c */ extern pcover size_sort();
-/* cvrm.c */ extern pcover sort_reduce();
-/* cvrm.c */ extern pcover uncof_output();
-/* cvrm.c */ extern pcover unravel();
-/* cvrm.c */ extern pcover unravel_range();
-/* cvrm.c */ extern void so_both_espresso();
-/* cvrm.c */ extern void so_espresso();
-/* cvrmisc.c */ extern char *fmt_cost();
-/* cvrmisc.c */ extern char *print_cost();
-/* cvrmisc.c */ extern char *strsav();
-/* cvrmisc.c */ extern void copy_cost();
-/* cvrmisc.c */ extern void cover_cost();
-/* cvrmisc.c */ extern void fatal();
-/* cvrmisc.c */ extern void print_trace();
-/* cvrmisc.c */ extern void size_stamp();
-/* cvrmisc.c */ extern void totals();
-/* cvrout.c */ extern char *fmt_cube();
-/* cvrout.c */ extern char *fmt_expanded_cube();
-/* cvrout.c */ extern char *pc1();
-/* cvrout.c */ extern char *pc2();
-/* cvrout.c */ extern char *pc3();
-/* cvrout.c */ extern void makeup_labels();
-/* cvrout.c */ extern void kiss_output();
-/* cvrout.c */ extern void kiss_print_cube();
-/* cvrout.c */ extern void output_symbolic_constraints();
-/* cvrout.c */ extern void cprint();
-/* cvrout.c */ extern void debug1_print();
-/* cvrout.c */ extern void debug_print();
-/* cvrout.c */ extern void eqn_output();
-/* cvrout.c */ extern void fpr_header();
-/* cvrout.c */ extern void fprint_pla();
-/* cvrout.c */ extern void pls_group();
-/* cvrout.c */ extern void pls_label();
-/* cvrout.c */ extern void pls_output();
-/* cvrout.c */ extern void print_cube();
-/* cvrout.c */ extern void print_expanded_cube();
-/* cvrout.c */ extern void sf_debug_print();
-/* equiv.c */ extern void find_equiv_outputs();
-/* equiv.c */ extern int check_equiv();
-/* espresso.c */ extern pcover espresso();
-/* essen.c */ extern bool essen_cube();
-/* essen.c */ extern pcover cb_consensus();
-/* essen.c */ extern pcover cb_consensus_dist0();
-/* essen.c */ extern pcover essential();
-/* exact.c */ extern pcover minimize_exact();
-/* exact.c */ extern pcover minimize_exact_literals();
-/* expand.c */ extern bool feasibly_covered();
-/* expand.c */ extern int most_frequent();
-/* expand.c */ extern pcover all_primes();
-/* expand.c */ extern pcover expand();
-/* expand.c */ extern pcover find_all_primes();
-/* expand.c */ extern void elim_lowering();
-/* expand.c */ extern void essen_parts();
-/* expand.c */ extern void essen_raising();
-/* expand.c */ extern void expand1();
-/* expand.c */ extern void mincov();
-/* expand.c */ extern void select_feasible();
-/* expand.c */ extern void setup_BB_CC();
-/* gasp.c */ extern pcover expand_gasp();
-/* gasp.c */ extern pcover irred_gasp();
-/* gasp.c */ extern pcover last_gasp();
-/* gasp.c */ extern pcover super_gasp();
-/* gasp.c */ extern void expand1_gasp();
-/* getopt.c */ extern int getopt();
-/* hack.c */ extern void find_dc_inputs();
-/* hack.c */ extern void find_inputs();
-/* hack.c */ extern void form_bitvector();
-/* hack.c */ extern void map_dcset();
-/* hack.c */ extern void map_output_symbolic();
-/* hack.c */ extern void map_symbolic();
-/* hack.c */ extern pcover map_symbolic_cover();
-/* hack.c */ extern void symbolic_hack_labels();
-/* hack.c */ extern void disassemble_fsm(pPLA PLA, int verbose_mode);
-/* irred.c */ extern bool cube_is_covered();
-/* irred.c */ extern bool taut_special_cases();
-/* irred.c */ extern bool tautology();
-/* irred.c */ extern pcover irredundant();
-/* irred.c */ extern void mark_irredundant();
-/* irred.c */ extern void irred_split_cover();
-/* irred.c */ extern sm_matrix *irred_derive_table();
-/* map.c */ extern pset minterms();
-/* map.c */ extern void explode();
-/* map.c */ extern void map();
-/* opo.c */ extern void output_phase_setup();
-/* opo.c */ extern pPLA set_phase();
-/* opo.c */ extern pcover opo();
-/* opo.c */ extern pcube find_phase();
-/* opo.c */ extern pset_family find_covers();
-/* opo.c */ extern pset_family form_cover_table();
-/* opo.c */ extern pset_family opo_leaf();
-/* opo.c */ extern pset_family opo_recur();
-/* opo.c */ extern void opoall();
-/* opo.c */ extern void phase_assignment();
-/* opo.c */ extern void repeated_phase_assignment();
-/* pair.c */ extern void generate_all_pairs();
-/* pair.c */ extern int **find_pairing_cost();
-/* pair.c */ extern void find_best_cost();
-/* pair.c */ extern int greedy_best_cost();
-/* pair.c */ extern void minimize_pair();
-/* pair.c */ extern void pair_free();
-/* pair.c */ extern void pair_all();
-/* pair.c */ extern pcover delvar();
-/* pair.c */ extern pcover pairvar();
-/* pair.c */ extern ppair pair_best_cost();
-/* pair.c */ extern ppair pair_new();
-/* pair.c */ extern ppair pair_save();
-/* pair.c */ extern void print_pair();
-/* pair.c */ extern void find_optimal_pairing();
-/* pair.c */ extern void set_pair();
-/* pair.c */ extern void set_pair1();
-/* primes.c */ extern pcover primes_consensus();
-/* reduce.c */ extern bool sccc_special_cases();
-/* reduce.c */ extern pcover reduce();
-/* reduce.c */ extern pcube reduce_cube();
-/* reduce.c */ extern pcube sccc();
-/* reduce.c */ extern pcube sccc_cube();
-/* reduce.c */ extern pcube sccc_merge();
-/* set.c */ extern bool set_andp();
-/* set.c */ extern bool set_orp();
-/* set.c */ extern bool setp_disjoint();
-/* set.c */ extern bool setp_empty();
-/* set.c */ extern bool setp_equal();
-/* set.c */ extern bool setp_full();
-/* set.c */ extern bool setp_implies();
-/* set.c */ extern char *pbv1();
-/* set.c */ extern char *ps1();
-/* set.c */ extern int *sf_count();
-/* set.c */ extern int *sf_count_restricted();
-/* set.c */ extern int bit_index();
-/* set.c */ extern int set_dist();
-/* set.c */ extern int set_ord();
-/* set.c */ extern void set_adjcnt();
-/* set.c */ extern pset set_and();
-/* set.c */ extern pset set_clear();
-/* set.c */ extern pset set_copy();
-/* set.c */ extern pset set_diff();
-/* set.c */ extern pset set_fill();
-/* set.c */ extern pset set_merge();
-/* set.c */ extern pset set_or();
-/* set.c */ extern pset set_xor();
-/* set.c */ extern pset sf_and();
-/* set.c */ extern pset sf_or();
-/* set.c */ extern pset_family sf_active();
-/* set.c */ extern pset_family sf_addcol();
-/* set.c */ extern pset_family sf_addset();
-/* set.c */ extern pset_family sf_append();
-/* set.c */ extern pset_family sf_bm_read();
-/* set.c */ extern pset_family sf_compress();
-/* set.c */ extern pset_family sf_copy();
-/* set.c */ extern pset_family sf_copy_col();
-/* set.c */ extern pset_family sf_delc();
-/* set.c */ extern pset_family sf_delcol();
-/* set.c */ extern pset_family sf_inactive();
-/* set.c */ extern pset_family sf_join();
-/* set.c */ extern pset_family sf_new();
-/* set.c */ extern pset_family sf_permute();
-/* set.c */ extern pset_family sf_read();
-/* set.c */ extern pset_family sf_save();
-/* set.c */ extern pset_family sf_transpose();
-/* set.c */ extern void set_write();
-/* set.c */ extern void sf_bm_print();
-/* set.c */ extern void sf_cleanup();
-/* set.c */ extern void sf_delset();
-/* set.c */ extern void sf_free();
-/* set.c */ extern void sf_print();
-/* set.c */ extern void sf_write();
-/* setc.c */ extern bool ccommon();
-/* setc.c */ extern bool cdist0();
-/* setc.c */ extern bool full_row();
-/* setc.c */ extern int ascend();
-/* setc.c */ extern int cactive();
-/* setc.c */ extern int cdist();
-/* setc.c */ extern int cdist01();
-/* setc.c */ extern int cvolume();
-/* setc.c */ extern int d1_order();
-/* setc.c */ extern int d1_order_size();
-/* setc.c */ extern int desc1();
-/* setc.c */ extern int descend();
-/* setc.c */ extern int lex_order();
-/* setc.c */ extern int lex_order1();
-/* setc.c */ extern pset force_lower();
-/* setc.c */ extern void consensus();
-/* sharp.c */ extern pcover cb1_dsharp();
-/* sharp.c */ extern pcover cb_dsharp();
-/* sharp.c */ extern pcover cb_recur_dsharp();
-/* sharp.c */ extern pcover cb_recur_sharp();
-/* sharp.c */ extern pcover cb_sharp();
-/* sharp.c */ extern pcover cv_dsharp();
-/* sharp.c */ extern pcover cv_intersect();
-/* sharp.c */ extern pcover cv_sharp();
-/* sharp.c */ extern pcover dsharp();
-/* sharp.c */ extern pcover make_disjoint();
-/* sharp.c */ extern pcover sharp();
-/* signature.c */ extern pcover signature();
-/* sminterf.c */ pset do_sm_minimum_cover();
-/* sparse.c */ extern pcover make_sparse();
-/* sparse.c */ extern pcover mv_reduce();
-/* unate.c */ extern pcover find_all_minimal_covers_petrick();
-/* unate.c */ extern pcover map_cover_to_unate();
-/* unate.c */ extern pcover map_unate_to_cover();
-/* unate.c */ extern pset_family exact_minimum_cover();
-/* unate.c */ extern pset_family gen_primes();
-/* unate.c */ extern pset_family unate_compl();
-/* unate.c */ extern pset_family unate_complement();
-/* unate.c */ extern pset_family unate_intersect();
-/* verify.c */ extern void PLA_permute();
-/* verify.c */ extern bool PLA_verify();
-/* verify.c */ extern bool check_consistency();
-/* verify.c */ extern bool verify();
+/* cofactor.c */
+pset *cofactor(pset *T, pset c);
+pset *scofactor(pset *T, pset c, int var);
+void massive_count(pset *T);
+int binate_split_select(pset *T, pset cleft, pset cright, int debug_flag);
+pset *cube1list(pset_family A);
+pset *cube2list(pset_family A, pset_family B);
+pset *cube3list(pset_family A, pset_family B, pset_family C);
+pset_family cubeunlist(pset *A1);
+void simplify_cubelist(pset *T);
+/* compl.c */
+pset_family complement(pset *T);
+void simp_comp(pset *T, pset_family *Tnew, pset_family *Tbar);
+pset_family simplify(pset *T);
+/* contain.c */
+pset_family sf_contain(pset_family A);
+pset_family sf_rev_contain(pset_family A);
+pset_family sf_ind_contain(pset_family A, int *row_indices);
+pset_family sf_dupl(pset_family A);
+pset_family sf_union(pset_family A, pset_family B);
+pset_family dist_merge(pset_family A, pset mask);
+pset_family d1merge(pset_family A, int var);
+int d1_rm_equal(pset *A1, int (*compare)(pset *, pset *));
+int rm_equal(pset *A1, int (*compare)(pset *, pset *));
+int rm_contain(pset *A1);
+int rm_rev_contain(pset *A1);
+int rm2_equal(pset *A1, pset *B1, pset *E1, int (*compare)(pset *, pset *));
+int rm2_contain(pset *A1, pset *B1);
+pset *sf_sort(pset_family A, int (*compare)(pset *, pset *));
+pset *sf_list(pset_family A);
+pset_family sf_unlist(pset *A1, int totcnt, int size);
+pset_family sf_ind_unlist(pset *A1, int totcnt, int size, int *row_indices,
+                          pset pfirst);
+pset_family sf_merge(pset *A1, pset *B1, pset *E1, int totcnt, int size);
+/* cubestr.c */
+void cube_setup();
+void setdown_cube();
+void save_cube_struct();
+void restore_cube_struct();
+/* cvrin.c */
+void skip_line(FILE *fpin, FILE *fpout, int echo);
+char *get_word(FILE *fp, char *word);
+void read_cube(FILE *fp, pPLA PLA);
+void parse_pla(FILE *fp, pPLA PLA);
+int read_pla(FILE *fp, int needs_dcset, int needs_offset, int pla_type,
+             pPLA *PLA_return);
+void PLA_summary(pPLA PLA);
+pPLA new_PLA();
+void PLA_labels(pPLA PLA);
+void free_PLA(pPLA PLA);
+int read_symbolic(FILE *fp, pPLA PLA, char *word, symbolic_t **retval);
+int label_index(pPLA PLA, char *word, int *varp, int *ip);
+/* cvrm.c */
+pset_family unravel_range(pset_family B, int start, int end);
+pset_family unravel(pset_family B, int start);
+pset_family lex_sort(pset_family T);
+pset_family size_sort(pset_family T);
+pset_family mini_sort(pset_family F, int (*compare)(pset *, pset *));
+pset_family sort_reduce(pset_family T);
+pset_family random_order(pset_family F);
+int cubelist_partition(pset *T, pset **A, pset **B, unsigned int comp_debug);
+pset_family cof_output(pset_family T, int i);
+pset_family uncof_output(pset_family T, int i);
+void foreach_output_function(pPLA PLA, int (*func)(pPLA, int),
+                             int (*func1)(pPLA, int));
+void so_espresso(pPLA PLA, int strategy);
+void so_both_espresso(pPLA PLA, int strategy);
+int so_do_espresso(pPLA PLA, int i);
+int so_do_exact(pPLA PLA, int i);
+int so_save(pPLA PLA, int i);
+int so_both_do_espresso(pPLA PLA, int i);
+int so_both_do_exact(pPLA PLA, int i);
+int so_both_save(pPLA PLA, int i);
+/* cvrmisc.c */
+void cover_cost(pset_family F, pcost cost);
+char *fmt_cost(pcost cost);
+char *print_cost(pset_family F);
+void copy_cost(pcost s, pcost d);
+void size_stamp(pset_family T, char *name);
+void print_trace(pset_family T, char *name, long time);
+void totals(long time, int i, pset_family T, pcost cost);
+void fatal(char *s);
+/* cvrout.c */
+void fprint_pla(FILE *fp, pPLA PLA, int output_type);
+void fpr_header(FILE *fp, pPLA PLA, int output_type);
+void pls_output(pPLA PLA);
+void pls_group(pPLA PLA, FILE *fp);
+void pls_label(pPLA PLA, FILE *fp);
+void eqn_output(pPLA PLA);
+char *fmt_cube(pset c, char *out_map, char *s);
+void print_cube(FILE *fp, pset c, char *out_map);
+void print_expanded_cube(FILE *fp, pset c, pset phase);
+char *pc1(pset c);
+char *pc2(pset c);
+void debug_print(pset *T, char *name, int level);
+void debug1_print(pset_family T, char *name, int num);
+void cprint(pset_family T);
+void makeup_labels(pPLA PLA);
+void kiss_output(FILE *fp, pPLA PLA);
+void kiss_print_cube(FILE *fp, pPLA PLA, pset p, char *out_string);
+void output_symbolic_constraints(FILE *fp, pPLA PLA, int output_symbolic);
+/* equiv.c */
+void find_equiv_outputs(pPLA PLA);
+int check_equiv(pset_family f1, pset_family f2);
+/* espresso.c */
+pset_family espresso(pset_family F, pset_family D1, pset_family R);
+/* essen.c */
+pset_family essential(pset_family *Fp, pset_family *Dp);
+int essen_cube(pset_family F, pset_family D, pset c);
+pset_family cb_consensus(pset_family T, pset c);
+pset_family cb_consensus_dist0(pset_family R, pset p, pset c);
+/* exact.c */
+pset_family minimize_exact(pset_family F, pset_family D, pset_family R,
+                           int exact_cover);
+pset_family minimize_exact_literals(pset_family F, pset_family D, pset_family R,
+                                    int exact_cover);
+/* expand.c */
+pset_family expand(pset_family F, pset_family R, int nonsparse);
+void expand1(pset_family BB, pset_family CC, pset RAISE, pset FREESET,
+             pset OVEREXPANDED_CUBE, pset SUPER_CUBE, pset INIT_LOWER,
+             int *num_covered, pset c);
+void essen_parts(pset_family BB, pset_family CC, pset RAISE, pset FREESET);
+void essen_raising(pset_family BB, pset RAISE, pset FREESET);
+void elim_lowering(pset_family BB, pset_family CC, pset RAISE, pset FREESET);
+int most_frequent(pset_family CC, pset FREESET);
+void setup_BB_CC(pset_family BB, pset_family CC);
+void select_feasible(pset_family BB, pset_family CC, pset RAISE, pset FREESET,
+                     pset SUPER_CUBE, int *num_covered);
+int feasibly_covered(pset_family BB, pset c, pset RAISE, pset new_lower);
+void mincov(pset_family BB, pset RAISE, pset FREESET);
+pset_family find_all_primes(pset_family BB, pset RAISE, pset FREESET);
+pset_family all_primes(pset_family F, pset_family R);
+/* gasp.c */
+pset_family expand_gasp(pset_family F, pset_family D, pset_family R,
+                        pset_family Foriginal);
+void expand1_gasp(pset_family F, pset_family D, pset_family R,
+                  pset_family Foriginal, int c1index, pset_family *G);
+pset_family irred_gasp(pset_family F, pset_family D, pset_family G);
+pset_family last_gasp(pset_family F, pset_family D, pset_family R,
+                      cost_t *cost);
+pset_family super_gasp(pset_family F, pset_family D, pset_family R,
+                       cost_t *cost);
+/* getopt.c */
+int getopt(int argc, char *argv[], char *optstring);
+/* hack.c */
+void map_dcset(pPLA PLA);
+void map_output_symbolic(pPLA PLA);
+void find_inputs(pset_family A, pPLA PLA, symbolic_list_t *list, int base,
+                 int value, pset_family *newF, pset_family *newD);
+void map_symbolic(pPLA PLA);
+pset_family map_symbolic_cover(pset_family T, symbolic_list_t *list, int base);
+void form_bitvector(pset p, int base, int value, symbolic_list_t *list);
+void symbolic_hack_labels(pPLA PLA, symbolic_t *list, pset compress,
+                          int new_size, int old_size, int size_added);
+void disassemble_fsm(pPLA PLA, int verbose_mode);
+/* irred.c */
+pset_family irredundant(pset_family F, pset_family D);
+void mark_irredundant(pset_family F, pset_family D);
+void irred_split_cover(pset_family F, pset_family D, pset_family *E,
+                       pset_family *Rt, pset_family *Rp);
+sm_matrix *irred_derive_table(pset_family D, pset_family E, pset_family Rp);
+int cube_is_covered(pset *T, pset c);
+int tautology(pset *T);
+int taut_special_cases(pset *T);
+/* map.c */
+pset minterms(pset_family T);
+void explode(int var, int z);
+void map(pset_family T);
+/* opo.c */
+void phase_assignment(pPLA PLA, int opo_strategy);
+void repeated_phase_assignment(pPLA PLA);
+pset find_phase(pPLA PLA, int first_output, pset phase1);
+pset_family opo(pset phase, pset_family T, pset_family D, pset_family R,
+                int first_output);
+pset_family opo_recur(pset_family T, pset_family D, pset select, int offset,
+                      int first, int last);
+pset_family opo_leaf(pset_family T, pset select, int out1, int out2);
+void output_phase_setup(pPLA PLA, int first_output);
+pPLA set_phase(pPLA PLA);
+void opoall(pPLA PLA, int first_output, int last_output, int opo_strategy);
+/* pair.c */
+void set_pair(pPLA PLA);
+void set_pair1(pPLA PLA, int adjust_labels);
+pset_family pairvar(pset_family A, ppair pair);
+pset_family delvar(pset_family A, int paired[]);
+void find_optimal_pairing(pPLA PLA, int strategy);
+int **find_pairing_cost(pPLA PLA, int strategy);
+void print_pair(ppair pair);
+int greedy_best_cost(int **cost_array_local, ppair *pair_p);
+ppair pair_best_cost(int **cost_array_local);
+void find_best_cost(ppair pair);
+void pair_all(pPLA PLA, int pair_strategy);
+void minimize_pair(ppair pair);
+void generate_all_pairs(ppair pair, int n, pset candidate,
+                        void (*action)(ppair));
+ppair pair_new(int n);
+ppair pair_save(ppair pair, int n);
+void pair_free(ppair pair);
+/* primes.c */
+pset_family primes_consensus(pset *T);
+/* reduce.c */
+pset_family reduce(pset_family F, pset_family D);
+pset reduce_cube(pset *FD, pset p);
+pset sccc(pset *T);
+pset sccc_merge(pset left, pset right, pset cl, pset cr);
+pset sccc_cube(pset result, pset p);
+int sccc_special_cases(pset *T, pset *result);
+/* set.c */
+int bit_index(unsigned int a);
+int set_ord(pset a);
+int set_dist(pset a, pset b);
+pset set_clear(pset r, int size);
+pset set_fill(pset r, int size);
+pset set_copy(pset r, pset a);
+pset set_and(pset r, pset a, pset b);
+pset set_or(pset r, pset a, pset b);
+pset set_diff(pset r, pset a, pset b);
+pset set_xor(pset r, pset a, pset b);
+pset set_merge(pset r, pset a, pset b, pset mask);
+int set_andp(pset r, pset a, pset b);
+int set_orp(pset r, pset a, pset b);
+int setp_empty(pset a);
+int setp_full(pset a, int size);
+int setp_equal(pset a, pset b);
+int setp_disjoint(pset a, pset b);
+int setp_implies(pset a, pset b);
+pset sf_or(pset_family A);
+pset sf_and(pset_family A);
+pset_family sf_active(pset_family A);
+pset_family sf_inactive(pset_family A);
+pset_family sf_copy(pset_family R, pset_family A);
+pset_family sf_join(pset_family A, pset_family B);
+pset_family sf_append(pset_family A, pset_family B);
+pset_family sf_new(int num, int size);
+pset_family sf_save(pset_family A);
+void sf_free(pset_family A);
+void sf_cleanup();
+pset_family sf_addset(pset_family A, pset s);
+void sf_delset(pset_family A, int i);
+void sf_print(pset_family A);
+void sf_bm_print(pset_family A);
+void sf_write(FILE *fp, pset_family A);
+pset_family sf_read(FILE *fp);
+void set_write(FILE *fp, pset a);
+pset_family sf_bm_read(FILE *fp);
+char *ps1(pset a);
+char *pbv1(pset s, int n);
+void set_adjcnt(pset a, int *count, int weight);
+int *sf_count(pset_family A);
+int *sf_count_restricted(pset_family A, pset r);
+pset_family sf_delc(pset_family A, int first, int last);
+pset_family sf_addcol(pset_family A, int firstcol, int n);
+pset_family sf_delcol(pset_family A, int firstcol, int n);
+pset_family sf_copy_col(pset_family dst, int dstcol, pset_family src,
+                        int srccol);
+pset_family sf_compress(pset_family A, pset c);
+pset_family sf_transpose(pset_family A);
+pset_family sf_permute(pset_family A, int *permute, int npermute);
+/* setc.c */
+int full_row(pset p, pset cof);
+int cdist0(pset a, pset b);
+int cdist01(pset a, pset b);
+int cdist(pset a, pset b);
+pset force_lower(pset xlower, pset a, pset b);
+void consensus(pset r, pset a, pset b);
+int cactive(pset a);
+int ccommon(pset a, pset b, pset cof);
+int descend(pset *a, pset *b);
+int ascend(pset *a, pset *b);
+int lex_order(pset *a, pset *b);
+int d1_order(pset *a, pset *b);
+int desc1(pset a, pset b);
+/* sharp.c */
+pset_family cv_sharp(pset_family A, pset_family B);
+pset_family cb_sharp(pset c, pset_family T);
+pset_family cb_recur_sharp(pset c, pset_family T, int first, int last,
+                           int level);
+pset_family sharp(pset a, pset b);
+pset_family make_disjoint(pset_family A);
+pset_family cv_dsharp(pset_family A, pset_family B);
+pset_family cb1_dsharp(pset_family T, pset c);
+pset_family cb_dsharp(pset c, pset_family T);
+pset_family dsharp(pset a, pset b);
+pset_family cv_intersect(pset_family A, pset_family B);
+/* signature.c */
+pset_family signature(pset_family F1, pset_family D1, pset_family R1);
+pset_family generate_primes(pset_family F, pset_family R);
+void cleanup();
+/* sminterf.c */
+pset do_sm_minimum_cover(pset_family A);
+/* sparse.c */
+pset_family make_sparse(pset_family F, pset_family D, pset_family R);
+pset_family mv_reduce(pset_family F, pset_family D);
+/* unate.c */
+pset_family map_cover_to_unate(pset *T);
+pset_family map_unate_to_cover(pset_family A);
+pset_family unate_compl(pset_family A);
+pset_family unate_complement(pset_family A);
+pset_family exact_minimum_cover(pset_family T);
+pset_family unate_intersect(pset_family A, pset_family B, int largest_only);
+/* verify.c */
+int verify(pset_family F, pset_family Fold, pset_family Dold);
+int PLA_verify(pPLA PLA1, pPLA PLA2);
+void PLA_permute(pPLA PLA1, pPLA PLA2);
+int check_consistency(pPLA PLA);

@@ -43,10 +43,8 @@ static bool toggle = TRUE;
     as fast as possible.
 */
 
-pcover reduce(F, D) INOUT pcover F;
-IN pcover D;
-{
-    register pcube last, p, cunder, *FD;
+pcover reduce(pcover F, pcover D) {
+    pcube last, p, cunder, *FD;
 
     /* Order the cubes */
     if (use_random_order)
@@ -84,8 +82,7 @@ IN pcover D;
 }
 
 /* reduce_cube -- find the maximal reduction of a cube */
-pcube reduce_cube(FD, p) IN pcube *FD, p;
-{
+pcube reduce_cube(pcube *FD, pcube p) {
     pcube cunder;
 
     cunder = sccc(cofactor(FD, p));
@@ -93,11 +90,11 @@ pcube reduce_cube(FD, p) IN pcube *FD, p;
 }
 
 /* sccc -- find Smallest Cube Containing the Complement of a cover */
-pcube sccc(T) INOUT pcube *T; /* T will be disposed of */
-{
+pcube sccc(pcube *T /* T will be disposed of */
+) {
     pcube r;
-    register pcube cl, cr;
-    register int best;
+    pcube cl, cr;
+    int best;
     static int sccc_level = 0;
 
     if (debug & REDUCE1) {
@@ -118,10 +115,9 @@ pcube sccc(T) INOUT pcube *T; /* T will be disposed of */
     return r;
 }
 
-pcube sccc_merge(left, right, cl, cr) INOUT register pcube left,
-    right;                   /* will be disposed of ... */
-INOUT register pcube cl, cr; /* will be disposed of ... */
-{
+pcube sccc_merge(pcube left, pcube right, /* will be disposed of ... */
+                 pcube cl, pcube cr       /* will be disposed of ... */
+) {
     INLINEset_and(left, left, cl);
     INLINEset_and(right, right, cr);
     INLINEset_or(left, left, right);
@@ -144,9 +140,8 @@ INOUT register pcube cl, cr; /* will be disposed of ... */
 
     This is "anded" with the incoming cube result.
 */
-pcube sccc_cube(result, p) register pcube result, p;
-{
-    register pcube temp = cube.temp[0], mask;
+pcube sccc_cube(pcube result, pcube p) {
+    pcube temp = cube.temp[0], mask;
     int var;
 
     if ((var = cactive(p)) >= 0) {
@@ -161,11 +156,10 @@ pcube sccc_cube(result, p) register pcube result, p;
  *   sccc_special_cases -- check the special cases for sccc
  */
 
-bool sccc_special_cases(
-    T, result) INOUT pcube *T; /* will be disposed if answer is determined */
-OUT pcube *result;             /* returned only if answer determined */
-{
-    register pcube *T1, p, temp = cube.temp[1], ceil, cof = T[0];
+bool sccc_special_cases(pcube *T, /* will be disposed if answer is determined */
+                        pcube *result /* returned only if answer determined */
+) {
+    pcube *T1, p, temp = cube.temp[1], ceil, cof = T[0];
     pcube *A, *B;
 
     /* empty cover => complement is universe => SCCC is universe */

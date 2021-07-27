@@ -19,11 +19,11 @@ static int verify_cover();
         abort();                                                               \
     }
 
-sm_row *sm_minimum_cover(A, weight, heuristic, debug_level) sm_matrix *A;
-int *weight;
-int heuristic;   /* set to 1 for a heuristic covering */
-int debug_level; /* how deep in the recursion to provide info */
-{
+sm_row *sm_minimum_cover(
+    sm_matrix *A, int *weight,
+    int heuristic,  /* set to 1 for a heuristic covering */
+    int debug_level /* how deep in the recursion to provide info */
+) {
     stats_t stats;
     solution_t *best, *select;
     sm_row *prow, *sol;
@@ -102,14 +102,8 @@ int debug_level; /* how deep in the recursion to provide info */
  *      and can be returned without further work.
  */
 
-solution_t *sm_mincov(A, select, weight, lb, bound, depth, stats) sm_matrix *A;
-solution_t *select;
-int *weight;
-int lb;
-int bound;
-int depth;
-stats_t *stats;
-{
+solution_t *sm_mincov(sm_matrix *A, solution_t *select, int *weight, int lb,
+                      int bound, int depth, stats_t *stats) {
     sm_matrix *A1, *A2, *L, *R;
     sm_element *p;
     solution_t *select1, *select2, *best, *best1, *best2, *indep;
@@ -256,13 +250,10 @@ stats_t *stats;
     return best;
 }
 
-static int select_column(A, weight, indep) sm_matrix *A;
-int *weight;
-solution_t *indep;
-{
-    register sm_col *pcol;
-    register sm_row *prow, *indep_cols;
-    register sm_element *p, *p1;
+static int select_column(sm_matrix *A, int *weight, solution_t *indep) {
+    sm_col *pcol;
+    sm_row *prow, *indep_cols;
+    sm_element *p, *p1;
     double w, best;
     int best_col;
 
@@ -311,13 +302,11 @@ solution_t *indep;
     return best_col;
 }
 
-static void select_essential(A, select, weight, bound) sm_matrix *A;
-solution_t *select;
-int *weight;
-int bound; /* must beat this solution */
-{
-    register sm_element *p;
-    register sm_row *prow, *essen;
+static void select_essential(sm_matrix *A, solution_t *select, int *weight,
+                             int bound /* must beat this solution */
+) {
+    sm_element *p;
+    sm_row *prow, *essen;
     int delcols, delrows, essen_count;
 
     do {
@@ -350,9 +339,7 @@ int bound; /* must beat this solution */
     } while (delcols > 0 || delrows > 0 || essen_count > 0);
 }
 
-static int verify_cover(A, cover) sm_matrix *A;
-sm_row *cover;
-{
+static int verify_cover(sm_matrix *A, sm_row *cover) {
     sm_row *prow;
 
     sm_foreach_row(A, prow) {
