@@ -41,3 +41,15 @@ jobs:
       - run: ./format.sh
       - name: Check changes
         run: git diff --quiet
+  z3-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pavpanchekha/setup-z3@0.2.0
+        with:
+          version: 4.8.10
+      - name: Install ammonite & espresso
+        run: |
+          sudo sh -c '(echo "#!/usr/bin/env sh" && curl -L https://github.com/com-lihaoyi/Ammonite/releases/download/2.4.0/2.12-2.4.0) > /usr/local/bin/amm && chmod +x /usr/local/bin/amm'
+          cmake -DBUILD_DOC=NO -B build && sudo make -C build install
+      - run: ./chisel-z3-test.sc
