@@ -75,9 +75,9 @@ val res = os
   .walk(os.pwd / "examples")
   .filter(os.isFile)
   .filterNot("o64" == _.baseName)
-  .par
   .map { origPla =>
     val fileName = origPla.last
+    print(fileName)
 
     val origPlaFdr = os.temp(prefix = s"${fileName}_fdr")
     // convert original PLA to fdr type w/o minify it.
@@ -96,8 +96,7 @@ val res = os
     } catch {
       case _: Throwable => succ = false
     }
-    System.err.println(s"$fileName ${if (succ) "S" else "F"}")
+    println(s" ${if (succ) "S" else "F"}")
     succ
   }
-  .seq
 sys.exit(if (res.reduce(_ && _)) 0 else 250)
