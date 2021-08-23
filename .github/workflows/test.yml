@@ -41,3 +41,19 @@ jobs:
       - run: ./format.sh
       - name: Check changes
         run: git diff --quiet
+  equivalence-test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install fd
+        run: |
+          curl -OL https://github.com/sharkdp/fd/releases/download/v8.2.1/fd-musl_8.2.1_amd64.deb
+          sudo dpkg --install fd-musl_8.2.1_amd64.deb
+      - name: Download ESPRESSO-II
+        run: |
+          curl -L https://github.com/chipsalliance/espresso/releases/download/v2.4/x86_64-linux-gnu-espresso -o espresso2
+          sudo chmod +x espresso2
+      - name: Build current espresso
+        run: cmake -DBUILD_DOC=NO -B build && make -C build
+      - name: Use espresso2 -Dverify to check the equivalence
+        run: fd --exclude '*o64*' . examples/ --type f --exec bash -c 'printf "\n{}:\n" && ./espresso2 -Dverify {} <(build/espresso {})'
