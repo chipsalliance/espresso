@@ -44,6 +44,8 @@ void solution_accept(solution_t *sol, sm_matrix *A, int *weight, int col) {
 
 /* ARGSUSED */
 void solution_reject(solution_t *sol, sm_matrix *A, int *weight, int col) {
+    (void)sol;
+    (void)weight;
     sm_delcol(A, col);
 }
 

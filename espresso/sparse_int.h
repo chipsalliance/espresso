@@ -1,5 +1,4 @@
 #include "port.h"
-#include "utility.h"
 #include "sparse.h"
 
 /*

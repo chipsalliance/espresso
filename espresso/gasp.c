@@ -47,9 +47,6 @@ static pcover reduce_gasp(pcover F, pcover D) {
             RESET(cunder, PRIME); /* it reduced ... */
             G = sf_addset(G, cunder);
         }
-        if (debug & GASP) {
-            printf("REDUCE_GASP: %s reduced to %s\n", pc1(p), pc2(cunder));
-        }
         free_cube(cunder);
     }
 
@@ -93,10 +90,6 @@ void expand1_gasp(
     pcube p, last, c2under;
     pcube RAISE, FREESET, temp, *FD, c2essential;
     pcover F1;
-
-    if (debug & EXPAND1) {
-        printf("\nEXPAND1_GASP:    \t%s\n", pc1(GETSET(F, c1index)));
-    }
 
     RAISE = new_cube();
     FREESET = new_cube();
@@ -175,24 +168,12 @@ pcover irred_gasp(pcover F, pcover D, pcover G /* G is disposed of */
 }
 
 /* last_gasp */
-pcover last_gasp(pcover F, pcover D, pcover R, cost_t *cost) {
+pcover last_gasp(pcover F, pcover D, pcover R) {
     pcover G, G1;
 
-    EXECUTE(G = reduce_gasp(F, D), GREDUCE_TIME, G, *cost);
-    EXECUTE(G1 = expand_gasp(G, D, R, F), GEXPAND_TIME, G1, *cost);
+    G = reduce_gasp(F, D);
+    G1 = expand_gasp(G, D, R, F);
     free_cover(G);
-    EXECUTE(F = irred_gasp(F, D, G1), GIRRED_TIME, F, *cost);
-    return F;
-}
-
-/* super_gasp */
-pcover super_gasp(pcover F, pcover D, pcover R, cost_t *cost) {
-    pcover G, G1;
-
-    EXECUTE(G = reduce_gasp(F, D), GREDUCE_TIME, G, *cost);
-    EXECUTE(G1 = all_primes(G, R), GEXPAND_TIME, G1, *cost);
-    free_cover(G);
-    EXEC(G = sf_dupl(sf_append(F, G1)), "NEWPRIMES", G);
-    EXECUTE(F = irredundant(G, D), IRRED_TIME, F, *cost);
+    F = irred_gasp(F, D, G1);
     return F;
 }

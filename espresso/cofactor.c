@@ -291,7 +291,7 @@ void massive_count(pcube *T) {
     }
 }
 
-int binate_split_select(pcube *T, pcube cleft, pcube cright, int debug_flag) {
+int binate_split_select(pcube *T, pcube cleft, pcube cright) {
     int best = cdata.best;
     int i, lastbit = cube.last_part[best], halfbit = 0;
     pcube cof = T[0];
@@ -309,11 +309,6 @@ int binate_split_select(pcube *T, pcube cleft, pcube cright, int debug_flag) {
         if (!is_in_set(cof, i))
             set_insert(cright, i);
 
-    if (debug & debug_flag) {
-        printf("BINATE_SPLIT_SELECT: split against %d\n", best);
-        if (verbose_debug)
-            printf("cl=%s\ncr=%s\n", pc1(cleft), pc2(cright));
-    }
     return best;
 }
 
@@ -381,26 +376,4 @@ pcover cubeunlist(pcube *A1) {
     }
     A->count = CUBELISTSIZE(A1);
     return A;
-}
-
-void simplify_cubelist(pcube *T) {
-    pcube *Tdest;
-    int i, ncubes;
-
-    set_copy(cube.temp[0], T[0]); /* retrieve cofactor */
-
-    ncubes = CUBELISTSIZE(T);
-    qsort((char *)(T + 2), ncubes, sizeof(pset),
-          (int (*)(const void *, const void *))d1_order);
-
-    Tdest = T + 2;
-    /*   *Tdest++ = T[2];   */
-    for (i = 3; i < ncubes; i++) {
-        if (d1_order(&T[i - 1], &T[i]) != 0) {
-            *Tdest++ = T[i];
-        }
-    }
-
-    *Tdest++ = NULL;         /* sentinel */
-    Tdest[1] = (pcube)Tdest; /* save pointer to last */
 }

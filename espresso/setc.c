@@ -277,7 +277,7 @@ void consensus(pcube r, pcube a, pcube b) {
 */
 
 int cactive(pcube a) {
-    int active = -1, dist = 0, bit_index();
+    int active = -1, dist = 0;
 
     { /* Check binary variables */
         int w, last;
@@ -421,19 +421,6 @@ int ascend(pset *a, pset *b) {
     return 0;
 }
 
-/* lex_order -- comparison for "lexical" ordering of cubes */
-int lex_order(pset *a, pset *b) {
-    pset a1 = *a, b1 = *b;
-    int i = LOOP(a1);
-    do
-        if (a1[i] > b1[i])
-            return -1;
-        else if (a1[i] < b1[i])
-            return 1;
-    while (--i > 0);
-    return 0;
-}
-
 /* d1_order -- comparison for distance-1 merge routine */
 int d1_order(pset *a, pset *b) {
     pset a1 = *a, b1 = *b, c1 = cube.temp[0];
@@ -445,29 +432,5 @@ int d1_order(pset *a, pset *b) {
         else if (x1 < x2)
             return 1;
     while (--i > 0);
-    return 0;
-}
-
-/* desc1 -- comparison (without indirection) for descending sort */
-/* also has effect of handling NULL pointers,and a NULL pointer has smallest
-order */
-int desc1(pset a, pset b) {
-    if (a == (pset)NULL)
-        return (b == (pset)NULL) ? 0 : 1;
-    else if (b == (pset)NULL)
-        return -1;
-    if (SIZE(a) > SIZE(b))
-        return -1;
-    else if (SIZE(a) < SIZE(b))
-        return 1;
-    else {
-        int i = LOOP(a);
-        do
-            if (a[i] > b[i])
-                return -1;
-            else if (a[i] < b[i])
-                return 1;
-        while (--i > 0);
-    }
     return 0;
 }

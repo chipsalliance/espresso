@@ -56,4 +56,4 @@ jobs:
       - name: Build current espresso
         run: cmake -DBUILD_DOC=NO -B build && make -C build
       - name: Use espresso2 -Dverify to check the equivalence
-        run: fd --exclude '*o64*' . examples/ --type f --exec bash -c 'printf "\n{}:\n" && ./espresso2 -Dverify {} <(build/espresso {})'
+        run: fd --exclude '*o64*' . examples/ --type f --exec bash -c 'printf "\n{}:\n" && ./espresso2 -Dverify {} <(build/espresso < {})'
