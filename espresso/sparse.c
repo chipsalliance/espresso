@@ -17,16 +17,16 @@ pcover make_sparse(pcover F, pcover D, pcover R) {
     cover_cost(F, &best_cost);
 
     do {
-        EXECUTE(F = mv_reduce(F, D), MV_REDUCE_TIME, F, cost);
+        F = mv_reduce(F, D);
         if (cost.total == best_cost.total)
             break;
         copy_cost(&cost, &best_cost);
 
-        EXECUTE(F = expand(F, R, TRUE), RAISE_IN_TIME, F, cost);
+        F = expand(F, R, TRUE);
         if (cost.total == best_cost.total)
             break;
         copy_cost(&cost, &best_cost);
-    } while (force_irredundant);
+    } while (TRUE);
 
     return F;
 }

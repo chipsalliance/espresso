@@ -18,7 +18,7 @@ pset do_sm_minimum_cover(pset_family A) {
         rownum++;
     }
 
-    sparse_cover = sm_minimum_cover(M, NIL(int), 1, 0);
+    sparse_cover = sm_minimum_cover(M, NIL(int), 1);
     sm_free(M);
 
     cover = set_new(A->sf_size);

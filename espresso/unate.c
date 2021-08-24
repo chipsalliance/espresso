@@ -4,10 +4,6 @@
 
 #include "espresso.h"
 
-static pset_family abs_covered();
-static pset_family abs_covered_many();
-static int abs_select_restricted();
-
 pcover map_cover_to_unate(pcube *T) {
     unsigned int word_test, word_set, bit_test, bit_set;
     pcube p, pA;
@@ -116,6 +112,70 @@ pset_family unate_compl(pset_family A) {
 }
 
 /*
+ *  abs_covered -- after selecting a new column for the selected set,
+ *  create a new matrix which is only those rows which are still uncovered
+ */
+static pset_family abs_covered(pset_family A, int pick) {
+    pset last, p, pdest;
+    pset_family Aprime;
+
+    Aprime = sf_new(A->count, A->sf_size);
+    pdest = Aprime->data;
+    foreach_set(A, last, p) if (!is_in_set(p, pick)) {
+        INLINEset_copy(pdest, p);
+        Aprime->count++;
+        pdest += Aprime->wsize;
+    }
+    return Aprime;
+}
+
+/*
+ *  abs_covered_many -- after selecting many columns for ther selected set,
+ *  create a new matrix which is only those rows which are still uncovered
+ */
+static pset_family abs_covered_many(pset_family A, pset pick_set) {
+    pset last, p, pdest;
+    pset_family Aprime;
+
+    Aprime = sf_new(A->count, A->sf_size);
+    pdest = Aprime->data;
+    foreach_set(A, last, p) if (setp_disjoint(p, pick_set)) {
+        INLINEset_copy(pdest, p);
+        Aprime->count++;
+        pdest += Aprime->wsize;
+    }
+    return Aprime;
+}
+
+/*
+ *  abs_select_restricted -- select the column of maximum column count which
+ *  also belongs to the set "restrict"; weight each column of a set as
+ *  1 / (set_ord(p) - 1).
+ */
+static int abs_select_restricted(pset_family A, pset _restrict) {
+    int i, best_var, best_count, *count;
+
+    /* Sum the elements in these columns */
+    count = sf_count_restricted(A, _restrict);
+
+    /* Find which variable has maximum weight */
+    best_var = -1;
+    best_count = 0;
+    for (i = 0; i < A->sf_size; i++) {
+        if (count[i] > best_count) {
+            best_var = i;
+            best_count = count[i];
+        }
+    }
+    FREE(count);
+
+    if (best_var == -1)
+        fatal("abs_select_restricted: should not have best_var == -1");
+
+    return best_var;
+}
+
+/*
  *  Assume SIZE(p) records the size of each set
  */
 pset_family unate_complement(pset_family A /* disposes of A */
@@ -200,200 +260,4 @@ pset_family unate_complement(pset_family A /* disposes of A */
     }
 
     return Abar;
-}
-
-pset_family exact_minimum_cover(pset_family T) {
-    pset p, last, p1;
-    int i, n;
-    int lev, lvl;
-    pset nlast;
-    pset_family temp;
-    long start = ptime();
-    struct {
-        pset_family sf;
-        int level;
-    } stack[32]; /* 32 suffices for 2 ** 32 cubes ! */
-
-    if (T->count <= 0)
-        return sf_new(1, T->sf_size);
-    for (n = T->count, lev = 0; n != 0; n >>= 1, lev++)
-        ;
-
-    /* A simple heuristic ordering */
-    T = lex_sort(sf_save(T));
-
-    /* Push a full set on the stack to get things started */
-    n = 1;
-    stack[0].sf = sf_new(1, T->sf_size);
-    stack[0].level = lev;
-    set_fill(GETSET(stack[0].sf, stack[0].sf->count++), T->sf_size);
-
-    nlast = GETSET(T, T->count - 1);
-    foreach_set(T, last, p) {
-        /* "unstack" the set into a family */
-        temp = sf_new(set_ord(p), T->sf_size);
-        for (i = 0; i < T->sf_size; i++)
-            if (is_in_set(p, i)) {
-                p1 = set_fill(GETSET(temp, temp->count++), T->sf_size);
-                set_remove(p1, i);
-            }
-        stack[n].sf = temp;
-        stack[n++].level = lev;
-
-        /* Pop the stack and perform (leveled) intersections */
-        while (n > 1 &&
-               (stack[n - 1].level == stack[n - 2].level || p == nlast)) {
-            temp = unate_intersect(stack[n - 1].sf, stack[n - 2].sf, FALSE);
-            lvl = MIN(stack[n - 1].level, stack[n - 2].level) - 1;
-            if (debug & MINCOV && lvl < 10) {
-                printf("# EXACT_MINCOV[%d]: %4d = %4d x %4d, time = %s\n", lvl,
-                       temp->count, stack[n - 1].sf->count,
-                       stack[n - 2].sf->count, print_time(ptime() - start));
-                (void)fflush(stdout);
-            }
-            sf_free(stack[n - 2].sf);
-            sf_free(stack[n - 1].sf);
-            stack[n - 2].sf = temp;
-            stack[n - 2].level = lvl;
-            n--;
-        }
-    }
-
-    temp = stack[0].sf;
-    p1 = set_fill(set_new(T->sf_size), T->sf_size);
-    foreach_set(temp, last, p) INLINEset_diff(p, p1, p);
-    set_free(p1);
-    if (debug & MINCOV1) {
-        printf("MINCOV: family of all minimal coverings is\n");
-        sf_print(temp);
-    }
-    sf_free(T); /* this is the copy of T we made ... */
-    return temp;
-}
-
-/*
- *  unate_intersect -- intersect two unate covers
- *
- *  If largest_only is TRUE, then only the largest cube(s) are returned
- */
-
-#define MAGIC 500 /* save 500 cubes before containment */
-
-pset_family unate_intersect(pset_family A, pset_family B, bool largest_only) {
-    pset pi, pj, lasti, lastj, pt;
-    pset_family T, Tsave;
-    bool save;
-    int maxord, ord;
-
-    /* How large should each temporary result cover be ? */
-    T = sf_new(MAGIC, A->sf_size);
-    Tsave = NULL;
-    maxord = 0;
-    pt = T->data;
-
-    /* Form pairwise intersection of each set of A with each cube of B */
-    foreach_set(A, lasti, pi) {
-        foreach_set(B, lastj, pj) {
-            save = set_andp(pt, pi, pj);
-
-            /* Check if we want the largest only */
-            if (save && largest_only) {
-                if ((ord = set_ord(pt)) > maxord) {
-                    /* discard Tsave and T */
-                    if (Tsave != NULL) {
-                        sf_free(Tsave);
-                        Tsave = NULL;
-                    }
-                    pt = T->data;
-                    T->count = 0;
-                    /* Re-create pt (which was just thrown away) */
-                    (void)set_and(pt, pi, pj);
-                    maxord = ord;
-                } else if (ord < maxord) {
-                    save = FALSE;
-                }
-            }
-
-            if (save) {
-                if (++T->count >= T->capacity) {
-                    T = sf_contain(T);
-                    Tsave = (Tsave == NULL) ? T : sf_union(Tsave, T);
-                    T = sf_new(MAGIC, A->sf_size);
-                    pt = T->data;
-                } else {
-                    pt += T->wsize;
-                }
-            }
-        }
-    }
-
-    /* Contain the final result and merge it into Tsave */
-    T = sf_contain(T);
-    Tsave = (Tsave == NULL) ? T : sf_union(Tsave, T);
-
-    return Tsave;
-}
-
-/*
- *  abs_covered -- after selecting a new column for the selected set,
- *  create a new matrix which is only those rows which are still uncovered
- */
-static pset_family abs_covered(pset_family A, int pick) {
-    pset last, p, pdest;
-    pset_family Aprime;
-
-    Aprime = sf_new(A->count, A->sf_size);
-    pdest = Aprime->data;
-    foreach_set(A, last, p) if (!is_in_set(p, pick)) {
-        INLINEset_copy(pdest, p);
-        Aprime->count++;
-        pdest += Aprime->wsize;
-    }
-    return Aprime;
-}
-
-/*
- *  abs_covered_many -- after selecting many columns for ther selected set,
- *  create a new matrix which is only those rows which are still uncovered
- */
-static pset_family abs_covered_many(pset_family A, pset pick_set) {
-    pset last, p, pdest;
-    pset_family Aprime;
-
-    Aprime = sf_new(A->count, A->sf_size);
-    pdest = Aprime->data;
-    foreach_set(A, last, p) if (setp_disjoint(p, pick_set)) {
-        INLINEset_copy(pdest, p);
-        Aprime->count++;
-        pdest += Aprime->wsize;
-    }
-    return Aprime;
-}
-
-/*
- *  abs_select_restricted -- select the column of maximum column count which
- *  also belongs to the set "restrict"; weight each column of a set as
- *  1 / (set_ord(p) - 1).
- */
-static int abs_select_restricted(pset_family A, pset _restrict) {
-    int i, best_var, best_count, *count;
-
-    /* Sum the elements in these columns */
-    count = sf_count_restricted(A, _restrict);
-
-    /* Find which variable has maximum weight */
-    best_var = -1;
-    best_count = 0;
-    for (i = 0; i < A->sf_size; i++) {
-        if (count[i] > best_count) {
-            best_var = i;
-            best_count = count[i];
-        }
-    }
-    FREE(count);
-
-    if (best_var == -1)
-        fatal("abs_select_restricted: should not have best_var == -1");
-
-    return best_var;
 }

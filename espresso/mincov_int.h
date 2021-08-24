@@ -1,21 +1,16 @@
 #include "port.h"
-#include "utility.h"
 #include "sparse.h"
 #include "mincov.h"
 
 typedef struct stats_struct stats_t;
 struct stats_struct {
-    int debug;           /* 1 if debugging is enabled */
-    int max_print_depth; /* dump stats for levels up to this level */
-    int max_depth;       /* deepest the recursion has gone */
-    int nodes;           /* total nodes visited */
-    int component;       /* currently solving a component */
-    int comp_count;      /* number of components detected */
-    int gimpel_count;    /* number of times Gimpel reduction applied */
-    int gimpel;          /* currently inside Gimpel reduction */
-    long start_time;     /* cpu time when the covering started */
+    int max_depth;    /* deepest the recursion has gone */
+    int nodes;        /* total nodes visited */
+    int component;    /* currently solving a component */
+    int comp_count;   /* number of components detected */
+    int gimpel_count; /* number of times Gimpel reduction applied */
+    int gimpel;       /* currently inside Gimpel reduction */
     int no_branching;
-    int lower_bound;
 };
 
 typedef struct solution_struct solution_t;
@@ -25,8 +20,7 @@ struct solution_struct {
 };
 
 /* mincov.c */
-sm_row *sm_minimum_cover(sm_matrix *A, int *weight, int heuristic,
-                         int debug_level);
+sm_row *sm_minimum_cover(sm_matrix *A, int *weight, int heuristic);
 solution_t *sm_mincov(sm_matrix *A, solution_t *select, int *weight, int lb,
                       int bound, int depth, stats_t *stats);
 /* solution.c */

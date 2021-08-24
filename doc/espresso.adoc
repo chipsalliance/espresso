@@ -1,232 +1,118 @@
-= ESPRESSO(1OCTTOOLS)
+= ESPRESSO(1)
 :doctype: manpage
 
 == NAME
 
 espresso - Boolean Minimization
 
+
 == SYNOPSIS
 
-*espresso* [_options_] [_file_]
+*espresso* [_file_]
+
 
 == DESCRIPTION
 
-_Espresso_ takes as input a two-level representation of a two-valued (or
-multiple-valued) Boolean function, and produces a minimal equivalent
-representation. The algorithms used are new and represent an advance in
-both speed and optimality of solution in heuristic Boolean minimization.
+_Espresso_ takes as input a two-level representation of a two-valued Boolean
+function, and produces a minimal equivalent representation. The algorithms used
+are new and represent an advance in both speed and optimality of solution in
+heuristic Boolean minimization.
 
-_Espresso_ reads the _file_ provided (or standard input if no files are
-specified), performs the minimization, and writes the minimized result
-to standard output. _Espresso_ automatically verifies that the minimized
-function is equivalent to the original function. Options allow for using
-an exact minimization algorithm, for choosing an optimal phase
-assignment for the output functions, and for choosing an optimal
-assignment of the inputs to input decoders.
+_Espresso_ reads the standard input, performs the minimization, and writes the
+minimized result to standard output.
 
-The default input and output file formats are compatible with the
-Berkeley standard format for the physical description of a PLA. The
-input format is described in detail in espresso(5). Note that the input
-file is a _logical_ representation of a set of Boolean equations, and
-hence the input format differs slightly from that described in pla(5)
-(which provides for the _physical_ representation of a PLA). The input
-and output formats have been expanded to allow for multiple-valued logic
-functions, and to allow for the specification of the don't-care set
-which will be used in the minimization.
+The input and output format is described below in the *FILE FORMAT* section.
 
-A complete list of the command line options is given below. Be warned
-that many of the command line options are not intended for general use.
 
-*-d*::
-  Enables debugging. Useful only for those familiar with the algorithms
-  used.
-*-Dcheck*::
-  Checks that the function is a partition of the entire space (i.e.,
-  that the ON-set, OFF-set and DC-set are pairwise disjoint, and that
-  their union is the Universe).
+== FILE FORMAT
 
-*-Dd1merge*::
-  Performs a quick distance-1 merge on the input file. This is useful
-  when the input file is very large (e.g., a truth table with more than
-  1000 terms) because distance-1 merge is O(n log n) rather than the
-  EXPAND step of Espresso which is O(n * n). The output should then be
-  run through Espresso to complete the minimization. A range of
-  variables to be merged can also be specified using *-rn-m* (the
-  default is to merge over all variables).
+_Espresso_ accepts as input a two-level description of a Boolean function. This
+is described as a character matrix with keywords embedded in the input to
+specify the size and type of the matrix of the input function.
 
-*-Decho*::
-  Echoes the function to standard output. This can be used to get the
-  complement of a function when combined with *-o*.
+The following keywords are recognized by _espresso_. [d] denotes a decimal
+number and [s] denotes a text string.
 
-*-Dequiv*::
-  Identify output variables which are equivalent. Takes into account the
-  don't-care set and checks for equivalence of both the ON-set and
-  OFF-set.
-*-Dexact*::
-  Exact minimization algorithm (guarantees minimum number of product
-  terms, and heuristically minimizes number of literals). Potentially
-  expensive.
-
-*-Dmany*::
-  Reads and minimizes PLA's until end-of-file is detected. PLA's in the
-  same file are separated by _.e_.
-
-*-Dmap*::
-  Draw the Karnaugh maps for a binary-valued function.
-
-*-Dmapdc*::
-  Derive from the binary-valued variable _DONT_CARE_ a don't-care set,
-  and then delete this variable. All input conditions for which an
-  output changes when _DONT_CARE_ changes define the don't-care
-  conditions for that output. This is a hack to support don't-cares from
-  high-level languages without a notion of don't-cares.
-
-*-Dopo*::
-  Perform output phase optimization (i.e., determine which functions to
-  complement to reduce the number of terms needed to implement the
-  function). After choosing an assignment of phases for the outputs, the
-  function is minimized. A simple algorithm is used which may become
-  very expensive for a large number of outputs (e.g., more than 40).
-*-Dopoall*::
-  Minimize the function with all possible phase assignments. A range of
-  outputs to cycle through can be given with *-rn-m* (the default is to
-  use all outputs). The option *-S1* will perform an exact minimization
-  for each phase assignment. Be warned that opoall requires an
-  exponential number of minimizations !
-*-Dpair*::
-  Choose an assignment of the inputs to two-bit decoders, and minimize
-  the function. The function MUST be minimized first to achieve good
-  results. There are actually 4 different algorithms, of increasing
-  cost, which may be selected with *-S1*, *-S2*, or *-S3*. The default
-  is *-S0* which seems to give the best results for the cost.
-*-Dpairall*::
-  Minimize the function with all possible assignments of inputs to
-  two-bit decoders. The option *-S1* will perform an exact minimization
-  for each assignment of inputs to decoders, and the option *-S2* will
-  perform an output-phase assignment for each assignment of inputs to
-  decoders. Be warned that pairall requires an exponential number of
-  minimizations !
-*-Dseparate*::
-  Remove the don't-care set from the ON-set of the function.
-*-Dso*::
-  Minimize each function one at a time as a single-output function.
-  Terms will not be shared among the functions. The option *-S1* will
-  perform an exact minimization for each single-output function.
-*-Dso_both*::
-  Minimize each function one at a time as a single-output function, but
-  choose the function or its complement based on which has fewer terms.
-  The option *-S1* will perform an exact minimization for each
-  single-output function and its complement to determine which has fewer
+*.i [d]*::
+  Required. Specifies the number of input variables. This keyword must come
+  before any product terms and the *.o* keyword.
+*.o [d]*::
+  Required. Specifies the number of output functions. This keyword must come
+  before any product terms.
+*.type [s]*::
+  Optional, default is *fd*. Sets the logical interpretation of the character
+  matrix as described below. [s] is one of *fd* or *fr* for input files, and *f*
+  for output files. This keyword must come before any product terms.
+*.e (.end)*::
+  Optional. Marks the end of the file. This keyword must come after any product
   terms.
-*-Dstats*::
-  Provide simple statistics on the size of the function.
-*-Dverify*::
-  Checks for Boolean equivalence of two PLA's. Reads two filenames from
-  the command line, each containing a single PLA.
-*-DPLAverify*::
-  Checks for Boolean equivalence of two PLA's by first permuting the
-  columns based on the user supplied variable names. Reads two filenames
-  from the command line.
-*-eeat*::
-  Normally comments are echoed from the input file to the output file.
-  This options discards any comments in the input file.
-*-efast*::
-  Stop after the first EXPAND and IRREDUNDANT operations (i.e., do not
-  iterate over the solution).
-*-ekiss*::
-  Sets up a _kiss_-style minimization problem. This is a hack.
-*-eness*::
-  Essential primes will not be detected.
-*-enirr*::
-  The result will not necessarily be made irredundant in the final step
-  which removes redundant literals.
-*-enunwrap*::
-  The ON-set will not be unwrapped before beginning the minimization.
-*-eonset*::
-  Recompute the ON-set before the minimization. Useful when the PLA has
-  a large number of product terms (e.g., an exhaustive list of
-  minterms).
-*-epos*::
-  Swaps the ON-set and OFF-set of the function after reading the
-  function. This can be used to minimize the OFF-set of a function.
-  _.phase_ (see espresso(5)) in the input file can also specify an
-  arbitrary choice of output phases.
-*-estrong*::
-  Uses the alternate strategy SUPER_GASP (as a replacement for LAST_
-  GASP) which is more expensive, but occasionally provides better
-  results.
-*-o[type]*::
-  Selects the output format. By default, only the ON-set (i.e., type f)
-  is output after the minimization. [type] can be one of *f*, *d*, *r*,
-  *fd*, *dr*, *fr*, or *fdr* to select any combination of the ON-set
-  (f), the OFF-set (r) or the DC-set (d). [type] may also be *eqntott*
-  to output algebraic equations acceptable to _eqntott_(1OCTTOOLS), or
-  *pleasure* to output an unmerged PLA (with the _.label_ and _.group_
-  keywords) acceptable to _pleasure_(1OCTTOOLS).
-*-s*::
-  Will provide a short summary of the execution of the program including
-  the initial cost of the function, the final cost, and the computer
-  resources used.
-*-t*::
-  Will produce a trace showing the execution of the program. After each
-  main step of the algorithm, a single line is printed which reports the
-  processor time used, and the current cost of the function.
-*-x*::
-  Suppress printing of the solution.
-*-v [type]*::
-  Specifies verbose debugging detail. Not generally useful.
 
-== DIAGNOSTICS
+When we speak of the ON-set of a Boolean function, we mean those minterms which
+imply the function value is a 1. Likewise, the OFF-set are those terms which
+imply the function is a 0, and the DC-set (don't care set) are those terms for
+which the function is unspecified. A function is completely described by
+providing its ON-set, OFF-set and DC-set. Note that all minterms lie in the
+union of the ON-set, OFF-set and DC-set, and that the ON-set, OFF-set and DC-set
+share no minterms.
 
-Espresso will issue a warning message if a product term spans more than
-one line. Usually this is an indication that the number of inputs or
-outputs of the function is specified incorrectly.
+The purpose of the _espresso_ minimization program is to find a logically
+equivalent set of product-terms to represent the ON-set and optionally minterms
+which lie in the DC-set, without containing any minterms of the OFF-set.
+
+A term is represented by a "cube" which can be considered either a compact
+representation of an algebraic product term which implies the function value is
+a 1, or as a representation of a row in a PLA which implements the term. A cube
+has an input part which corresponds to the input plane of a PLA, and an output
+part which corresponds to the output plane of a PLA.
+
+Each position in the input plane corresponds to an input variable where a 0
+implies the corresponding input literal appears complemented in the product
+term, a 1 implies the input literal appears un-complemented in the product term,
+and - implies the input literal does not appear in the product term.
+
+Each position in the out plane corresponds to a logic function.
+
+A Boolean function can be described in one of the following two ways:
+
+[arabic]
+. *.type fd*: The ON-set and DC-set are provided. In this case, _espresso_
+computes the OFF-set as the complement of the union of the ON-set and the
+DC-set. If any minterm belongs to both the ON-set and DC-set, then it is
+considered a don't care. For each output function, a *1* means this product term
+belongs to the ON-set of this function, a *0* means this product term has no
+meaning for this function (just a placeholder), and a *-* means this product
+term belongs to the DC-set of this function.
+. *.type fr*: The ON-set and OFF-set are provided. In this case, _espresso_
+computes the DC-set as the complement of the union of the ON-set and the
+OFF-set. It is an error for any minterm to belong to both the ON-set and
+OFF-set. For each output function, a *1* means this product term belongs to the
+ON-set of this function, a *0* means this product term belongs to the OFF-set of
+this function, and a *-* means this product term has no meaning for this
+function (just a placeholder).
+. *.type f*: Output format, the ON-set is given. For each output function, a *1*
+means this product term belongs to the ON-set, and a *0* means this product term
+has no meaning for the value of this function (just a placeholder). This type
+corresponds to an actual PLA where only the ON-set is actually implemented.
+
+A 1-of-8 decoder (e.g. 74xx138 without enables) can be described completely in
+minterms as:
+....
+.i 3
+.o 8
+.type fd
+000 00000001
+001 00000010
+010 00000100
+011 00001000
+100 00010000
+101 00100000
+110 01000000
+111 10000000
+....
+
 
 == SEE ALSO
 
-kiss(1OCTTOOLS), pleasure(1OCTTOOLS), pla(5OCTTOOLS),
-espresso(5OCTTOOLS)
-
 pass:[R.] Brayton, G. Hachtel, C. McMullen, and A. Sangiovanni-Vincentelli,
-_Logic Minimization Algorithms for VLSI Synthesis_, Kluwer Academic
-Publishers, 1984.
-
-pass:[R.] Rudell, A. Sangiovanni-Vincentelli, "Espresso-MV: Algorithms for
-Multiple-Valued Logic Minimization," _Proc. Cust. Int. Circ. Conf._,
-Portland, May 1985.
-
-pass:[R.] Rudell, "Multiple-Valued Minimization for PLA Synthesis," Master's
-Report, University of California, Berkeley, June 1986.
-
-pass:[R.] Rudell, A. Sangiovanni-Vincentelli, "Exact Minimization of
-Multiple-Valued Functions for PLA Optimization", _Int. Conf. Comp. Aid.
-Des._, Santa Clara, November 1986.
-
-== AUTHOR
-
-Please direct any questions or comments to:
-
-....
-Richard Rudell
-205 Cory Hall
-Dept. of EECS
-University of California
-Berkeley, California  94720
-....
-
-Arpanet mail address is rudell@ic.Berkeley.EDU.
-
-== COMMENTS
-
-Default is to pass comments and unrecognized options from the input file
-to standard output (sometimes this isn't what you want).
-
-It is no longer possible to specify the type on the command line.
-
-There are a lot of options, but typical use doesn't need them.
-
-This manual page refers to Version 2.4 of Espresso. The major change
-from Version 2.2 to Version 2.3 is the addition of a fast sparse-matrix
-covering algorithm for the *-Dexact* mode.
-
-The -Dopo option becomes very slow for many outputs (> 20).
+_Logic Minimization Algorithms for VLSI Synthesis_, Kluwer Academic Publishers,
+1984.

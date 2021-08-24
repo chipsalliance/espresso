@@ -47,12 +47,8 @@ pcover reduce(pcover F, pcover D) {
     pcube last, p, cunder, *FD;
 
     /* Order the cubes */
-    if (use_random_order)
-        F = random_order(F);
-    else {
-        F = toggle ? sort_reduce(F) : mini_sort(F, descend);
-        toggle = !toggle;
-    }
+    F = toggle ? sort_reduce(F) : mini_sort(F, descend);
+    toggle = !toggle;
 
     /* Try to reduce each cube */
     FD = cube2list(F, D);
@@ -62,10 +58,6 @@ pcover reduce(pcover F, pcover D) {
             SET(p, ACTIVE);          /* cube remains active */
             SET(p, PRIME);           /* cube remains prime ? */
         } else {
-            if (debug & REDUCE) {
-                printf("REDUCE: %s to %s %s\n", pc1(p), pc2(cunder),
-                       print_time(ptime()));
-            }
             set_copy(p, cunder); /* save reduced version */
             RESET(p, PRIME);     /* cube is no longer prime */
             if (setp_empty(cunder))
@@ -95,23 +87,16 @@ pcube sccc(pcube *T /* T will be disposed of */
     pcube r;
     pcube cl, cr;
     int best;
-    static int sccc_level = 0;
-
-    if (debug & REDUCE1) {
-        debug_print(T, "SCCC", sccc_level++);
-    }
 
     if (sccc_special_cases(T, &r) == MAYBE) {
         cl = new_cube();
         cr = new_cube();
-        best = binate_split_select(T, cl, cr, REDUCE1);
+        best = binate_split_select(T, cl, cr);
         r = sccc_merge(sccc(scofactor(T, cl, best)),
                        sccc(scofactor(T, cr, best)), cl, cr);
         free_cubelist(T);
     }
 
-    if (debug & REDUCE1)
-        printf("SCCC[%d]: result is %s\n", --sccc_level, pc1(r));
     return r;
 }
 
@@ -218,7 +203,7 @@ bool sccc_special_cases(pcube *T, /* will be disposed if answer is determined */
 
     /* Check for components */
     if (cdata.var_zeros[cdata.best] < CUBELISTSIZE(T) / 2) {
-        if (cubelist_partition(T, &A, &B, debug & REDUCE1) == 0) {
+        if (cubelist_partition(T, &A, &B) == 0) {
             return MAYBE;
         } else {
             free_cubelist(T);

@@ -106,21 +106,6 @@ void sm_row_remove(sm_row *prow, int col) {
 }
 
 /*
- *  find an element (if it is in the row vector)
- */
-sm_element *sm_row_find(sm_row *prow, int col) {
-    sm_element *p;
-
-    for (p = prow->first_col; p != 0 && p->col_num < col; p = p->next_col)
-        ;
-    if (p != 0 && p->col_num == col) {
-        return p;
-    } else {
-        return NIL(sm_element);
-    }
-}
-
-/*
  *  return 1 if row p2 contains row p1; 0 otherwise
  */
 int sm_row_contains(sm_row *p1, sm_row *p2) {
@@ -167,87 +152,10 @@ int sm_row_intersects(sm_row *p1, sm_row *p2) {
 }
 
 /*
- *  compare two rows, lexical ordering
- */
-int sm_row_compare(sm_row *p1, sm_row *p2) {
-    sm_element *q1, *q2;
-
-    q1 = p1->first_col;
-    q2 = p2->first_col;
-    while (q1 != 0 && q2 != 0) {
-        if (q1->col_num != q2->col_num) {
-            return q1->col_num - q2->col_num;
-        }
-        q1 = q1->next_col;
-        q2 = q2->next_col;
-    }
-
-    if (q1 != 0) {
-        return 1;
-    } else if (q2 != 0) {
-        return -1;
-    } else {
-        return 0;
-    }
-}
-
-/*
- *  return the intersection
- */
-sm_row *sm_row_and(sm_row *p1, sm_row *p2) {
-    sm_element *q1, *q2;
-    sm_row *result;
-
-    result = sm_row_alloc();
-    q1 = p1->first_col;
-    q2 = p2->first_col;
-    if (q1 == 0 || q2 == 0)
-        return result;
-    for (;;) {
-        if (q1->col_num < q2->col_num) {
-            if ((q1 = q1->next_col) == 0) {
-                return result;
-            }
-        } else if (q1->col_num > q2->col_num) {
-            if ((q2 = q2->next_col) == 0) {
-                return result;
-            }
-        } else {
-            (void)sm_row_insert(result, q1->col_num);
-            if ((q1 = q1->next_col) == 0) {
-                return result;
-            }
-            if ((q2 = q2->next_col) == 0) {
-                return result;
-            }
-        }
-    }
-}
-
-int sm_row_hash(sm_row *prow, int modulus) {
-    int sum;
-    sm_element *p;
-
-    sum = 0;
-    for (p = prow->first_col; p != 0; p = p->next_col) {
-        sum = (sum * 17 + p->col_num) % modulus;
-    }
-    return sum;
-}
-
-/*
  *  remove an element from a row vector (given a pointer to the element)
  */
 void sm_row_remove_element(sm_row *prow, sm_element *p) {
     dll_unlink(p, prow->first_col, prow->last_col, next_col, prev_col,
                prow->length);
     sm_element_free(p);
-}
-
-void sm_row_print(FILE *fp, sm_row *prow) {
-    sm_element *p;
-
-    for (p = prow->first_col; p != 0; p = p->next_col) {
-        (void)fprintf(fp, " %d", p->col_num);
-    }
 }

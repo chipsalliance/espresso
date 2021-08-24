@@ -16,12 +16,7 @@ void cube_setup() {
     int i, var;
     pcube p;
 
-    if (cube.num_binary_vars < 0 || cube.num_vars < cube.num_binary_vars)
-        fatal("cube size is silly, error in .i/.o or .mv");
-
-    cube.num_mv_vars = cube.num_vars - cube.num_binary_vars;
-    cube.output = cube.num_mv_vars > 0 ? cube.num_vars - 1 : -1;
-
+    cube.output = cube.num_vars - 1;
     cube.size = 0;
     cube.first_part = ALLOC(int, cube.num_vars);
     cube.last_part = ALLOC(int, cube.num_vars);
@@ -114,24 +109,4 @@ void setdown_cube() {
 
     cdata.part_zeros = cdata.var_zeros = cdata.parts_active = (int *)NULL;
     cdata.is_unate = (bool *)NULL;
-}
-
-void save_cube_struct() {
-    temp_cube_save = cube;   /* structure copy ! */
-    temp_cdata_save = cdata; /*      ""          */
-
-    cube.first_part = cube.last_part = (int *)NULL;
-    cube.first_word = cube.last_word = (int *)NULL;
-    cube.part_size = (int *)NULL;
-    cube.binary_mask = cube.mv_mask = (pcube)NULL;
-    cube.fullset = cube.emptyset = (pcube)NULL;
-    cube.var_mask = cube.temp = (pcube *)NULL;
-
-    cdata.part_zeros = cdata.var_zeros = cdata.parts_active = (int *)NULL;
-    cdata.is_unate = (bool *)NULL;
-}
-
-void restore_cube_struct() {
-    cube = temp_cube_save;   /* structure copy ! */
-    cdata = temp_cdata_save; /*      ""          */
 }

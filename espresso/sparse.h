@@ -85,35 +85,14 @@ struct sm_matrix_struct {
 #define sm_foreach_row_element(prow, p) \
     for (p = prow->first_col; p != 0; p = p->next_col)
 
-#define sm_foreach_col_element(pcol, p) \
-    for (p = pcol->first_row; p != 0; p = p->next_row)
-
-#define sm_put(x, val) (x->user_word = (char *)val)
-
-#define sm_get(type, x) ((type)(x->user_word))
-
 /* matrix.c */
 sm_matrix *sm_alloc();
-sm_matrix *sm_alloc_size(int row, int col);
 void sm_free(sm_matrix *A);
 sm_matrix *sm_dup(sm_matrix *A);
 void sm_resize(sm_matrix *A, int row, int col);
 sm_element *sm_insert(sm_matrix *A, int row, int col);
-sm_element *sm_find(sm_matrix *A, int rownum, int colnum);
-void sm_remove(sm_matrix *A, int rownum, int colnum);
-void sm_remove_element(sm_matrix *A, sm_element *p);
 void sm_delrow(sm_matrix *A, int i);
 void sm_delcol(sm_matrix *A, int i);
-void sm_copy_row(sm_matrix *dest, int dest_row, sm_row *prow);
-void sm_copy_col(sm_matrix *dest, int dest_col, sm_col *pcol);
-sm_row *sm_longest_row(sm_matrix *A);
-sm_col *sm_longest_col(sm_matrix *A);
-int sm_num_elements(sm_matrix *A);
-int sm_read(FILE *fp, sm_matrix **A);
-int sm_read_compressed(FILE *fp, sm_matrix **A);
-void sm_write(FILE *fp, sm_matrix *A);
-void sm_print(FILE *fp, sm_matrix *A);
-void sm_dump(sm_matrix *A, char *s, int max);
 void sm_cleanup();
 
 /* rows.c */
@@ -122,27 +101,13 @@ void sm_row_free(sm_row *prow);
 sm_row *sm_row_dup(sm_row *prow);
 sm_element *sm_row_insert(sm_row *prow, int col);
 void sm_row_remove(sm_row *prow, int col);
-sm_element *sm_row_find(sm_row *prow, int col);
 int sm_row_contains(sm_row *p1, sm_row *p2);
 int sm_row_intersects(sm_row *p1, sm_row *p2);
-int sm_row_compare(sm_row *p1, sm_row *p2);
-sm_row *sm_row_and(sm_row *p1, sm_row *p2);
-int sm_row_hash(sm_row *prow, int modulus);
-void sm_row_print(FILE *fp, sm_row *prow);
 
 /* cols.c */
 sm_col *sm_col_alloc();
 void sm_col_free(sm_col *pcol);
-sm_col *sm_col_dup(sm_col *pcol);
-sm_element *sm_col_insert(sm_col *pcol, int row);
-void sm_col_remove(sm_col *pcol, int row);
-sm_element *sm_col_find(sm_col *pcol, int row);
 int sm_col_contains(sm_col *p1, sm_col *p2);
-int sm_col_intersects(sm_col *p1, sm_col *p2);
-int sm_col_compare(sm_col *p1, sm_col *p2);
-sm_col *sm_col_and(sm_col *p1, sm_col *p2);
-int sm_col_hash(sm_col *pcol, int modulus);
-void sm_col_print(FILE *fp, sm_col *pcol);
 /* dominate.c */
 int sm_row_dominance(sm_matrix *A);
 int sm_col_dominance(sm_matrix *A, int *weight);
