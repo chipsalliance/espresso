@@ -112,7 +112,7 @@ foreach(
   examples/br1
   examples/br2
   examples/check
-  examples/check~
+  examples/check1
   examples/check2
   examples/chkn
   examples/clpl
