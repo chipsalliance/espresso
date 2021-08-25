@@ -1,7 +1,8 @@
 .i 9
 .o 23
 .ilb  CPIPE1s<0> CPIPE1s<1> CPIPE1s<2> CPIPE1s<3> CPIPE1s<4> CPIPE1s<5> CPIPE1s<7> CPIPE1s<8> RESET
-.ob  selaluSUM aluCINbar1 aluselSR selaluAND selaluOR selaluXOR selBIbar storeSXT pbusLtoINB RD_WR predecodeEA pSTOREwrite pLOADLtobusL pSXTtobusL byteEX 
+.ob  selaluSUM aluCINbar1 aluselSR selaluAND selaluOR selaluXOR selBIbar storeSXT pbusLtoINB RD_WR predecodeEA pSTOREwrite pLOADLtobusL pSXTtobusL byteEX
+     o16 o17 o18 o19 o20 o21 o22 o23
 .p 43
 --------1 00000000000000000010000
 ---0--11- 00000000100001000000000
