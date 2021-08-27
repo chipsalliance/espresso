@@ -57,12 +57,12 @@ void read_cube(FILE *fp, pPLA PLA) {
                 var--;
                 break;
             case '2':
-            case '-':
+            case '-':  // 2n and (2n + 1)
                 set_insert(cf, var * 2 + 1);
-            case '0':
+            case '0':  // 2n
                 set_insert(cf, var * 2);
                 break;
-            case '1':
+            case '1':  // (2n + 1)
                 set_insert(cf, var * 2 + 1);
                 break;
             case '?':
@@ -71,34 +71,7 @@ void read_cube(FILE *fp, pPLA PLA) {
                 goto bad_char;
         }
 
-    /* Loop for the all but one of the multiple-valued variables */
-    for (var = cube.num_binary_vars; var < cube.num_vars - 1; var++)
-        for (i = cube.first_part[var]; i <= cube.last_part[var]; i++)
-            switch (getc(fp)) {
-                case EOF:
-                    goto bad_char;
-                case '\n':
-                    if (!line_length_error)
-                        fprintf(stderr, "product term(s) %s\n",
-                                "span more than one line (warning only)");
-                    line_length_error = TRUE;
-                    lineno++;
-                    i--;
-                    break;
-                case ' ':
-                case '|':
-                case '\t':
-                    i--;
-                    break;
-                case '1':
-                    set_insert(cf, i);
-                case '0':
-                    break;
-                default:
-                    goto bad_char;
-            }
-
-    /* Loop for last multiple-valued variable */
+    /* Loop for last multiple-valued variable (the output) */
     set_copy(cr, cf);
     set_copy(cd, cf);
     for (i = cube.first_part[var]; i <= cube.last_part[var]; i++)

@@ -265,7 +265,7 @@ typedef enum {
 #define CUBE_TEMP 10
 
 struct cube_struct {
-    int size;            /* set size of a cube */
+    int size;            /* set size of a cube, number of columns */
     int num_vars;        /* number of variables in a cube */
     int num_binary_vars; /* number of binary variables */
     int *first_part;     /* first element of each variable */
@@ -286,7 +286,7 @@ struct cube_struct {
 };
 
 struct cdata_struct {
-    int *part_zeros;   /* count of zeros for each element */
+    int *part_zeros;   /* count of zeros for each element (column) */
     int *var_zeros;    /* count of zeros for each variable */
     int *parts_active; /* number of "active" parts for each var */
     bool *is_unate;    /* indicates given var is unate */
@@ -335,8 +335,7 @@ int read_pla(FILE *fp, pPLA *PLA_return);
 pPLA new_PLA();
 void free_PLA(pPLA PLA);
 /* cvrm.c */
-pset_family unravel_range(pset_family B, int start, int end);
-pset_family unravel(pset_family B, int start);
+pset_family unravel_output(pset_family B);
 pset_family mini_sort(pset_family F, int (*compare)(pset *, pset *));
 pset_family sort_reduce(pset_family T);
 int cubelist_partition(pset *T, pset **A, pset **B);
@@ -441,3 +440,7 @@ pset_family map_cover_to_unate(pset *T);
 pset_family map_unate_to_cover(pset_family A);
 pset_family unate_compl(pset_family A);
 pset_family unate_complement(pset_family A);
+
+/* helper.c */
+char *sf_print(pset_family A);
+char *ps1(pset a);

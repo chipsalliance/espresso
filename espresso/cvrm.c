@@ -8,23 +8,20 @@
 
 #include "espresso.h"
 
-static void cb_unravel(pcube c, int start, int end, pcube startbase,
-                       pcover B1) {
+static void cb_unravel(pcube c, pcube startbase, pcover B1) {
     pcube base = cube.temp[0], p, last;
-    int expansion, place, skip, var, size, offset;
-    int i, j, k, n;
+    int expansion, place, size, offset;
+    int i, j, n;
 
     /* Determine how many cubes it will blow up into, and create a mask
         for those parts that have only a single coordinate
     */
     expansion = 1;
     (void)set_copy(base, startbase);
-    for (var = start; var <= end; var++) {
-        if ((size = set_dist(c, cube.var_mask[var])) < 2) {
-            (void)set_or(base, base, cube.var_mask[var]);
-        } else {
-            expansion *= size;
-        }
+    if ((size = set_dist(c, cube.var_mask[cube.output])) < 2) {
+        (void)set_or(base, base, cube.var_mask[cube.output]);
+    } else {
+        expansion *= size;
     }
     (void)set_and(base, c, base);
 
@@ -35,61 +32,55 @@ static void cb_unravel(pcube c, int start, int end, pcube startbase,
         INLINEset_copy(p, base);
     }
 
-    place = expansion;
-    for (var = start; var <= end; var++) {
-        if ((size = set_dist(c, cube.var_mask[var])) > 1) {
-            skip = place;
-            place = place / size;
-            n = 0;
-            for (i = cube.first_part[var]; i <= cube.last_part[var]; i++) {
-                if (is_in_set(c, i)) {
-                    for (j = n; j < expansion; j += skip) {
-                        for (k = 0; k < place; k++) {
-                            p = GETSET(B1, j + k + offset);
-                            (void)set_insert(p, i);
-                        }
-                    }
-                    n += place;
+    if ((size = set_dist(c, cube.var_mask[cube.output])) > 1) {
+        place = expansion / size;
+        n = 0;
+        for (i = cube.first_part[cube.output]; i <= cube.last_part[cube.output];
+             i++) {
+            if (is_in_set(c, i)) {
+                for (j = 0; j < place; j++) {
+                    p = GETSET(B1, n + j + offset);
+                    (void)set_insert(p, i);
                 }
+                n += place;
             }
         }
     }
 }
 
-pcover unravel_range(pcover B, int start, int end) {
+/**
+ * Unravel on output part
+ * @param B Cover to be unraveled, can have multiple `1`s in the output part of
+ *              every cube.
+ * @return A cover which has the output part of every cube 'one-hot'.
+ */
+pcover unravel_output(pcover B) {
     pcover B1;
     int var, total_size, expansion, size;
     pcube p, last, startbase = cube.temp[1];
 
     /* Create the starting base for those variables not being unravelled */
     (void)set_copy(startbase, cube.emptyset);
-    for (var = 0; var < start; var++)
-        (void)set_or(startbase, startbase, cube.var_mask[var]);
-    for (var = end + 1; var < cube.num_vars; var++)
+    for (var = 0; var < cube.output; var++)
         (void)set_or(startbase, startbase, cube.var_mask[var]);
 
     /* Determine how many cubes it will blow up into */
     total_size = 0;
     foreach_set(B, last, p) {
         expansion = 1;
-        for (var = start; var <= end; var++)
-            if ((size = set_dist(p, cube.var_mask[var])) >= 2)
-                if ((expansion *= size) > 1000000)
-                    fatal("unreasonable expansion in unravel");
+        if ((size = set_dist(p, cube.var_mask[cube.output])) >= 2)
+            if ((expansion *= size) > 1000000)
+                fatal("unreasonable expansion in unravel");
         total_size += expansion;
     }
 
     /* We can now allocate a cover of exactly the correct size */
     B1 = new_cover(total_size);
     foreach_set(B, last, p) {
-        cb_unravel(p, start, end, startbase, B1);
+        cb_unravel(p, startbase, B1);
     }
     free_cover(B);
     return B1;
-}
-
-pcover unravel(pcover B, int start) {
-    return unravel_range(B, start, cube.num_vars - 1);
 }
 
 /*  mini_sort -- sort cubes according to the heuristics of mini */

@@ -602,7 +602,7 @@ void mincov(pcover BB, pcube RAISE, pcube FREESET) {
             goto heuristic_mincov;
     }
 
-    B = unravel(B, cube.num_binary_vars);
+    B = unravel_output(B);
     xlower = do_sm_minimum_cover(B);
 
     /* Add any remaining free parts to the raising set */

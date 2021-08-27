@@ -32,7 +32,8 @@ add_executable(
   espresso/sminterf.c
   espresso/solution.c
   espresso/sparse.c
-  espresso/unate.c)
+  espresso/unate.c
+  espresso/helper.c)
 set_property(TARGET espresso PROPERTY C_STANDARD 99)
 
 include(GNUInstallDirs)

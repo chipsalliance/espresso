@@ -53,7 +53,7 @@ begin:
     if (unwrap_onset && (cube.part_size[cube.num_vars - 1] > 1) &&
         (cost.out != cost.cubes * cube.part_size[cube.num_vars - 1]) &&
         (cost.out < 5000))
-        F = sf_contain(unravel(F, cube.num_vars - 1));
+        F = sf_contain(unravel_output(F));
 
     /* Initial expand and irredundant */
     foreach_set(F, last, p) {
