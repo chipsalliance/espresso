@@ -35,7 +35,6 @@ void cube_setup() {
     cube.var_mask = ALLOC(pset, cube.num_input_vars + 1);
     cube.sparse = ALLOC(int, cube.num_input_vars + 1);
     cube.binary_mask = new_cube();
-    cube.mv_mask = new_cube();
     for (var = 0; var < cube.num_input_vars + 1; var++) {
         p = cube.var_mask[var] = new_cube();
         for (i = cube.first_part[var]; i <= cube.last_part[var]; i++)
@@ -44,7 +43,6 @@ void cube_setup() {
             INLINEset_or(cube.binary_mask, cube.binary_mask, p);
             cube.sparse[var] = 0;
         } else {  // output
-            INLINEset_or(cube.mv_mask, cube.mv_mask, p);
             cube.sparse[var] = 1;
         }
     }
@@ -84,7 +82,6 @@ void setdown_cube() {
     FREE(cube.sparse);
 
     free_cube(cube.binary_mask);
-    free_cube(cube.mv_mask);
     free_cube(cube.fullset);
     free_cube(cube.emptyset);
     for (var = 0; var < cube.num_input_vars + 1; var++)
@@ -103,7 +100,7 @@ void setdown_cube() {
     cube.first_part = cube.last_part = (int *)NULL;
     cube.first_word = cube.last_word = (int *)NULL;
     cube.sparse = (int *)NULL;
-    cube.binary_mask = cube.mv_mask = (pcube)NULL;
+    cube.binary_mask = (pcube)NULL;
     cube.fullset = cube.emptyset = (pcube)NULL;
     cube.var_mask = cube.temp = (pcube *)NULL;
 

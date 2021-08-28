@@ -271,7 +271,6 @@ struct cube_struct {
     int *first_word;     /* first word for each variable */
     int *last_word;      /* last word for each variable */
     pset binary_mask;    /* Mask to extract binary variables */
-    pset mv_mask;        /* mask to get mv parts */
     pset *var_mask;      /* mask to extract a variable */
     pset *temp;          /* an array of temporary sets */
     pset fullset;        /* a full cube */
