@@ -39,7 +39,7 @@ void read_cube(FILE *fp, pPLA PLA) {
     set_clear(cf, cube.size);
 
     /* Loop and read binary variables */
-    for (var = 0; var < cube.num_binary_vars; var++)
+    for (var = 0; var < cube.num_input_vars; var++)
         switch (getc(fp)) {
             case EOF:
                 goto bad_char;
@@ -151,12 +151,11 @@ loop:
                     fprintf(stderr, "extra .i ignored\n");
                     skip_line(fp);
                 } else {
-                    if (fscanf(fp, "%d", &cube.num_binary_vars) != 1)
+                    if (fscanf(fp, "%d", &cube.num_input_vars) != 1)
                         fatal("error reading .i");
-                    if (cube.num_binary_vars <= 0)
+                    if (cube.num_input_vars <= 0)
                         fatal("silly value in .i");
-                    cube.num_vars = cube.num_binary_vars + 1;
-                    cube.part_size = ALLOC(int, cube.num_vars);
+                    cube.part_size = ALLOC(int, cube.num_input_vars + 1);
                 }
 
                 /* .o gives the cube output size (binary-functions only) */
@@ -168,9 +167,11 @@ loop:
                     if (cube.part_size == NULL)
                         fatal(".o cannot appear before .i");
                     if (fscanf(fp, "%d",
-                               &(cube.part_size[cube.num_vars - 1])) != 1)
+                               &(cube.part_size[cube.num_input_vars])) !=
+                        1)  // we don't have cube.output until cube_setup is
+                            // called
                         fatal("error reading .o");
-                    if (cube.part_size[cube.num_vars - 1] <= 0)
+                    if (cube.part_size[cube.num_input_vars] <= 0)
                         fatal("silly value in .i");
                     cube_setup();
                 }
@@ -230,7 +231,6 @@ loop:
 */
 int read_pla(FILE *fp, pPLA *PLA_return) {
     pPLA PLA;
-    int i;
 
     /* Allocate and initialize the PLA structure */
     PLA = *PLA_return = new_PLA();
@@ -243,11 +243,6 @@ int read_pla(FILE *fp, pPLA *PLA_return) {
         return EOF;
     }
 
-    /* This hack merges the next-state field with the outputs */
-    for (i = 0; i < cube.num_vars; i++) {
-        cube.part_size[i] = ABS(cube.part_size[i]);
-    }
-
     if (pla_type == TYPE_FD) {
         free_cover(PLA->R);
         PLA->R = complement(cube2list(PLA->F, PLA->D));  // R = U - (F u D)
@@ -255,7 +250,7 @@ int read_pla(FILE *fp, pPLA *PLA_return) {
         pcover X;
         free_cover(PLA->D);
         /* hack, why not? */
-        X = d1merge(sf_join(PLA->F, PLA->R), cube.num_vars - 1);
+        X = d1merge(sf_join(PLA->F, PLA->R), cube.num_input_vars);
         PLA->D = complement(cube1list(X));
         free_cover(X);
     }

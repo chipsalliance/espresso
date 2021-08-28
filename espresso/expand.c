@@ -58,7 +58,7 @@ pcover expand(pcover F, pcover R,
 
     /* Setup the initial lowering set (differs only for nonsparse) */
     if (nonsparse)
-        for (var = 0; var < cube.num_vars; var++)
+        for (var = 0; var < cube.num_input_vars + 1; var++)
             if (cube.sparse[var])
                 (void)set_or(INIT_LOWER, INIT_LOWER, cube.var_mask[var]);
 
@@ -454,7 +454,7 @@ bool feasibly_covered(pcover BB, pcube c, pcube RAISE, pcube new_lower) {
 */
 
 void mincov(pcover BB, pcube RAISE, pcube FREESET) {
-    int expansion, nset, var, dist;
+    int expansion, nset, dist;
     pset_family B;
     pcube xraise = cube.temp[0], xlower, p, last, plower;
 
@@ -482,12 +482,10 @@ void mincov(pcover BB, pcube RAISE, pcube FREESET) {
     nset = 0;
     foreach_set(B, last, p) {
         expansion = 1;
-        for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-            if ((dist = set_dist(p, cube.var_mask[var])) > 1) {
-                expansion *= dist;
-                if (expansion > 500)
-                    goto heuristic_mincov;
-            }
+        if ((dist = set_dist(p, cube.var_mask[cube.output])) > 1) {
+            expansion *= dist;
+            if (expansion > 500)
+                goto heuristic_mincov;
         }
         nset += expansion;
         if (nset > 500)

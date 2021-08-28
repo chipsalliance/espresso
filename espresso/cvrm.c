@@ -115,7 +115,7 @@ pcover mini_sort(pcover F, int (*compare)(pset *, pset *)) {
 /* sort_reduce -- Espresso strategy for ordering the cubes before reduction */
 pcover sort_reduce(pcover T) {
     pcube p, last, largest = NULL;
-    int bestsize = -1, size, n = cube.num_vars;
+    int bestsize = -1, size, n = cube.num_input_vars + 1;
     pcover T_sorted;
     pcube *T1;
 

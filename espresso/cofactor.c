@@ -212,17 +212,17 @@ void massive_count(pcube *T) {
         int best = -1, mostactive = 0, mostzero = 0, mostbalanced = 32000;
         cdata.vars_unate = cdata.vars_active = 0;
 
-        for (var = 0; var < cube.num_vars; var++) {
-            if (var < cube.num_binary_vars) { /* special hack for binary vars */
+        for (var = 0; var < cube.num_input_vars + 1;
+             var++) {                  // including output var
+            if (var != cube.output) {  // binary vars
                 i = count[var * 2];
                 lastbit = count[var * 2 + 1];
                 active = (i > 0) + (lastbit > 0);
                 cdata.var_zeros[var] = i + lastbit;
                 maxactive = MAX(i, lastbit);
-            } else {
+            } else {  // output var
                 maxactive = active = cdata.var_zeros[var] = 0;
-                lastbit = cube.last_part[var];
-                for (i = cube.first_part[var]; i <= lastbit; i++) {
+                for (i = cube.first_part[var]; i <= cube.last_part[var]; i++) {
                     cdata.var_zeros[var] += count[i];
                     active += (count[i] > 0);
                     if (active > maxactive)

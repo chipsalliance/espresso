@@ -50,8 +50,8 @@ begin:
 
     /* Setup has always been a problem */
     cover_cost(F, &cost);
-    if (unwrap_onset && (cube.part_size[cube.num_vars - 1] > 1) &&
-        (cost.out != cost.cubes * cube.part_size[cube.num_vars - 1]) &&
+    if (unwrap_onset && (cube.part_size[cube.output] > 1) &&
+        (cost.out != cost.cubes * cube.part_size[cube.output]) &&
         (cost.out < 5000))
         F = sf_contain(unravel_output(F));
 

@@ -46,79 +46,66 @@ pcover make_sparse(pcover F, pcover D, pcover R) {
 */
 
 pcover mv_reduce(pcover F, pcover D) {
-    int i, var;
+    int i;
     pcube p, p1, last;
     int index;
     pcover F1, D1;
     pcube *F_cube_table;
 
-    /* loop for each multiple-valued variable */
-    for (var = 0; var < cube.num_vars; var++) {
-        if (cube.sparse[var]) {
-            /* loop for each part of the variable */
-            for (i = cube.first_part[var]; i <= cube.last_part[var]; i++) {
-                /* remember mapping of F1 cubes back to F cubes */
-                F_cube_table = ALLOC(pcube, F->count);
+    /* loop for each part of the variable */
+    for (i = cube.first_part[cube.output]; i <= cube.last_part[cube.output];
+         i++) {
+        /* remember mapping of F1 cubes back to F cubes */
+        F_cube_table = ALLOC(pcube, F->count);
 
-                /* 'cofactor' against part #i of variable #var */
-                F1 = new_cover(F->count);
-                foreach_set(F, last, p) {
-                    if (is_in_set(p, i)) {
-                        F_cube_table[F1->count] = p;
-                        p1 = GETSET(F1, F1->count++);
-                        (void)set_diff(p1, p, cube.var_mask[var]);
-                        set_insert(p1, i);
-                    }
-                }
-
-                /* 'cofactor' against part #i of variable #var */
-                /* not really necessary -- just more efficient ? */
-                D1 = new_cover(D->count);
-                foreach_set(D, last, p) {
-                    if (is_in_set(p, i)) {
-                        p1 = GETSET(D1, D1->count++);
-                        (void)set_diff(p1, p, cube.var_mask[var]);
-                        set_insert(p1, i);
-                    }
-                }
-
-                mark_irredundant(F1, D1);
-
-                /* now remove part i from cubes which are redundant */
-                index = 0;
-                foreach_set(F1, last, p1) {
-                    if (!TESTP(p1, ACTIVE)) {
-                        p = F_cube_table[index];
-
-                        /*   don't reduce a variable which is full
-                         *   (unless it is the output variable)
-                         */
-                        if (var == cube.num_vars - 1 ||
-                            !setp_implies(cube.var_mask[var], p)) {
-                            set_remove(p, i);
-                        }
-                        RESET(p, PRIME);
-                    }
-                    index++;
-                }
-
-                free_cover(F1);
-                free_cover(D1);
-                FREE(F_cube_table);
+        /* 'cofactor' against part #i of variable #var */
+        F1 = new_cover(F->count);
+        foreach_set(F, last, p) {
+            if (is_in_set(p, i)) {
+                F_cube_table[F1->count] = p;
+                p1 = GETSET(F1, F1->count++);
+                (void)set_diff(p1, p, cube.var_mask[cube.output]);
+                set_insert(p1, i);
             }
         }
+
+        /* 'cofactor' against part #i of variable #var */
+        /* not really necessary -- just more efficient ? */
+        D1 = new_cover(D->count);
+        foreach_set(D, last, p) {
+            if (is_in_set(p, i)) {
+                p1 = GETSET(D1, D1->count++);
+                (void)set_diff(p1, p, cube.var_mask[cube.output]);
+                set_insert(p1, i);
+            }
+        }
+
+        mark_irredundant(F1, D1);
+
+        /* now remove part i from cubes which are redundant */
+        index = 0;
+        foreach_set(F1, last, p1) {
+            if (!TESTP(p1, ACTIVE)) {
+                p = F_cube_table[index];
+
+                // reduce the output variable
+                set_remove(p, i);
+                RESET(p, PRIME);
+            }
+            index++;
+        }
+
+        free_cover(F1);
+        free_cover(D1);
+        FREE(F_cube_table);
     }
 
     /* Check if any cubes disappeared */
     (void)sf_active(F);
-    for (var = 0; var < cube.num_vars; var++) {
-        if (cube.sparse[var]) {
-            foreach_active_set(F, last, p) {
-                if (setp_disjoint(p, cube.var_mask[var])) {
-                    RESET(p, ACTIVE);
-                    F->active_count--;
-                }
-            }
+    foreach_active_set(F, last, p) {
+        if (setp_disjoint(p, cube.var_mask[cube.output])) {
+            RESET(p, ACTIVE);
+            F->active_count--;
         }
     }
 

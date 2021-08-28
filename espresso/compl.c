@@ -27,12 +27,12 @@ static pcover compl_cube(pcube p) {
     pcover R;
 
     /* Allocate worst-case size cover (to avoid checking overflow) */
-    R = new_cover(cube.num_vars);
+    R = new_cover(cube.num_input_vars + 1);
 
     /* Compute bit-wise complement of the cube */
     INLINEset_diff(diff, full, p);
 
-    for (var = 0; var < cube.num_vars; var++) {
+    for (var = 0; var < cube.num_input_vars + 1; var++) {
         mask = cube.var_mask[var];
         /* If the bit-wise complement is not empty in var ... */
         if (!setp_disjoint(diff, mask)) {

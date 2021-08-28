@@ -28,8 +28,5 @@
 #ifndef MIN
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif /* MIN */
-#ifndef ABS
-#define ABS(a) ((a) > 0 ? (a) : -(a))
-#endif /* ABS */
 
 #endif  // ESPRESSO_PORT_H

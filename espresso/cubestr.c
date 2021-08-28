@@ -5,8 +5,8 @@
 #include "espresso.h"
 
 /*
-    cube_setup -- assume that the fields "num_vars", "num_binary_vars", and
-    part_size[num_binary_vars .. num_vars-1] are setup, and initialize the
+    cube_setup -- assume that the fields "num_input_vars", and
+    part_size[num_input_vars (aka output)] is setup, and initialize the
     rest of cube and cdata.
 
     If a part_size is < 0, then the field size is abs(part_size) and the
@@ -16,42 +16,42 @@ void cube_setup() {
     int i, var;
     pcube p;
 
-    cube.output = cube.num_vars - 1;
+    cube.output = cube.num_input_vars;
     cube.size = 0;
-    cube.first_part = ALLOC(int, cube.num_vars);
-    cube.last_part = ALLOC(int, cube.num_vars);
-    cube.first_word = ALLOC(int, cube.num_vars);
-    cube.last_word = ALLOC(int, cube.num_vars);
-    for (var = 0; var < cube.num_vars; var++) {
-        if (var < cube.num_binary_vars)
+    cube.first_part = ALLOC(int, cube.num_input_vars + 1);
+    cube.last_part = ALLOC(int, cube.num_input_vars + 1);
+    cube.first_word = ALLOC(int, cube.num_input_vars + 1);
+    cube.last_word = ALLOC(int, cube.num_input_vars + 1);
+    for (var = 0; var < cube.num_input_vars + 1; var++) {
+        if (var < cube.num_input_vars)
             cube.part_size[var] = 2;
         cube.first_part[var] = cube.size;
         cube.first_word[var] = WHICH_WORD(cube.size);
-        cube.size += ABS(cube.part_size[var]);
+        cube.size += cube.part_size[var];
         cube.last_part[var] = cube.size - 1;
         cube.last_word[var] = WHICH_WORD(cube.size - 1);
     }
 
-    cube.var_mask = ALLOC(pset, cube.num_vars);
-    cube.sparse = ALLOC(int, cube.num_vars);
+    cube.var_mask = ALLOC(pset, cube.num_input_vars + 1);
+    cube.sparse = ALLOC(int, cube.num_input_vars + 1);
     cube.binary_mask = new_cube();
     cube.mv_mask = new_cube();
-    for (var = 0; var < cube.num_vars; var++) {
+    for (var = 0; var < cube.num_input_vars + 1; var++) {
         p = cube.var_mask[var] = new_cube();
         for (i = cube.first_part[var]; i <= cube.last_part[var]; i++)
             set_insert(p, i);
-        if (var < cube.num_binary_vars) {
+        if (var < cube.num_input_vars) {
             INLINEset_or(cube.binary_mask, cube.binary_mask, p);
             cube.sparse[var] = 0;
-        } else {
+        } else {  // output
             INLINEset_or(cube.mv_mask, cube.mv_mask, p);
             cube.sparse[var] = 1;
         }
     }
-    if (cube.num_binary_vars == 0)
+    if (cube.num_input_vars == 0)
         cube.inword = -1;
     else {
-        cube.inword = cube.last_word[cube.num_binary_vars - 1];
+        cube.inword = cube.last_word[cube.num_input_vars - 1];
         cube.inmask = cube.binary_mask[cube.inword] & DISJOINT;
     }
 
@@ -62,9 +62,9 @@ void cube_setup() {
     cube.emptyset = new_cube();
 
     cdata.part_zeros = ALLOC(int, cube.size);
-    cdata.var_zeros = ALLOC(int, cube.num_vars);
-    cdata.parts_active = ALLOC(int, cube.num_vars);
-    cdata.is_unate = ALLOC(int, cube.num_vars);
+    cdata.var_zeros = ALLOC(int, cube.num_input_vars + 1);
+    cdata.parts_active = ALLOC(int, cube.num_input_vars + 1);
+    cdata.is_unate = ALLOC(int, cube.num_input_vars + 1);
 }
 
 /*
@@ -87,7 +87,7 @@ void setdown_cube() {
     free_cube(cube.mv_mask);
     free_cube(cube.fullset);
     free_cube(cube.emptyset);
-    for (var = 0; var < cube.num_vars; var++)
+    for (var = 0; var < cube.num_input_vars + 1; var++)
         free_cube(cube.var_mask[var]);
     FREE(cube.var_mask);
 

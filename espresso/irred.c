@@ -139,7 +139,7 @@ start:
     } else if (cdata.vars_unate != 0) {
         /* Form a cube "ceil" with full variables in the unate variables */
         (void)set_copy(ceil, cube.emptyset);
-        for (var = 0; var < cube.num_vars; var++) {
+        for (var = 0; var < cube.num_input_vars + 1; var++) {
             if (cdata.is_unate[var]) {
                 INLINEset_or(ceil, ceil, cube.var_mask[var]);
             }
@@ -301,7 +301,7 @@ start:
     } else if (cdata.vars_unate != 0) {
         /* Form a cube "ceil" with full variables in the unate variables */
         (void)set_copy(ceil, cube.emptyset);
-        for (var = 0; var < cube.num_vars; var++) {
+        for (var = 0; var < cube.num_input_vars + 1; var++) {
             if (cdata.is_unate[var]) {
                 INLINEset_or(ceil, ceil, cube.var_mask[var]);
             }

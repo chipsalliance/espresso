@@ -14,21 +14,12 @@ void cover_cost(pcover F, pcost cost) {
     cost->total = cost->in = cost->out = cost->mv = cost->primes = 0;
 
     /* Count transistors (zeros) for each binary variable (inputs) */
-    for (var = 0; var < cube.num_binary_vars; var++)
+    for (var = 0; var < cube.num_input_vars; var++)
         cost->in += cdata.var_zeros[var];
 
-    /* Count transistors for each mv variable based on sparse/dense */
-    for (var = cube.num_binary_vars; var < cube.num_vars - 1; var++)
-        if (cube.sparse[var])
-            cost->mv += F->count * cube.part_size[var] - cdata.var_zeros[var];
-        else
-            cost->mv += cdata.var_zeros[var];
-
     /* Count the transistors (ones) for the output variable */
-    if (cube.num_binary_vars != cube.num_vars) {
-        var = cube.num_vars - 1;
-        cost->out = F->count * cube.part_size[var] - cdata.var_zeros[var];
-    }
+    cost->out =
+        F->count * cube.part_size[cube.output] - cdata.var_zeros[cube.output];
 
     /* Count the number of nonprime cubes */
     foreach_set(F, last, p) cost->primes += TESTP(p, PRIME) != 0;

@@ -54,9 +54,9 @@ pcover map_unate_to_cover(pset_family A) {
     B->count = A->count;
 
     /* Find the unate variables */
-    unate = ALLOC(int, cube.num_vars);
+    unate = ALLOC(int, cube.num_input_vars + 1);
     nunate = 0;
-    for (var = 0; var < cube.num_vars; var++) {
+    for (var = 0; var < cube.num_input_vars + 1; var++) {
         if (cdata.is_unate[var]) {
             unate[nunate++] = var;
         }

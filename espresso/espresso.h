@@ -264,8 +264,7 @@ typedef enum {
 
 struct cube_struct {
     int size;            /* set size of a cube, number of columns */
-    int num_vars;        /* number of variables in a cube */
-    int num_binary_vars; /* number of binary variables */
+    int num_input_vars;  /* number of binary variables */
     int *first_part;     /* first element of each variable */
     int *last_part;      /* first element of each variable */
     int *part_size;      /* number of elements in each variable */

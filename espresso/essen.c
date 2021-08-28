@@ -117,7 +117,6 @@ pcover cb_consensus(pcover T, pcube c) {
  *  What we are forming is consensus(p # c, c).
  */
 pcover cb_consensus_dist0(pcover R, pcube p, pcube c) {
-    int var;
     bool got_one;
     pcube temp, mask;
     pcube p_diff_c = cube.temp[0], p_and_c = cube.temp[1];
@@ -133,18 +132,16 @@ pcover cb_consensus_dist0(pcover R, pcube p, pcube c) {
     INLINEset_diff(p_diff_c, p, c);
     INLINEset_and(p_and_c, p, c);
 
-    for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-        /* Check if c(var) is contained in p(var) -- if so, no news */
-        mask = cube.var_mask[var];
-        if (!setp_disjoint(p_diff_c, mask)) {
-            INLINEset_merge(temp, c, p_and_c, mask);
-            R = sf_addset(R, temp);
-            got_one = TRUE;
-        }
+    /* Check if c(output) is contained in p(output) -- if so, no news */
+    mask = cube.var_mask[cube.output];
+    if (!setp_disjoint(p_diff_c, mask)) {
+        INLINEset_merge(temp, c, p_and_c, mask);
+        R = sf_addset(R, temp);
+        got_one = TRUE;
     }
 
     /* if no cube so far, add one for the intersection */
-    if (!got_one && cube.num_binary_vars > 0) {
+    if (!got_one && cube.num_input_vars > 0) {
         /* Add a single cube for the intersection of p and c */
         INLINEset_and(temp, p, c);
         R = sf_addset(R, temp);

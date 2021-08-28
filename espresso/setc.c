@@ -73,20 +73,14 @@ bool cdist0(pcube a, pcube b) {
         }
     }
 
-    { /* Check the multiple-valued variables */
-        int w, var, last;
-        pcube mask;
-        for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-            mask = cube.var_mask[var];
-            last = cube.last_word[var];
-            for (w = cube.first_word[var]; w <= last; w++)
-                if (a[w] & b[w] & mask[w])
-                    goto nextvar;
-            return FALSE; /* disjoint in this variable */
-        nextvar:;
-        }
+    { /* Check the output variable */
+        int w;
+        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
+             w++)
+            if (a[w] & b[w] & cube.var_mask[cube.output][w])
+                return TRUE;
+        return FALSE; /* disjoint in this variable */
     }
-    return TRUE;
 }
 
 /*
@@ -118,19 +112,14 @@ int cdist01(pset a, pset b) {
         }
     }
 
-    { /* Check the multiple-valued variables */
-        int w, var, last;
-        pcube mask;
-        for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-            mask = cube.var_mask[var];
-            last = cube.last_word[var];
-            for (w = cube.first_word[var]; w <= last; w++)
-                if (a[w] & b[w] & mask[w])
-                    goto nextvar;
-            if (++dist > 1)
-                return 2;
-        nextvar:;
-        }
+    { /* Check the output variable */
+        int w;
+        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
+             w++)
+            if (a[w] & b[w] & cube.var_mask[cube.output][w])
+                return dist;
+        if (++dist > 1)
+            return 2;
     }
     return dist;
 }
@@ -161,18 +150,13 @@ int cdist(pset a, pset b) {
         }
     }
 
-    { /* Check the multiple-valued variables */
-        int w, var, last;
-        pcube mask;
-        for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-            mask = cube.var_mask[var];
-            last = cube.last_word[var];
-            for (w = cube.first_word[var]; w <= last; w++)
-                if (a[w] & b[w] & mask[w])
-                    goto nextvar;
-            dist++;
-        nextvar:;
-        }
+    { /* Check the output variable */
+        int w;
+        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
+             w++)
+            if (a[w] & b[w] & cube.var_mask[cube.output][w])
+                return dist;
+        dist++;
     }
     return dist;
 }
@@ -200,19 +184,15 @@ pset force_lower(pset xlower, pset a, pset b) {
         }
     }
 
-    { /* Check the multiple-valued variables */
-        int w, var, last;
-        pcube mask;
-        for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-            mask = cube.var_mask[var];
-            last = cube.last_word[var];
-            for (w = cube.first_word[var]; w <= last; w++)
-                if (a[w] & b[w] & mask[w])
-                    goto nextvar;
-            for (w = cube.first_word[var]; w <= last; w++)
-                xlower[w] |= a[w] & mask[w];
-        nextvar:;
-        }
+    { /* Check the output variable */
+        int w;
+        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
+             w++)
+            if (a[w] & b[w] & cube.var_mask[cube.output][w])
+                return xlower;
+        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
+             w++)
+            xlower[w] |= a[w] & cube.var_mask[cube.output][w];
     }
     return xlower;
 }
@@ -251,23 +231,19 @@ void consensus(pcube r, pcube a, pcube b) {
         }
     }
 
-    { /* Check the multiple-valued variables */
+    { /* Check the output variable */
         bool empty;
-        int var;
         unsigned int x;
-        int w, last;
-        pcube mask;
-        for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-            mask = cube.var_mask[var];
-            last = cube.last_word[var];
-            empty = TRUE;
-            for (w = cube.first_word[var]; w <= last; w++)
-                if ((x = a[w] & b[w] & mask[w]))
-                    empty = FALSE, r[w] |= x;
-            if (empty)
-                for (w = cube.first_word[var]; w <= last; w++)
-                    r[w] |= mask[w] & (a[w] | b[w]);
-        }
+        int w;
+        empty = TRUE;
+        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
+             w++)
+            if ((x = a[w] & b[w] & cube.var_mask[cube.output][w]))
+                empty = FALSE, r[w] |= x;
+        if (empty)
+            for (w = cube.first_word[cube.output];
+                 w <= cube.last_word[cube.output]; w++)
+                r[w] |= cube.var_mask[cube.output][w] & (a[w] | b[w]);
     }
 }
 
@@ -303,20 +279,16 @@ int cactive(pcube a) {
         }
     }
 
-    { /* Check the multiple-valued variables */
-        int w, var, last;
-        pcube mask;
-        for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-            mask = cube.var_mask[var];
-            last = cube.last_word[var];
-            for (w = cube.first_word[var]; w <= last; w++)
-                if (mask[w] & ~a[w]) {
-                    if (++dist > 1)
-                        return -1;
-                    active = var;
-                    break;
-                }
-        }
+    { /* Check the output variable */
+        int w;
+        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
+             w++)
+            if (cube.var_mask[cube.output][w] & ~a[w]) {
+                if (++dist > 1)
+                    return -1;
+                active = cube.output;
+                break;
+            }
     }
     return active;
 }
@@ -348,23 +320,19 @@ bool ccommon(pcube a, pcube b, pcube cof) {
         }
     }
 
-    { /* Check the multiple-valued variables */
-        int var;
-        int w, last;
-        pcube mask;
-        for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-            mask = cube.var_mask[var];
-            last = cube.last_word[var];
-            /* Check for some part missing from a */
-            for (w = cube.first_word[var]; w <= last; w++)
-                if (mask[w] & ~a[w] & ~cof[w]) {
-                    /* If so, check for some part missing from b */
-                    for (w = cube.first_word[var]; w <= last; w++)
-                        if (mask[w] & ~b[w] & ~cof[w])
-                            return TRUE; /* both active */
-                    break;
-                }
-        }
+    { /* Check the output variable */
+        int w;
+        /* Check for some part missing from a */
+        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
+             w++)
+            if (cube.var_mask[cube.output][w] & ~a[w] & ~cof[w]) {
+                /* If so, check for some part missing from b */
+                for (w = cube.first_word[cube.output];
+                     w <= cube.last_word[cube.output]; w++)
+                    if (cube.var_mask[cube.output][w] & ~b[w] & ~cof[w])
+                        return TRUE; /* both active */
+                break;
+            }
     }
     return FALSE;
 }
