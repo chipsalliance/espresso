@@ -6,8 +6,6 @@
 #include "sparse.h"
 #include "mincov.h"
 
-#undef NO_INLINE
-
 /*-----THIS USED TO BE set.h----- */
 
 /*

@@ -45,41 +45,8 @@ pcube *cofactor(pcube *T, pcube c) {
     /* Loop for each cube in the list, determine suitability, and save */
     for (T1 = T + 2; (p = *T1++) != NULL;) {
         if (p != c) {
-#ifdef NO_INLINE
-            if (!cdist0(p, c))
-                goto false;
-#else
-            {
-                int w, last;
-                unsigned int x;
-                if ((last = cube.inword) != -1) {
-                    x = p[last] & c[last];
-                    if (~(x | x >> 1) & cube.inmask)
-                        goto false;
-                    for (w = 1; w < last; w++) {
-                        x = p[w] & c[w];
-                        if (~(x | x >> 1) & DISJOINT)
-                            goto false;
-                    }
-                }
-            }
-            {
-                int w, var, last;
-                pcube mask;
-                for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-                    mask = cube.var_mask[var];
-                    last = cube.last_word[var];
-                    for (w = cube.first_word[var]; w <= last; w++)
-                        if (p[w] & c[w] & mask[w])
-                            goto nextvar;
-                    goto false;
-                nextvar:;
-                }
-            }
-#endif
-
-            *Tc++ = p;
-            false:;
+            if (cdist0(p, c))
+                *Tc++ = p;
         }
     }
 

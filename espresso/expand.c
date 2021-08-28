@@ -190,50 +190,15 @@ void essen_parts(pcover BB, pcover CC, pcube RAISE, pcube FREESET) {
     (void)set_copy(xlower, cube.emptyset);
 
     foreach_active_set(BB, lastp, p) {
-#ifdef NO_INLINE
-        if ((dist = cdist01(p, r)) > 1)
-            goto exit_if;
-#else
-        {
-            int w, last;
-            unsigned int x;
-            dist = 0;
-            if ((last = cube.inword) != -1) {
-                x = p[last] & r[last];
-                if ((x = ~(x | x >> 1) & cube.inmask))
-                    if ((dist = count_ones(x)) > 1)
-                        goto exit_if;
-                for (w = 1; w < last; w++) {
-                    x = p[w] & r[w];
-                    if ((x = ~(x | x >> 1) & DISJOINT))
-                        if (dist == 1 || (dist += count_ones(x)) > 1)
-                            goto exit_if;
-                }
+        if ((dist = cdist01(p, r)) <= 1) {
+            if (dist == 0) {
+                fatal("ON-set and OFF-set are not orthogonal");
+            } else {
+                (void)force_lower(xlower, p, r);
+                BB->active_count--;
+                RESET(p, ACTIVE);
             }
         }
-        {
-            int w, var, last;
-            pcube mask;
-            for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-                mask = cube.var_mask[var];
-                last = cube.last_word[var];
-                for (w = cube.first_word[var]; w <= last; w++)
-                    if (p[w] & r[w] & mask[w])
-                        goto nextvar;
-                if (++dist > 1)
-                    goto exit_if;
-            nextvar:;
-            }
-        }
-#endif
-        if (dist == 0) {
-            fatal("ON-set and OFF-set are not orthogonal");
-        } else {
-            (void)force_lower(xlower, p, r);
-            BB->active_count--;
-            RESET(p, ACTIVE);
-        }
-    exit_if:;
     }
 
     if (!setp_empty(xlower)) {
@@ -279,39 +244,7 @@ void elim_lowering(pcover BB, pcover CC, pcube RAISE, pcube FREESET) {
      *  Remove sets of BB which are orthogonal to future expansions
      */
     foreach_active_set(BB, last, p) {
-#ifdef NO_INLINE
         if (!cdist0(p, r))
-#else
-        {
-            int w, lastw;
-            unsigned int x;
-            if ((lastw = cube.inword) != -1) {
-                x = p[lastw] & r[lastw];
-                if (~(x | x >> 1) & cube.inmask)
-                    goto false;
-                for (w = 1; w < lastw; w++) {
-                    x = p[w] & r[w];
-                    if (~(x | x >> 1) & DISJOINT)
-                        goto false;
-                }
-            }
-        }
-        {
-            int w, var, lastw;
-            pcube mask;
-            for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-                mask = cube.var_mask[var];
-                lastw = cube.last_word[var];
-                for (w = cube.first_word[var]; w <= lastw; w++)
-                    if (p[w] & r[w] & mask[w])
-                        goto nextvar;
-                goto false;
-            nextvar:;
-            }
-        }
-        continue;
-        false:
-#endif
             BB->active_count--, RESET(p, ACTIVE);
     }
 
@@ -320,13 +253,7 @@ void elim_lowering(pcover BB, pcover CC, pcube RAISE, pcube FREESET) {
      */
     if (CC != (pcover)NULL) {
         foreach_active_set(CC, last, p) {
-#ifdef NO_INLINE
             if (!setp_implies(p, r))
-#else
-            INLINEsetp_implies(p, r, /* when false => */ goto false1);
-            /* when true => go to end of loop */ continue;
-        false1:
-#endif
                 CC->active_count--, RESET(p, ACTIVE);
         }
     }
@@ -507,47 +434,12 @@ bool feasibly_covered(pcover BB, pcube c, pcube RAISE, pcube new_lower) {
 
     set_copy(new_lower, cube.emptyset);
     foreach_active_set(BB, lastp, p) {
-#ifdef NO_INLINE
-        if ((dist = cdist01(p, r)) > 1)
-            goto exit_if;
-#else
-        {
-            int w, last;
-            unsigned int x;
-            dist = 0;
-            if ((last = cube.inword) != -1) {
-                x = p[last] & r[last];
-                if ((x = ~(x | x >> 1) & cube.inmask))
-                    if ((dist = count_ones(x)) > 1)
-                        goto exit_if;
-                for (w = 1; w < last; w++) {
-                    x = p[w] & r[w];
-                    if ((x = ~(x | x >> 1) & DISJOINT))
-                        if (dist == 1 || (dist += count_ones(x)) > 1)
-                            goto exit_if;
-                }
-            }
+        if ((dist = cdist01(p, r)) <= 1) {
+            if (dist == 0)
+                return FALSE;
+            else
+                (void)force_lower(new_lower, p, r);
         }
-        {
-            int w, var, last;
-            pcube mask;
-            for (var = cube.num_binary_vars; var < cube.num_vars; var++) {
-                mask = cube.var_mask[var];
-                last = cube.last_word[var];
-                for (w = cube.first_word[var]; w <= last; w++)
-                    if (p[w] & r[w] & mask[w])
-                        goto nextvar;
-                if (++dist > 1)
-                    goto exit_if;
-            nextvar:;
-            }
-        }
-#endif
-        if (dist == 0)
-            return FALSE;
-        else
-            (void)force_lower(new_lower, p, r);
-    exit_if:;
     }
     return TRUE;
 }
