@@ -46,12 +46,9 @@ void cube_setup() {
             cube.sparse[var] = 1;
         }
     }
-    if (cube.num_input_vars == 0)
-        cube.inword = -1;
-    else {
-        cube.inword = cube.last_word[cube.num_input_vars - 1];
-        cube.inmask = cube.binary_mask[cube.inword] & DISJOINT;
-    }
+
+    cube.inword = cube.last_word[cube.num_input_vars - 1];
+    cube.inmask = cube.binary_mask[cube.inword] & DISJOINT;
 
     cube.temp = ALLOC(pset, CUBE_TEMP);
     for (i = 0; i < CUBE_TEMP; i++)

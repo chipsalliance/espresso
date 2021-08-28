@@ -56,20 +56,18 @@ bool full_row(pcube p, pcube cof) {
 
 bool cdist0(pcube a, pcube b) {
     { /* Check binary variables */
-        int w, last;
+        int w, last = cube.inword;
         unsigned int x;
-        if ((last = cube.inword) != -1) {
-            /* Check the partial word of binary variables */
-            x = a[last] & b[last];
-            if (~(x | x >> 1) & cube.inmask)
-                return FALSE; /* disjoint in some variable */
+        /* Check the partial word of binary variables */
+        x = a[last] & b[last];
+        if (~(x | x >> 1) & cube.inmask)
+            return FALSE; /* disjoint in some variable */
 
-            /* Check the full words of binary variables */
-            for (w = 1; w < last; w++) {
-                x = a[w] & b[w];
-                if (~(x | x >> 1) & DISJOINT)
-                    return FALSE; /* disjoint in some variable */
-            }
+        /* Check the full words of binary variables */
+        for (w = 1; w < last; w++) {
+            x = a[w] & b[w];
+            if (~(x | x >> 1) & DISJOINT)
+                return FALSE; /* disjoint in some variable */
         }
     }
 
@@ -93,22 +91,20 @@ int cdist01(pset a, pset b) {
     int dist = 0;
 
     { /* Check binary variables */
-        int w, last;
+        int w, last = cube.inword;
         unsigned int x;
-        if ((last = cube.inword) != -1) {
-            /* Check the partial word of binary variables */
-            x = a[last] & b[last];
-            if ((x = ~(x | x >> 1) & cube.inmask))
-                if ((dist = count_ones(x)) > 1)
-                    return 2;
+        /* Check the partial word of binary variables */
+        x = a[last] & b[last];
+        if ((x = ~(x | x >> 1) & cube.inmask))
+            if ((dist = count_ones(x)) > 1)
+                return 2;
 
-            /* Check the full words of binary variables */
-            for (w = 1; w < last; w++) {
-                x = a[w] & b[w];
-                if ((x = ~(x | x >> 1) & DISJOINT))
-                    if (dist == 1 || (dist += count_ones(x)) > 1)
-                        return 2;
-            }
+        /* Check the full words of binary variables */
+        for (w = 1; w < last; w++) {
+            x = a[w] & b[w];
+            if ((x = ~(x | x >> 1) & DISJOINT))
+                if (dist == 1 || (dist += count_ones(x)) > 1)
+                    return 2;
         }
     }
 
@@ -133,20 +129,18 @@ int cdist(pset a, pset b) {
     int dist = 0;
 
     { /* Check binary variables */
-        int w, last;
+        int w, last = cube.inword;
         unsigned int x;
-        if ((last = cube.inword) != -1) {
-            /* Check the partial word of binary variables */
-            x = a[last] & b[last];
-            if ((x = ~(x | x >> 1) & cube.inmask))
-                dist = count_ones(x);
+        /* Check the partial word of binary variables */
+        x = a[last] & b[last];
+        if ((x = ~(x | x >> 1) & cube.inmask))
+            dist = count_ones(x);
 
-            /* Check the full words of binary variables */
-            for (w = 1; w < last; w++) {
-                x = a[w] & b[w];
-                if ((x = ~(x | x >> 1) & DISJOINT))
-                    dist += count_ones(x);
-            }
+        /* Check the full words of binary variables */
+        for (w = 1; w < last; w++) {
+            x = a[w] & b[w];
+            if ((x = ~(x | x >> 1) & DISJOINT))
+                dist += count_ones(x);
         }
     }
 
@@ -167,20 +161,18 @@ int cdist(pset a, pset b) {
 
 pset force_lower(pset xlower, pset a, pset b) {
     { /* Check binary variables (if any) */
-        int w, last;
+        int w, last = cube.inword;
         unsigned int x;
-        if ((last = cube.inword) != -1) {
-            /* Check the partial word of binary variables */
-            x = a[last] & b[last];
-            if ((x = ~(x | x >> 1) & cube.inmask))
-                xlower[last] |= (x | (x << 1)) & a[last];
+        /* Check the partial word of binary variables */
+        x = a[last] & b[last];
+        if ((x = ~(x | x >> 1) & cube.inmask))
+            xlower[last] |= (x | (x << 1)) & a[last];
 
-            /* Check the full words of binary variables */
-            for (w = 1; w < last; w++) {
-                x = a[w] & b[w];
-                if ((x = ~(x | x >> 1) & DISJOINT))
-                    xlower[w] |= (x | (x << 1)) & a[w];
-            }
+        /* Check the full words of binary variables */
+        for (w = 1; w < last; w++) {
+            x = a[w] & b[w];
+            if ((x = ~(x | x >> 1) & DISJOINT))
+                xlower[w] |= (x | (x << 1)) & a[w];
         }
     }
 
@@ -214,20 +206,18 @@ void consensus(pcube r, pcube a, pcube b) {
     INLINEset_clear(r, cube.size);
 
     { /* Check binary variables (if any) */
-        int w, last;
+        int w, last = cube.inword;
         unsigned int x;
-        if ((last = cube.inword) != -1) {
-            /* Check the partial word of binary variables */
-            r[last] = x = a[last] & b[last];
-            if ((x = ~(x | x >> 1) & cube.inmask))
-                r[last] |= (x | (x << 1)) & (a[last] | b[last]);
+        /* Check the partial word of binary variables */
+        r[last] = x = a[last] & b[last];
+        if ((x = ~(x | x >> 1) & cube.inmask))
+            r[last] |= (x | (x << 1)) & (a[last] | b[last]);
 
-            /* Check the full words of binary variables */
-            for (w = 1; w < last; w++) {
-                r[w] = x = a[w] & b[w];
-                if ((x = ~(x | x >> 1) & DISJOINT))
-                    r[w] |= (x | (x << 1)) & (a[w] | b[w]);
-            }
+        /* Check the full words of binary variables */
+        for (w = 1; w < last; w++) {
+            r[w] = x = a[w] & b[w];
+            if ((x = ~(x | x >> 1) & DISJOINT))
+                r[w] |= (x | (x << 1)) & (a[w] | b[w]);
         }
     }
 
@@ -256,25 +246,23 @@ int cactive(pcube a) {
     int active = -1, dist = 0;
 
     { /* Check binary variables */
-        int w, last;
+        int w, last = cube.inword;
         unsigned int x;
-        if ((last = cube.inword) != -1) {
-            /* Check the partial word of binary variables */
-            x = a[last];
-            if ((x = ~(x & x >> 1) & cube.inmask)) {
-                if ((dist = count_ones(x)) > 1)
-                    return -1; /* more than 2 active variables */
-                active = (last - 1) * (BPI / 2) + bit_index(x) / 2;
-            }
+        /* Check the partial word of binary variables */
+        x = a[last];
+        if ((x = ~(x & x >> 1) & cube.inmask)) {
+            if ((dist = count_ones(x)) > 1)
+                return -1; /* more than 2 active variables */
+            active = (last - 1) * (BPI / 2) + bit_index(x) / 2;
+        }
 
-            /* Check the full words of binary variables */
-            for (w = 1; w < last; w++) {
-                x = a[w];
-                if ((x = ~(x & x >> 1) & DISJOINT)) {
-                    if ((dist += count_ones(x)) > 1)
-                        return -1; /* more than 2 active variables */
-                    active = (w - 1) * (BPI / 2) + bit_index(x) / 2;
-                }
+        /* Check the full words of binary variables */
+        for (w = 1; w < last; w++) {
+            x = a[w];
+            if ((x = ~(x & x >> 1) & DISJOINT)) {
+                if ((dist += count_ones(x)) > 1)
+                    return -1; /* more than 2 active variables */
+                active = (w - 1) * (BPI / 2) + bit_index(x) / 2;
             }
         }
     }
@@ -300,23 +288,21 @@ int cactive(pcube a) {
 
 bool ccommon(pcube a, pcube b, pcube cof) {
     { /* Check binary variables */
-        int last;
+        int last = cube.inword;
         int w;
         unsigned int x, y;
-        if ((last = cube.inword) != -1) {
-            /* Check the partial word of binary variables */
-            x = a[last] | cof[last];
-            y = b[last] | cof[last];
-            if (~(x & x >> 1) & ~(y & y >> 1) & cube.inmask)
-                return TRUE;
+        /* Check the partial word of binary variables */
+        x = a[last] | cof[last];
+        y = b[last] | cof[last];
+        if (~(x & x >> 1) & ~(y & y >> 1) & cube.inmask)
+            return TRUE;
 
-            /* Check the full words of binary variables */
-            for (w = 1; w < last; w++) {
-                x = a[w] | cof[w];
-                y = b[w] | cof[w];
-                if (~(x & x >> 1) & ~(y & y >> 1) & DISJOINT)
-                    return TRUE;
-            }
+        /* Check the full words of binary variables */
+        for (w = 1; w < last; w++) {
+            x = a[w] | cof[w];
+            y = b[w] | cof[w];
+            if (~(x & x >> 1) & ~(y & y >> 1) & DISJOINT)
+                return TRUE;
         }
     }
 
