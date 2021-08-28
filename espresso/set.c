@@ -303,8 +303,8 @@ int *sf_count(pset_family A) {
     }
 
     foreach_set(A, last, p) {
-        for (i = LOOP(p); i > 0;) {
-            for (val = p[i], base = --i << LOGBPI; val != 0;
+        for (i = LOOP(p); i > 0; i--) {
+            for (val = p[i], base = (i - 1) << LOGBPI; val != 0;
                  base++, val >>= 1) {
                 if (val & 1) {
                     count[base]++;
