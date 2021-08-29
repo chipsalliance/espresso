@@ -130,89 +130,89 @@ void parse_pla(FILE *fp, pPLA PLA) {
     lineno = 1;
     line_length_error = FALSE;
 
-loop:
-    switch (ch = getc(fp)) {
-        case EOF:
-            return;
-
-        case '\n':
-            lineno++;
-
-        case ' ':
-        case '\t':
-        case '\f':
-        case '\r':
-            break;
-
-        case '.':
-            /* .i gives the cube input size (binary-functions only) */
-            if (equal(get_word(fp, word), "i")) {
-                if (cube.fullset != NULL) {
-                    fprintf(stderr, "extra .i ignored\n");
-                    skip_line(fp);
-                } else {
-                    if (fscanf(fp, "%d", &cube.num_input_vars) != 1)
-                        fatal("error reading .i");
-                    if (cube.num_input_vars <= 0)
-                        fatal("silly value in .i");
-                    cube.part_size = ALLOC(int, cube.num_input_vars + 1);
-                }
-
-                /* .o gives the cube output size (binary-functions only) */
-            } else if (equal(word, "o")) {
-                if (cube.fullset != NULL) {
-                    fprintf(stderr, "extra .o ignored\n");
-                    skip_line(fp);
-                } else {
-                    if (cube.part_size == NULL)
-                        fatal(".o cannot appear before .i");
-                    if (fscanf(fp, "%d",
-                               &(cube.part_size[cube.num_input_vars])) !=
-                        1)  // we don't have cube.output until cube_setup is
-                            // called
-                        fatal("error reading .o");
-                    if (cube.part_size[cube.num_input_vars] <= 0)
-                        fatal("silly value in .i");
-                    cube_setup();
-                }
-
-                /* .type specifies a logical type for the PLA */
-            } else if (equal(word, "type")) {
-                (void)get_word(fp, word);
-                if (equal(word, "fd")) {
-                    pla_type = TYPE_FD;
-                } else if (equal(word, "fr")) {
-                    pla_type = TYPE_FR;
-                } else {
-                    fatal("unknown type in .type");
-                }
-
-                /* .e and .end specify the end of the file */
-            } else if (equal(word, "e") || equal(word, "end"))
+    while (1) {
+        switch (ch = getc(fp)) {
+            case EOF:
                 return;
-            /* .p is ignored */
-            else if (equal(word, "p"))
-                skip_line(fp);
-            else {
-                fprintf(stderr, "%c%s unrecognized\n", ch, word);
-                skip_line(fp);
-            }
-            break;
-        default:
-            (void)ungetc(ch, fp);
-            if (cube.fullset == NULL) {
-                /*		fatal("unknown PLA size, need .i/.o or .mv");*/
-                skip_line(fp);
+
+            case '\n':
+                lineno++;
+
+            case ' ':
+            case '\t':
+            case '\f':
+            case '\r':
                 break;
-            }
-            if (PLA->F == NULL) {
-                PLA->F = new_cover(10);
-                PLA->D = new_cover(10);
-                PLA->R = new_cover(10);
-            }
-            read_cube(fp, PLA);
+
+            case '.':
+                /* .i gives the cube input size (binary-functions only) */
+                if (equal(get_word(fp, word), "i")) {
+                    if (cube.fullset != NULL) {
+                        fprintf(stderr, "extra .i ignored\n");
+                        skip_line(fp);
+                    } else {
+                        if (fscanf(fp, "%d", &cube.num_input_vars) != 1)
+                            fatal("error reading .i");
+                        if (cube.num_input_vars <= 0)
+                            fatal("silly value in .i");
+                        cube.part_size = ALLOC(int, cube.num_input_vars + 1);
+                    }
+
+                    /* .o gives the cube output size (binary-functions only) */
+                } else if (equal(word, "o")) {
+                    if (cube.fullset != NULL) {
+                        fprintf(stderr, "extra .o ignored\n");
+                        skip_line(fp);
+                    } else {
+                        if (cube.part_size == NULL)
+                            fatal(".o cannot appear before .i");
+                        if (fscanf(fp, "%d",
+                                   &(cube.part_size[cube.num_input_vars])) !=
+                            1)  // we don't have cube.output until cube_setup is
+                                // called
+                            fatal("error reading .o");
+                        if (cube.part_size[cube.num_input_vars] <= 0)
+                            fatal("silly value in .i");
+                        cube_setup();
+                    }
+
+                    /* .type specifies a logical type for the PLA */
+                } else if (equal(word, "type")) {
+                    (void)get_word(fp, word);
+                    if (equal(word, "fd")) {
+                        pla_type = TYPE_FD;
+                    } else if (equal(word, "fr")) {
+                        pla_type = TYPE_FR;
+                    } else {
+                        fatal("unknown type in .type");
+                    }
+
+                    /* .e and .end specify the end of the file */
+                } else if (equal(word, "e") || equal(word, "end"))
+                    return;
+                /* .p is ignored */
+                else if (equal(word, "p"))
+                    skip_line(fp);
+                else {
+                    fprintf(stderr, "%c%s unrecognized\n", ch, word);
+                    skip_line(fp);
+                }
+                break;
+            default:
+                (void)ungetc(ch, fp);
+                if (cube.fullset == NULL) {
+                    /*		fatal("unknown PLA size, need .i/.o or .mv");*/
+                    skip_line(fp);
+                    break;
+                }
+                if (PLA->F == NULL) {
+                    PLA->F = new_cover(10);
+                    PLA->D = new_cover(10);
+                    PLA->R = new_cover(10);
+                }
+                read_cube(fp, PLA);
+        }
     }
-    goto loop;
 }
 
 /*
