@@ -277,7 +277,6 @@ struct cube_struct {
     pset emptyset;       /* an empty cube */
     unsigned int inmask; /* mask to get odd word of binary part */
     int inword;          /* which word number for above */
-    int *sparse;         /* should this variable be sparse? */
     int output;          /* which variable is "output" (-1 if none) */
 };
 

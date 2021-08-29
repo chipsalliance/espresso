@@ -43,7 +43,7 @@ pcover expand(pcover F, pcover R,
 ) {
     pcube last, p;
     pcube RAISE, FREESET, INIT_LOWER, SUPER_CUBE, OVEREXPANDED_CUBE;
-    int var, num_covered;
+    int num_covered;
     bool change;
 
     /* Order the cubes according to "chewing-away from the edges" of mini */
@@ -58,9 +58,9 @@ pcover expand(pcover F, pcover R,
 
     /* Setup the initial lowering set (differs only for nonsparse) */
     if (nonsparse)
-        for (var = 0; var < cube.num_input_vars + 1; var++)
-            if (cube.sparse[var])
-                (void)set_or(INIT_LOWER, INIT_LOWER, cube.var_mask[var]);
+        (void)set_or(
+            INIT_LOWER, INIT_LOWER,
+            cube.var_mask[cube.output]);  // the output variable is "sparse"
 
     /* Mark all cubes as not covered, and maybe essential */
     foreach_set(F, last, p) {
