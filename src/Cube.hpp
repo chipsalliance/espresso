@@ -10,12 +10,16 @@
 
 class Cube {
 public:
-    using Element = int;
+    using Element = size_t;
     using Container = boost::dynamic_bitset<>;
     explicit Cube(size_t size);
+    Cube(const Cube &old);
     size_t size();
+    void set(Element i);
+    [[nodiscard]] std::string toString() const;
+    [[nodiscard]] bool test(Element i) const;
 
-private:
+//private:
     std::unique_ptr<Container> data;
 
 };

@@ -8,6 +8,6 @@
 
 int main(int, char*[]) {
     espresso::PLA pla;
-
+    pla.dump();
     return EXIT_SUCCESS;
 }

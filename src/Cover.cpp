@@ -4,11 +4,11 @@
 
 #include "Cover.hpp"
 
-espresso::Cover::Cover(size_t cubeSize) : cubeSize(cubeSize) {
+espresso::Cover::Cover(size_t cubeSize) : cubeSize(cubeSize), data(std::make_unique<Container>()) {
 
 }
 
-void espresso::Cover::insert(const espresso::Cover::Element& e) {
+void espresso::Cover::insert(const espresso::Cover::Element& e) const {
     assert(e->size() == cubeSize);
-    data.push_back(e);
+    data->push_back(e);
 }

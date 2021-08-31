@@ -17,10 +17,10 @@ public:
     using Container = std::vector<Element>;
 
     explicit Cover(size_t cubeSize);
-    void insert(const Element& e);
+    void insert(const Element& e) const;
 
-private:
-    Container data;
+//private:
+    std::unique_ptr<Container> data;
     size_t cubeSize;
 };
 

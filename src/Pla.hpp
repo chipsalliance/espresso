@@ -12,11 +12,15 @@ namespace espresso {
 class PLA {
 public:
     explicit PLA();
+    void dump();
+
 private:
-    std::unique_ptr<Cover> F, D, R;
+    std::shared_ptr<Cover> F, D, R;
     size_t inputCount, outputCount;
 
     void parse();
+    [[nodiscard]] size_t coverSize() const;
+    void dumpSet(char c) const;
 };
 
 } // namespace espresso
