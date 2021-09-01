@@ -302,13 +302,16 @@ void setup_BB_CC(pcover BB, pcover CC) {
     BB->active_count = BB->count;
     foreach_set(BB, last, p) SET(p, ACTIVE);
 
-    if (CC != (pcover)NULL) {
-        CC->active_count = CC->count;
-        foreach_set(CC, last, p) if (TESTP(p, COVERED) || TESTP(p, PRIME))
-            CC->active_count--,
+    CC->active_count = CC->count;
+    // clang-format off
+    foreach_set(CC, last, p)
+        if (TESTP(p, COVERED) || TESTP(p, PRIME)) {
+            CC->active_count--;
             RESET(p, ACTIVE);
-        else SET(p, ACTIVE);
-    }
+        } else {
+            SET(p, ACTIVE);
+        }
+    // clang-format on
 }
 
 /*
