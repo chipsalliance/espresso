@@ -42,19 +42,14 @@ pcover expand(pcover F, pcover R,
               bool nonsparse /* expand non-sparse variables only */
 ) {
     pcube last, p;
-    pcube RAISE, FREESET, INIT_LOWER, SUPER_CUBE, OVEREXPANDED_CUBE;
-    int num_covered;
+    pcube INIT_LOWER;
     bool change;
 
     /* Order the cubes according to "chewing-away from the edges" of mini */
     F = mini_sort(F, ascend);
 
     /* Allocate memory for variables needed by expand1() */
-    RAISE = new_cube();
-    FREESET = new_cube();
     INIT_LOWER = new_cube();
-    SUPER_CUBE = new_cube();
-    OVEREXPANDED_CUBE = new_cube();
 
     /* Setup the initial lowering set (differs only for nonsparse) */
     if (nonsparse)
@@ -73,16 +68,7 @@ pcover expand(pcover F, pcover R,
         /* do not expand if PRIME or if covered by previous expansion */
         if (!TESTP(p, PRIME) && !TESTP(p, COVERED)) {
             /* expand the cube p, result is RAISE */
-            expand1(R, F, RAISE, FREESET, OVEREXPANDED_CUBE, SUPER_CUBE,
-                    INIT_LOWER, &num_covered, p);
-            (void)set_copy(p, RAISE);
-            SET(p, PRIME);
-            RESET(p, COVERED); /* not really necessary */
-
-            /* See if we generated an inessential prime */
-            if (num_covered == 0 && !setp_equal(p, OVEREXPANDED_CUBE)) {
-                SET(p, NONESSEN);
-            }
+            expand1(R, F, INIT_LOWER, p);
         }
     }
 
@@ -101,27 +87,24 @@ pcover expand(pcover F, pcover R,
     if (change)
         F = sf_inactive(F);
 
-    free_cube(RAISE);
-    free_cube(FREESET);
     free_cube(INIT_LOWER);
-    free_cube(SUPER_CUBE);
-    free_cube(OVEREXPANDED_CUBE);
     return F;
 }
 
 /*
     expand1 -- Expand a single cube against the OFF-set
 */
-void expand1(pcover BB,     /* Blocking matrix (OFF-set) */
-             pcover CC,     /* Covering matrix (ON-set) */
-             pcube RAISE,   /* The current parts which have been raised */
-             pcube FREESET, /* The current parts which are free */
-             pcube OVEREXPANDED_CUBE, /* Overexpanded cube of c */
-             pcube SUPER_CUBE, /* Supercube of all cubes of CC we cover */
+void expand1(pcover BB,        /* Blocking matrix (OFF-set) */
+             pcover CC,        /* Covering matrix (ON-set) */
              pcube INIT_LOWER, /* Parts to initially remove from FREESET */
-             int *num_covered, /* Number of cubes of CC which are covered */
              pcube c           /* The cube to be expanded */
 ) {
+    pcube FREESET = new_cube();    /* The current parts which are free */
+    pcube SUPER_CUBE = new_cube(); /* Supercube of all cubes of CC we cover */
+    pcube RAISE = new_cube(); /* The current parts which have been raised */
+    pcube OVEREXPANDED_CUBE = new_cube(); /* Overexpanded cube of c */
+    int num_covered; /* Number of cubes of CC which are covered */
+
     int bestindex;
 
     /* initialize BB and CC */
@@ -129,7 +112,7 @@ void expand1(pcover BB,     /* Blocking matrix (OFF-set) */
     setup_BB_CC(BB, CC);
 
     /* initialize count of # cubes covered, and the supercube of them */
-    *num_covered = 0;
+    num_covered = 0;
     (void)set_copy(SUPER_CUBE, c);
 
     /* Initialize the lowering, raising and unassigned sets */
@@ -148,7 +131,7 @@ void expand1(pcover BB,     /* Blocking matrix (OFF-set) */
 
     /* While there are still cubes which can be covered, cover them ! */
     if (CC->active_count > 0) {
-        select_feasible(BB, CC, RAISE, FREESET, SUPER_CUBE, num_covered);
+        select_feasible(BB, CC, RAISE, FREESET, SUPER_CUBE, &num_covered);
     }
 
     /* While there are still cubes covered by the overexpanded cube ... */
@@ -167,6 +150,20 @@ void expand1(pcover BB,     /* Blocking matrix (OFF-set) */
 
     /* Raise any remaining free coordinates */
     (void)set_or(RAISE, RAISE, FREESET);
+
+    (void)set_copy(c, RAISE);
+    SET(c, PRIME);
+    RESET(c, COVERED); /* not really necessary */
+
+    /* See if we generated an inessential prime */
+    if (num_covered == 0 && !setp_equal(c, OVEREXPANDED_CUBE)) {
+        SET(c, NONESSEN);
+    }
+
+    free_cube(FREESET);
+    free_cube(SUPER_CUBE);
+    free_cube(RAISE);
+    free_cube(OVEREXPANDED_CUBE);
 }
 
 /*

@@ -350,9 +350,7 @@ pset_family cb_consensus(pset_family T, pset c);
 pset_family cb_consensus_dist0(pset_family R, pset p, pset c);
 /* expand.c */
 pset_family expand(pset_family F, pset_family R, int nonsparse);
-void expand1(pset_family BB, pset_family CC, pset RAISE, pset FREESET,
-             pset OVEREXPANDED_CUBE, pset SUPER_CUBE, pset INIT_LOWER,
-             int *num_covered, pset c);
+void expand1(pset_family BB, pset_family CC, pset INIT_LOWER, pset c);
 void essen_parts(pset_family BB, pset_family CC, pset RAISE, pset FREESET);
 void essen_raising(pset_family BB, pset RAISE, pset FREESET);
 void elim_lowering(pset_family BB, pset_family CC, pset RAISE, pset FREESET);
