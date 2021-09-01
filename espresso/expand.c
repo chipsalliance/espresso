@@ -202,7 +202,7 @@ void essen_parts(pcover BB, pcover CC, pcube RAISE, pcube FREESET) {
     (void)set_copy(xlower, cube.emptyset);
 
     foreach_active_set(BB, lastp, p) {
-        if ((dist = cdist01(p, r)) <= 1) {
+        if ((dist = cdist(p, r)) <= 1) {
             if (dist == 0) {
                 fatal("ON-set and OFF-set are not orthogonal");
             } else {
@@ -256,7 +256,7 @@ void elim_lowering(pcover BB, pcover CC, pcube RAISE, pcube FREESET) {
      *  Remove sets of BB which are orthogonal to future expansions
      */
     foreach_active_set(BB, last, p) {
-        if (!cdist0(p, r))
+        if (cdist(p, r) != 0)
             BB->active_count--, RESET(p, ACTIVE);
     }
 
@@ -422,7 +422,7 @@ bool feasibly_covered(pcover BB, pcube c, pcube RAISE, pcube new_lower) {
 
     set_copy(new_lower, cube.emptyset);
     foreach_active_set(BB, lastp, p) {
-        if ((dist = cdist01(p, r)) <= 1) {
+        if ((dist = cdist(p, r)) <= 1) {
             if (dist == 0)
                 return FALSE;
             else

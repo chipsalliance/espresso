@@ -412,8 +412,6 @@ int *sf_count(pset_family A);
 int *sf_count_restricted(pset_family A, pset r);
 /* setc.c */
 int full_row(pset p, pset cof);
-int cdist0(pset a, pset b);
-int cdist01(pset a, pset b);
 int cdist(pset a, pset b);
 pset force_lower(pset xlower, pset a, pset b);
 void consensus(pset r, pset a, pset b);

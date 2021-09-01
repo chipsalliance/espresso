@@ -32,8 +32,6 @@
 
 
     cdist       return distance between two cubes
-    cdist0      return true if two cubes are distance 0 apart
-    cdist01     return distance, or 2 if distance exceeds 1
     consensus   compute consensus of two cubes distance 1 apart
     force_lower expand hack (for now), related to consensus
 */
@@ -51,78 +49,19 @@ bool full_row(pcube p, pcube cof) {
 }
 
 /*
-    cdist0 -- return TRUE if a and b are distance 0 apart
-*/
-
-bool cdist0(pcube a, pcube b) {
-    { /* Check binary variables */
-        int w, last = cube.inword;
-        unsigned int x;
-        /* Check the partial word of binary variables */
-        x = a[last] & b[last];
-        if (~(x | x >> 1) & cube.inmask)
-            return FALSE; /* disjoint in some variable */
-
-        /* Check the full words of binary variables */
-        for (w = 1; w < last; w++) {
-            x = a[w] & b[w];
-            if (~(x | x >> 1) & DISJOINT)
-                return FALSE; /* disjoint in some variable */
-        }
-    }
-
-    { /* Check the output variable */
-        int w;
-        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
-             w++)
-            if (a[w] & b[w] & cube.var_mask[cube.output][w])
-                return TRUE;
-        return FALSE; /* disjoint in this variable */
-    }
-}
-
-/*
-    cdist01 -- return the "distance" between two cubes (defined as the
-    number of null variables in their intersection).  If the distance
-    exceeds 1, the value 2 is returned.
-*/
-
-int cdist01(pset a, pset b) {
-    int dist = 0;
-
-    { /* Check binary variables */
-        int w, last = cube.inword;
-        unsigned int x;
-        /* Check the partial word of binary variables */
-        x = a[last] & b[last];
-        if ((x = ~(x | x >> 1) & cube.inmask))
-            if ((dist = count_ones(x)) > 1)
-                return 2;
-
-        /* Check the full words of binary variables */
-        for (w = 1; w < last; w++) {
-            x = a[w] & b[w];
-            if ((x = ~(x | x >> 1) & DISJOINT))
-                if (dist == 1 || (dist += count_ones(x)) > 1)
-                    return 2;
-        }
-    }
-
-    { /* Check the output variable */
-        int w;
-        for (w = cube.first_word[cube.output]; w <= cube.last_word[cube.output];
-             w++)
-            if (a[w] & b[w] & cube.var_mask[cube.output][w])
-                return dist;
-        if (++dist > 1)
-            return 2;
-    }
-    return dist;
-}
-
-/*
     cdist -- return the "distance" between two cubes (defined as the
     number of null variables in their intersection).
+
+    a   b   contribution
+    0   0        0
+    0   1        1
+    0   -        0
+    1   0        1
+    1   1        0
+    1   -        0
+    -   0        0
+    -   1        0
+    -   -        0
 */
 
 int cdist(pset a, pset b) {

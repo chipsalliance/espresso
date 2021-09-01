@@ -20,7 +20,7 @@
         T[n-1] = NULL pointer (sentinel)
 
 
-    Cofactoring involves repeated application of "cdist0" to check if a
+    Cofactoring involves repeated application of "cdist == 0" to check if a
     cube of the cover intersects the cofactored cube.  This can be
     slow, especially for the recursive descent of the espresso
     routines.  Therefore, a special cofactor routine "scofactor" is
@@ -45,7 +45,7 @@ pcube *cofactor(pcube *T, pcube c) {
     /* Loop for each cube in the list, determine suitability, and save */
     for (T1 = T + 2; (p = *T1++) != NULL;) {
         if (p != c) {
-            if (cdist0(p, c))
+            if (cdist(p, c) == 0)
                 *Tc++ = p;
         }
     }

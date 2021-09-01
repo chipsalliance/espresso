@@ -94,7 +94,7 @@ pcover cb_consensus(pcover T, pcube c) {
     temp = new_cube();
     foreach_set(T, last, p) {
         if (p != c) {
-            switch (cdist01(p, c)) {
+            switch (cdist(p, c)) {
                 case 0:
                     /* distance-0 needs special care */
                     R = cb_consensus_dist0(R, p, c);

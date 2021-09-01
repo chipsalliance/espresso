@@ -151,7 +151,7 @@ static void compl_lift_onset(pcube *A1, pcover T, pcube bcube, int var) {
 
             /* for each cube in the ON-set, check for intersection */
             foreach_set(T, last, p) {
-                if (cdist0(p, lift)) {
+                if (cdist(p, lift) == 0) {
                     goto nolift;
                 }
             }
