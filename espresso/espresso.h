@@ -355,7 +355,6 @@ void essen_parts(pset_family BB, pset_family CC, pset RAISE, pset FREESET);
 void essen_raising(pset_family BB, pset RAISE, pset FREESET);
 void elim_lowering(pset_family BB, pset_family CC, pset RAISE, pset FREESET);
 int most_frequent(pset_family CC, pset FREESET);
-void setup_BB_CC(pset_family BB, pset_family CC);
 void select_feasible(pset_family BB, pset_family CC, pset RAISE, pset FREESET,
                      pset SUPER_CUBE, int *num_covered);
 int feasibly_covered(pset_family BB, pset c, pset RAISE, pset new_lower);

@@ -109,7 +109,22 @@ void expand1(pcover BB,        /* Blocking matrix (OFF-set) */
 
     /* initialize BB and CC */
     SET(c, PRIME); /* don't try to cover ourself */
-    setup_BB_CC(BB, CC);
+    pcube p, last;
+
+    /* Create the block and cover set families */
+    BB->active_count = BB->count;
+    foreach_set(BB, last, p) SET(p, ACTIVE);
+
+    CC->active_count = CC->count;
+    // clang-format off
+    foreach_set(CC, last, p)
+        if (TESTP(p, COVERED) || TESTP(p, PRIME)) {
+            CC->active_count--;
+            RESET(p, ACTIVE);
+        } else {
+            SET(p, ACTIVE);
+        }
+    // clang-format on
 
     /* initialize count of # cubes covered, and the supercube of them */
     num_covered = 0;
@@ -285,33 +300,6 @@ int most_frequent(pcover CC, pcube FREESET) {
     FREE(count);
 
     return best_part;
-}
-
-/*
-    setup_BB_CC -- set up the blocking and covering set families;
-
-    Note that the blocking family is merely the set of cubes of R, and
-    that CC is the set of cubes of F which might possibly be covered
-    (i.e., nonprime cubes, and cubes not already covered)
-*/
-
-void setup_BB_CC(pcover BB, pcover CC) {
-    pcube p, last;
-
-    /* Create the block and cover set families */
-    BB->active_count = BB->count;
-    foreach_set(BB, last, p) SET(p, ACTIVE);
-
-    CC->active_count = CC->count;
-    // clang-format off
-    foreach_set(CC, last, p)
-        if (TESTP(p, COVERED) || TESTP(p, PRIME)) {
-            CC->active_count--;
-            RESET(p, ACTIVE);
-        } else {
-            SET(p, ACTIVE);
-        }
-    // clang-format on
 }
 
 /*
