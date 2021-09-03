@@ -232,7 +232,7 @@ sm_matrix *irred_derive_table(pcover D, pcover E, pcover Rp) {
 
 /* cube_is_covered -- determine if a cubelist "covers" a single cube */
 bool cube_is_covered(pcube *T, pcube c) {
-    return tautology(cofactor(T, c));
+    return tautology(cofactor(T, c));  // Theorem 3.1.2, p33
 }
 
 /* tautology -- answer the tautology question for T */
@@ -246,7 +246,7 @@ bool tautology(pcube *T /* T will be disposed of */
         cr = new_cube();
         best = binate_split_select(T, cl, cr);
         result = tautology(scofactor(T, cl, best)) &&
-                 tautology(scofactor(T, cr, best));
+                 tautology(scofactor(T, cr, best));  // Proposition 3.1.2, p34
         free_cubelist(T);
         free_cube(cl);
         free_cube(cr);

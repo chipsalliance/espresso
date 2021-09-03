@@ -128,15 +128,15 @@ void expand1(pcover BB,        /* Blocking matrix (OFF-set) */
 
     /* initialize count of # cubes covered, and the supercube of them */
     num_covered = 0;
-    (void)set_copy(SUPER_CUBE, c);
+    (void)set_copy(SUPER_CUBE, c);  // SUPER_CUBE = c
 
     /* Initialize the lowering, raising and unassigned sets */
-    (void)set_copy(RAISE, c);
-    (void)set_diff(FREESET, cube.fullset, RAISE);
+    (void)set_copy(RAISE, c);                      // RAISE = c
+    (void)set_diff(FREESET, cube.fullset, RAISE);  // FREESET = U - RAISE
 
     /* If some parts are forced into lowering set, remove them */
-    if (!setp_empty(INIT_LOWER)) {
-        (void)set_diff(FREESET, FREESET, INIT_LOWER);
+    if (!setp_empty(INIT_LOWER)) {                     // INIT_LOWER != 0
+        (void)set_diff(FREESET, FREESET, INIT_LOWER);  // FREESET -= INIT_LOWER
         elim_lowering(BB, CC, RAISE, FREESET);
     }
 
@@ -183,7 +183,7 @@ void expand1(pcover BB,        /* Blocking matrix (OFF-set) */
 
 /*
     essen_parts -- determine which parts are forced into the lowering
-    set to insure that the cube be orthognal to the OFF-set.
+    set to ensure that the cube be orthogonal to the OFF-set.
 
     If any cube of the OFF-set is distance 1 from the raising cube,
     then we must lower all parts of the conflicting variable.  (If the
@@ -214,7 +214,7 @@ void essen_parts(pcover BB, pcover CC, pcube RAISE, pcube FREESET) {
     }
 
     if (!setp_empty(xlower)) {
-        (void)set_diff(FREESET, FREESET, xlower); /* remove from free set */
+        (void)set_diff(FREESET, FREESET, xlower);  // FREESET -= xlower
         elim_lowering(BB, CC, RAISE, FREESET);
     }
 }
@@ -249,7 +249,7 @@ void essen_raising(pcover BB, pcube RAISE, pcube FREESET) {
 */
 
 void elim_lowering(pcover BB, pcover CC, pcube RAISE, pcube FREESET) {
-    pcube p, r = set_or(cube.temp[0], RAISE, FREESET);
+    pcube p, r = set_or(cube.temp[0], RAISE, FREESET);  // r = RAISE + FREESET
     pcube last;
 
     /*
@@ -325,6 +325,7 @@ void select_feasible(pcover BB, pcover CC, pcube RAISE, pcube FREESET,
     feas = ALLOC(pcube, CC->active_count);
     numfeas = 0;
     foreach_active_set(CC, last, p) feas[numfeas++] = p;
+    // numfeas now == CC->active_count
 
     /* Setup extra cubes to record parts forced low after a covering */
     feas_new_lower = ALLOC(pcube, CC->active_count);
@@ -416,11 +417,11 @@ loop:
 */
 
 bool feasibly_covered(pcover BB, pcube c, pcube RAISE, pcube new_lower) {
-    pcube p, r = set_or(cube.temp[0], RAISE, c);
+    pcube p, r = set_or(cube.temp[0], RAISE, c);  // r = RAISE + c
     int dist;
     pcube lastp;
 
-    set_copy(new_lower, cube.emptyset);
+    set_copy(new_lower, cube.emptyset);  // new_lower = 0
     foreach_active_set(BB, lastp, p) {
         if ((dist = cdist(p, r)) <= 1) {
             if (dist == 0)
