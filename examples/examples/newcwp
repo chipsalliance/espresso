@@ -1,7 +1,5 @@
 .i 4
 .o 5
-.ilb  CWP<6> CWP<5> CWP<4> changeCWP2
-.ob  CWP+1<2> CWP+1<1> CWP+1<0> CWPm1<1> CWPm1<2>
 .p 11
 101- 10001
 110- 10001

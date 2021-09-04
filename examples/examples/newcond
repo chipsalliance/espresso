@@ -1,7 +1,5 @@
 .i 11
 .o 2
-.ilb  cAin0 cselaluSUM caluZout cBIprocessedMSB cAIprocessedMSB cALUmsb cDST1s<0> cDST1s<1> cDST1s<2> cDST1s<3> cDST1s<4>
-.ob  pCONDvalid aluVout
 .p 31
 ---01101--0 10
 ---10101--0 10

@@ -1,7 +1,5 @@
 .i 12
 .o 10
-.ilb CPIPE1s<7> SRC1s<0> SRC1s<1> SRC1s<2> SRC1s<3> SRC1s<4> SRC1equalDST2 DSTvalid pbusDtoINA SRC2equal16 SRC2equalDST2 opc2load 
-.ob readRFaccessA1 readRFaccessB1 AIzero1 AIzeroforce busDtobusAa DSTtobusDa2 preadTBtoA preadSWPtoA pForwardtoINB preadPCtoA 
 .p 17
 --------1--- 0000010000
 1-------1--- 1100010000

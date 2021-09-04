@@ -1,7 +1,5 @@
 .i 15
 .o 5
-.ilb tagcompare tCPIPE1s<0> tCPIPE1s<1> tCPIPE1s<2> tCPIPE1s<3> tCPIPE1s<4> tCPIPE1s<5> tCPIPE1s<7> tbusA<31> tbusB<31> tbusB<30> tbusB<29> tbusB<28> tCPIPE1s<6> tCPIPE1s<8> 
-.ob GStrap trapinstr TAGtrap pov_unflow skipCONDenable 
 .p 23
 --001011-0---10 00100
 -0-0-011-0---10 00100

@@ -1,7 +1,5 @@
 .i 5
 .o 8
-.ilb  EX_INSpass byteEX s1 s0 phi3
-.ob  ex3 ex2 ex1 ex0 ins3 ins2 ins1 ins0
 .p 8
 00001 00000001
 00011 00000010

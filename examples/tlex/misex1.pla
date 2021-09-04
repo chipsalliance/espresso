@@ -1,8 +1,6 @@
 
 .i 8
 .o 7
-.ilb dmpst3 dmpst2 dmpst1 dmpst0 xskip yskip page rmwB
-.ob dmnst3B dmnst2B dmnst1B dmnst0B adctlp2B adctlp1B adctlp0B
 .p 32
 0111---- 1000000
 1010---- 1000000

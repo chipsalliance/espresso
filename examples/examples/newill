@@ -1,7 +1,5 @@
 .i 8
 .o 1
-.ilb CPIPE1s<9> CPIPE1s<0> CPIPE1s<1> CPIPE1s<2> CPIPE1s<3> CPIPE1s<4> CPIPE1s<5> CPIPE1s<7> 
-.ob pillegalopc 
 .p 8
 -1-11011 1
 -110-011 1

@@ -1,7 +1,5 @@
 .i 5
 .o 1
-.ilb d c b a e
-.ob xor5
 .p 16
 11111 1
 01110 1

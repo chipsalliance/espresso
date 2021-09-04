@@ -1,7 +1,5 @@
 .i 7
 .o 10
-.ilb  CPIPE2s<0> CPIPE2s<1> CPIPE2s<2> CPIPE2s<3> CPIPE2s<4> CPIPE2s<5> CPIPE2s<7>
-.ob  writeRFaccess2 lastPCtobusD1 busDtobusB2 busDtobusA2 DSTtobusD2 nillonreturn pLOADwrite opc2load DSTvalid pbusDtoINA
 .p 19
 ---0111 1000001010
 -1--111 0000000001

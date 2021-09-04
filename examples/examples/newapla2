@@ -1,7 +1,5 @@
 .i 6
 .o 7
-.ilb DST2s<0> DST2s<1> DST2s<2> DST2s<3> DST2s<4> DSTvalid 
-.ob writetoSHA1 writetoSHB1 writetoPSW1 writetoCWP1 pwritetoTB pwritetoSWP pwritetoPC 
 .p 7
 001011 0000010
 111011 0010000
