@@ -52,11 +52,8 @@ void read_cube(FILE *fp, pPLA PLA) {
                 var--;
                 break;
             case ' ':
-            case '|':
-            case '\t':
                 var--;
                 break;
-            case '2':
             case '-':  // 2n and (2n + 1)
                 set_insert(cf, var * 2 + 1);
             case '0':  // 2n
@@ -64,8 +61,6 @@ void read_cube(FILE *fp, pPLA PLA) {
                 break;
             case '1':  // (2n + 1)
                 set_insert(cf, var * 2 + 1);
-                break;
-            case '?':
                 break;
             default:
                 goto bad_char;
@@ -87,24 +82,18 @@ void read_cube(FILE *fp, pPLA PLA) {
                 i--;
                 break;
             case ' ':
-            case '|':
-            case '\t':
                 i--;
                 break;
-            case '4':
             case '1':
                 set_insert(cf, i), savef = TRUE;
                 break;
-            case '3':
             case '0':
                 if (pla_type == TYPE_FR)
                     set_insert(cr, i), saver = TRUE;
                 break;
-            case '2':
             case '-':
                 if (pla_type == TYPE_FD)
                     set_insert(cd, i), saved = TRUE;
-            case '~':
                 break;
             default:
                 goto bad_char;
