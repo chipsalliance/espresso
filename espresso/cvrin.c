@@ -175,14 +175,7 @@ void parse_pla(FILE *fp, pPLA PLA) {
                     } else {
                         fatal("unknown type in .type");
                     }
-
-                    /* .e and .end specify the end of the file */
-                } else if (equal(word, "e") || equal(word, "end"))
-                    return;
-                /* .p is ignored */
-                else if (equal(word, "p"))
-                    skip_line(fp);
-                else {
+                } else {
                     fprintf(stderr, "%c%s unrecognized\n", ch, word);
                     skip_line(fp);
                 }

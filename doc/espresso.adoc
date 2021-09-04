@@ -43,9 +43,6 @@ number and [s] denotes a text string.
   Optional, default is *fd*. Sets the logical interpretation of the character
   matrix as described below. [s] is one of *fd* or *fr* for input files, and *f*
   for output files. This keyword must come before any product terms.
-*.e (.end)*::
-  Optional. Marks the end of the file. This keyword must come after any product
-  terms.
 
 When we speak of the ON-set of a Boolean function, we mean those minterms which
 imply the function value is a 1. Likewise, the OFF-set are those terms which
