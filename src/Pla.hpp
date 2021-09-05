@@ -15,12 +15,9 @@ public:
     void dump();
 
 private:
-    std::shared_ptr<Cover> F, D, R;
-    size_t inputCount, outputCount;
+    Cover F, D, R;
 
     void parse();
-    [[nodiscard]] size_t coverSize() const;
-    void dumpSet(char c) const;
 };
 
 } // namespace espresso

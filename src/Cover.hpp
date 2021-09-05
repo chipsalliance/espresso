@@ -16,12 +16,12 @@ public:
     using Element = std::shared_ptr<Cube>;
     using Container = std::vector<Element>;
 
-    explicit Cover(size_t cubeSize);
-    void insert(const Element& e) const;
+    explicit Cover();
+    void insert(const Element& e);
+    [[nodiscard]] std::string toString(char on, char off) const;
 
-//private:
-    std::unique_ptr<Container> data;
-    size_t cubeSize;
+private:
+    Container data;
 };
 
 } // namespace espresso
