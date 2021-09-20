@@ -12,27 +12,33 @@ espresso::Cube::Cube() {
     if (inputCount == 0 || outputCount == 0) {
         throw std::logic_error("Input count and output count not set up");
     } else {
-        input = std::make_unique<Container>(inputCount);
-        output = std::make_unique<Container>(outputCount);
+        data = std::make_unique<Container>(inputCount * 2 + outputCount);
     }
 }
 
-espresso::Cube::Cube(std::string &s) : Cube() {
-    std::vector<std::string> io;
-    boost::split(io, s, boost::is_any_of(" "));
-    std::string i = io[0];
-
-}
-
-espresso::Cube::Cube(const espresso::Cube &old) :
-    input(std::make_unique<Container>(*(old.input))),
-    output(std::make_unique<Container>(*(old.output)))
-{
-
+espresso::Cube::Cube(const espresso::Cube &old) : Cube() {
+    *data = *old.data;
 }
 
 std::string espresso::Cube::toString(char on, char off) const {
-    return input->toString() + " " + output->toString(on, off);
+    std::string s;
+    for (auto i = 0; i < inputCount; i++) {
+        if (data->test(i * 2) && data->test(i * 2 + 1)) {
+            s += '-';
+        } else if (data->test(i * 2) && !data->test(i * 2 + 1)) {
+            s += '0';
+        } else if (!data->test(i * 2) && data->test(i * 2 + 1)) {
+            s += '1';
+        }
+    }
+    for (auto i = 0; i < outputCount; i++) {
+        if (data->test(inputCount * 2 + i)) {
+            s += on;
+        } else {
+            s += off;
+        }
+    }
+    return s;
 }
 
 void espresso::Cube::setInputCount(size_t i) {
@@ -76,13 +82,16 @@ std::tuple<
     for (auto i = 0; i < inputCount; i++) {
         switch (inputPart[i]) {
             case '0':
-                (*input.input)[i] = OFF;
+                input.data->set(i * 2);
+                input.data->reset(i * 2 + 1);
                 break;
             case '1':
-                (*input.input)[i] = ON;
+                input.data->reset(i * 2);
+                input.data->set(i * 2 + 1);
                 break;
             case '-':
-                (*input.input)[i] = DC;
+                input.data->set(i * 2);
+                input.data->set(i * 2 + 1);
                 break;
             default:
                 throw std::invalid_argument("unknown character in input");
@@ -94,15 +103,15 @@ std::tuple<
         switch (outputPart[i]) {
             case '0':
                 if (r == nullptr) r = std::make_shared<Cube>(input);
-                (*r->output)[i] = ON;
+                r->data->set(inputCount * 2 + i);
                 break;
             case '1':
                 if (f == nullptr) f = std::make_shared<Cube>(input);
-                (*f->output)[i] = ON;
+                f->data->set(inputCount * 2 + i);
                 break;
             case '-':
                 if (d == nullptr) d = std::make_shared<Cube>(input);
-                (*d->output)[i] = ON;
+                d->data->set(inputCount * 2 + i);
                 break;
             default:
                 throw std::invalid_argument("unknown character in output");

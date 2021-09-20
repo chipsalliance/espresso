@@ -21,7 +21,7 @@ public:
     [[nodiscard]] std::string toString(char on, char off) const;
 
 private:
-    Container data;
+    Container cubes;
 };
 
 } // namespace espresso

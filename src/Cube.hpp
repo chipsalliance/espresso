@@ -7,17 +7,14 @@
 
 #include <memory>
 #include <boost/dynamic_bitset.hpp>
-#include "BitPat.hpp"
 
 namespace espresso {
 
 class Cube {
 public:
-    using Element = size_t;
-    using Container = BitPat;
+    using Container = boost::dynamic_bitset<>;
 
     explicit Cube();
-    explicit Cube(std::string&);
     Cube(const Cube &old);
     [[nodiscard]] std::string toString(char on, char off) const;
 
@@ -35,7 +32,7 @@ public:
 
 private:
     static size_t inputCount, outputCount;
-    std::unique_ptr<Container> input, output;
+    std::unique_ptr<Container> data;
 
 };
 
