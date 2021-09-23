@@ -333,79 +333,79 @@ void select_feasible(pcover BB, pcover CC, pcube RAISE, pcube FREESET,
     for (i = 0; i < numfeas; i++)
         feas_new_lower[i] = GETSET(new_lower, i);
 
-loop:
-    /* Find the essentially raised parts -- this might cover some cubes
-       for us, without having to find out if they are fcc or not
-    */
-    essen_raising(BB, RAISE, FREESET);
+    while (1) {
+        /* Find the essentially raised parts -- this might cover some cubes
+           for us, without having to find out if they are fcc or not
+        */
+        essen_raising(BB, RAISE, FREESET);
 
-    /* Now check all "possibly" feasibly covered cubes to check feasibility */
-    lastfeas = numfeas;
-    numfeas = 0;
-    for (i = 0; i < lastfeas; i++) {
-        p = feas[i];
+        /* Now check all "possibly" feasibly covered cubes to check feasibility
+         */
+        lastfeas = numfeas;
+        numfeas = 0;
+        for (i = 0; i < lastfeas; i++) {
+            p = feas[i];
 
-        /* Check active because essen_parts might have removed it */
-        if (TESTP(p, ACTIVE)) {
-            /*  See if the cube is already covered by RAISE --
-             *  this can happen because of essen_raising() or because of
-             *  the previous "loop"
-             */
-            if (setp_implies(p, RAISE)) {
-                (*num_covered) += 1;
-                (void)set_or(SUPER_CUBE, SUPER_CUBE, p);
-                CC->active_count--;
-                RESET(p, ACTIVE);
-                SET(p, COVERED);
-                /* otherwise, test if it is feasibly covered */
-            } else if (feasibly_covered(BB, p, RAISE,
-                                        feas_new_lower[numfeas])) {
-                feas[numfeas] = p; /* save the fcc */
-                numfeas++;
+            /* Check active because essen_parts might have removed it */
+            if (TESTP(p, ACTIVE)) {
+                /*  See if the cube is already covered by RAISE --
+                 *  this can happen because of essen_raising() or because of
+                 *  the previous "loop"
+                 */
+                if (setp_implies(p, RAISE)) {
+                    (*num_covered) += 1;
+                    (void)set_or(SUPER_CUBE, SUPER_CUBE, p);
+                    CC->active_count--;
+                    RESET(p, ACTIVE);
+                    SET(p, COVERED);
+                    /* otherwise, test if it is feasibly covered */
+                } else if (feasibly_covered(BB, p, RAISE,
+                                            feas_new_lower[numfeas])) {
+                    feas[numfeas] = p; /* save the fcc */
+                    numfeas++;
+                }
             }
         }
-    }
-    /* Exit here if there are no feasibly covered cubes */
-    if (numfeas == 0) {
-        FREE(feas);
-        FREE(feas_new_lower);
-        free_cover(new_lower);
-        return;
-    }
+        /* Exit here if there are no feasibly covered cubes */
+        if (numfeas == 0) {
+            FREE(feas);
+            FREE(feas_new_lower);
+            free_cover(new_lower);
+            return;
+        }
 
-    /* Now find which is the best feasibly covered cube */
-    bestcount = 0;
-    bestsize = 9999;
-    for (i = 0; i < numfeas; i++) {
-        size = set_dist(feas[i], FREESET); /* # of newly raised parts */
-        count = 0; /* # of other cubes which remain fcc after raising */
+        /* Now find which is the best feasibly covered cube */
+        bestcount = 0;
+        bestsize = 9999;
+        for (i = 0; i < numfeas; i++) {
+            size = set_dist(feas[i], FREESET); /* # of newly raised parts */
+            count = 0; /* # of other cubes which remain fcc after raising */
 
 #define NEW
 #ifdef NEW
-        for (j = 0; j < numfeas; j++)
-            if (setp_disjoint(feas_new_lower[i], feas[j]))
-                count++;
+            for (j = 0; j < numfeas; j++)
+                if (setp_disjoint(feas_new_lower[i], feas[j]))
+                    count++;
 #else
-        for (j = 0; j < numfeas; j++)
-            if (setp_implies(feas[j], feas[i]))
-                count++;
+            for (j = 0; j < numfeas; j++)
+                if (setp_implies(feas[j], feas[i]))
+                    count++;
 #endif
-        if (count > bestcount) {
-            bestcount = count;
-            bestfeas = feas[i];
-            bestsize = size;
-        } else if (count == bestcount && size < bestsize) {
-            bestfeas = feas[i];
-            bestsize = size;
+            if (count > bestcount) {
+                bestcount = count;
+                bestfeas = feas[i];
+                bestsize = size;
+            } else if (count == bestcount && size < bestsize) {
+                bestfeas = feas[i];
+                bestsize = size;
+            }
         }
-    }
 
-    /* Add the necessary parts to the raising set */
-    (void)set_or(RAISE, RAISE, bestfeas);
-    (void)set_diff(FREESET, FREESET, RAISE);
-    essen_parts(BB, CC, RAISE, FREESET);
-    goto loop;
-    /* NOTREACHED */
+        /* Add the necessary parts to the raising set */
+        (void)set_or(RAISE, RAISE, bestfeas);
+        (void)set_diff(FREESET, FREESET, RAISE);
+        essen_parts(BB, CC, RAISE, FREESET);
+    }
 }
 
 /*
