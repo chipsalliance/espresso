@@ -13,6 +13,7 @@ class PLA {
 public:
     explicit PLA();
     void dump();
+    void expand();
 
 private:
     Cover F, D, R;

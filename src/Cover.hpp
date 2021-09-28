@@ -16,11 +16,14 @@ public:
     using Element = std::shared_ptr<Cube>;
     using Container = std::vector<Element>;
 
+    unsigned int activeCount{};
+
     explicit Cover();
     void insert(const Element& e);
     [[nodiscard]] std::string toString(char on, char off) const;
+    void miniSort(bool ascend);
+    Cover& operator = (const Cover& x);
 
-private:
     Container cubes;
 };
 
