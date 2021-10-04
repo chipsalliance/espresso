@@ -102,7 +102,7 @@ void PLA::parse() {
     }
 }
 
-void PLA::dump() {
+void PLA::dump() const {
     std::cout << ".i " << Cube::getInputCount() << std::endl;
     std::cout << ".o " << Cube::getOutputCount() << std::endl;
     std::cout << ".type f" << std::endl;

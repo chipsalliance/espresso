@@ -12,7 +12,7 @@ namespace espresso {
 class PLA {
 public:
     explicit PLA();
-    void dump();
+    void dump() const;
     void expand();
 
 private:
