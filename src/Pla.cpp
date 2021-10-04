@@ -404,3 +404,13 @@ void PLA::expand() {
         }
     }
 }
+
+Cost PLA::cost() const {
+    Cost cost{};
+    for (auto& c: F.cubes) {
+        cost.in += (~((*c) + Cube::getOutputMask())).count();
+        cost.out += ((*c) & Cube::getOutputMask()).count();
+        cost.cubes++;
+    }
+    return cost;
+}

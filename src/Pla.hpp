@@ -6,6 +6,7 @@
 #define ESPRESSO_PLA_HPP
 
 #include "Cover.hpp"
+#include "Cost.hpp"
 
 namespace espresso {
 
@@ -14,6 +15,7 @@ public:
     explicit PLA();
     void dump() const;
     void expand();
+    Cost cost() const;
 
 private:
     Cover F, D, R;

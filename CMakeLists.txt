@@ -16,7 +16,7 @@ add_library(smmincov STATIC
 add_executable(
   espresso
   src/main.cpp
-        src/Cover.cpp src/Cover.hpp src/Cube.cpp src/Cube.hpp src/Pla.cpp src/Pla.hpp src/SMMincov.cpp)
+        src/Cover.cpp src/Cover.hpp src/Cube.cpp src/Cube.hpp src/Pla.cpp src/Pla.hpp src/SMMincov.cpp src/Cost.cpp src/Cost.hpp)
 target_link_libraries(espresso smmincov)
 
 set_property(TARGET espresso PROPERTY CXX_STANDARD 20)

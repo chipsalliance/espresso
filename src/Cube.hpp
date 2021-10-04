@@ -30,6 +30,7 @@ public:
     Cube operator + (const Cube& x) const;
     Cube& operator += (const Cube& x);
     Cube operator & (const Cube& x) const;
+    Cube operator ~ () const;
     bool operator <= (const Cube& x) const; // implies
     bool operator <=> (const Cube& x) const; // disjoint
     bool operator == (const Cube& x) const;

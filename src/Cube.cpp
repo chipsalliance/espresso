@@ -283,3 +283,9 @@ size_t espresso::Cube::count() const {
 void espresso::Cube::reset() {
     data->reset();
 }
+
+espresso::Cube espresso::Cube::operator~() const {
+    Cube r;
+    (*r.data) = ~(*data);
+    return r;
+}
