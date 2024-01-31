@@ -12,7 +12,7 @@
 #include "espresso.h"
 
 pcover make_sparse(pcover F, pcover D, pcover R) {
-    cost_t cost, best_cost;
+    cost_t cost = {.total = 0}, best_cost;
 
     cover_cost(F, &best_cost);
 
