@@ -7,6 +7,7 @@
   cmake,
   ninja,
   asciidoctor,
+  catch2
 }:
 stdenv.mkDerivation rec {
   name = "espresso";
@@ -14,6 +15,7 @@ stdenv.mkDerivation rec {
     cmake
     ninja
     asciidoctor
+    catch2
   ];
   src = ../../.;
 }

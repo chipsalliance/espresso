@@ -41,4 +41,7 @@ foreach(PLA_FILE ${PLA_FILES})
   set_tests_properties(run_${PLA_NAME} PROPERTIES DEPENDS espresso_legacy)
 endforeach()
 
+# Add C++23 modern implementation and tests
+add_subdirectory(src)
+
 message(STATUS "espresso_legacy CLI built with sanitizers: ${ESPRESSO_SANITIZE}")
