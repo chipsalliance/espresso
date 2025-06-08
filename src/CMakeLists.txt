@@ -11,6 +11,7 @@ add_library(libespresso SHARED
     bitcube.cpp
     cube_algebra.cpp
     espresso_algorithm.cpp
+    pla_parser.cpp
 )
 
 target_include_directories(libespresso PUBLIC
@@ -27,8 +28,11 @@ target_link_libraries(cube_algebra_tests PRIVATE Catch2::Catch2 libespresso)
 add_executable(espresso_algorithm_tests ../tests/espresso_algorithm_tests.cpp)
 target_link_libraries(espresso_algorithm_tests PRIVATE Catch2::Catch2 libespresso)
 
-add_executable(espresso espresso.cpp pla_parser.cpp)
+add_executable(espresso espresso.cpp)
 target_link_libraries(espresso PRIVATE libespresso)
+
+add_executable(pla_normalize pla_normalize.cpp)
+target_link_libraries(pla_normalize PRIVATE libespresso)
 
 enable_testing()
 add_test(NAME bitcube_tests COMMAND bitcube_tests)
@@ -67,7 +71,25 @@ foreach(PLA_FILE ${PLA_FILES})
   set_tests_properties(${ROUNDTRIP_TEST_NAME} PROPERTIES TIMEOUT 60)
   set_tests_properties(${ROUNDTRIP_TEST_NAME} PROPERTIES DEPENDS espresso)
   
+  # Test pla_normalize idempotency (normalize -> normalize should be identical)
+  set(NORMALIZE_IDEMPOTENT_TEST_NAME "pla_normalize_idempotent_${PLA_DIR_NAME}_${PLA_NAME}")
+  add_test(NAME ${NORMALIZE_IDEMPOTENT_TEST_NAME}
+    COMMAND bash -c "
+      TEMP1=$(mktemp) && TEMP2=$(mktemp) && 
+      cat '${PLA_FILE}' | ./pla_normalize > \$TEMP1 && 
+      cat \$TEMP1 | ./pla_normalize > \$TEMP2 && 
+      if cmp -s \$TEMP1 \$TEMP2; then 
+        rm \$TEMP1 \$TEMP2; exit 0; 
+      else 
+        echo 'Idempotency test failed: normalized outputs differ'; 
+        rm \$TEMP1 \$TEMP2; exit 1; 
+      fi"
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/src)
+  set_tests_properties(${NORMALIZE_IDEMPOTENT_TEST_NAME} PROPERTIES TIMEOUT 30)
+  set_tests_properties(${NORMALIZE_IDEMPOTENT_TEST_NAME} PROPERTIES DEPENDS pla_normalize)
+  
   # Add labels for easy test filtering
   set_tests_properties(${MINIMIZE_TEST_NAME} PROPERTIES LABELS "espresso;minimization;algorithm")
   set_tests_properties(${ROUNDTRIP_TEST_NAME} PROPERTIES LABELS "pla_parser;roundtrip;validation")
+  set_tests_properties(${NORMALIZE_IDEMPOTENT_TEST_NAME} PROPERTIES LABELS "pla_normalize;idempotency;validation")
 endforeach()
