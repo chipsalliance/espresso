@@ -10,6 +10,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 add_library(espresso_bitcube SHARED
     bitcube.cpp
     cube_algebra.cpp
+    espresso_algorithm.cpp
 )
 
 target_include_directories(espresso_bitcube PUBLIC
@@ -23,6 +24,10 @@ target_link_libraries(bitcube_tests PRIVATE Catch2::Catch2 espresso_bitcube)
 add_executable(cube_algebra_tests ../tests/cube_algebra_tests.cpp)
 target_link_libraries(cube_algebra_tests PRIVATE Catch2::Catch2 espresso_bitcube)
 
+add_executable(espresso_algorithm_tests ../tests/espresso_algorithm_tests.cpp)
+target_link_libraries(espresso_algorithm_tests PRIVATE Catch2::Catch2 espresso_bitcube)
+
 enable_testing()
 add_test(NAME bitcube_tests COMMAND bitcube_tests)
 add_test(NAME cube_algebra_tests COMMAND cube_algebra_tests)
+add_test(NAME espresso_algorithm_tests COMMAND espresso_algorithm_tests)
