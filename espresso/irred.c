@@ -193,7 +193,7 @@ static void fcube_is_covered(pcube *T, pcube c, sm_matrix *table) {
 sm_matrix *irred_derive_table(pcover D, pcover E, pcover Rp) {
     pcube last, p, *list;
     sm_matrix *table;
-    int size_last_dominance, i;
+    int size_last_dominance;
 
     /* Mark each cube in DE as not part of the redundant set */
     foreach_set(D, last, p) {
@@ -212,7 +212,6 @@ sm_matrix *irred_derive_table(pcover D, pcover E, pcover Rp) {
     list = cube3list(D, E, Rp);
     table = sm_alloc();
     size_last_dominance = 0;
-    i = 0;
     foreach_set(Rp, last, p) {
         Rp_current = SIZE(p);
         fcube_is_covered(list, p, table);
@@ -223,7 +222,6 @@ sm_matrix *irred_derive_table(pcover D, pcover E, pcover Rp) {
             (void)sm_row_dominance(table);
             size_last_dominance = table->nrows;
         }
-        i++;
     }
     free_cubelist(list);
 

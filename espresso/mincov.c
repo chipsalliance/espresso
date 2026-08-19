@@ -33,10 +33,10 @@ sm_row *sm_minimum_cover(sm_matrix *A, int *weight,
 ) {
     stats_t stats;
     solution_t *best, *select;
-    sm_row *prow, *sol;
+    sm_row *sol;
     sm_col *pcol;
     sm_matrix *dup_A;
-    int nelem, bound;
+    int bound;
 
     /* Avoid sillyness */
     if (A->nrows <= 0) {
@@ -49,12 +49,6 @@ sm_row *sm_minimum_cover(sm_matrix *A, int *weight,
     stats.component = stats.comp_count = 0;
     stats.gimpel = stats.gimpel_count = 0;
     stats.no_branching = heuristic != 0;
-
-    /* Check the matrix sparsity */
-    nelem = 0;
-    sm_foreach_row(A, prow) {
-        nelem += prow->length;
-    }
 
     /* Determine an upper bound on the solution */
     bound = 1;
