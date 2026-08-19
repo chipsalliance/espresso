@@ -54,7 +54,7 @@ typedef struct set_family {
 #define WHICH_BIT(element)  ((element) & (BPI - 1))
 
 /* # of ints needed to allocate a set with "size" elements */
-#define SET_SIZE(size) ((size) <= BPI ? 2 : (WHICH_WORD((size)-1) + 1))
+#define SET_SIZE(size) ((size) <= BPI ? 2 : (WHICH_WORD((size) - 1) + 1))
 
 /*
  *  Three fields are maintained in the first word of the set
@@ -70,7 +70,7 @@ typedef struct set_family {
 #define PUTSIZE(set, size) ((set)[0] &= 0xffff, (set)[0] |= ((size) << 16))
 
 #define NELEM(set)     (BPI * LOOP(set))
-#define LOOPINIT(size) (((size) <= BPI) ? 1 : WHICH_WORD((size)-1))
+#define LOOPINIT(size) (((size) <= BPI) ? 1 : WHICH_WORD((size) - 1))
 
 /*
  *      FLAGS store general information about the set
@@ -113,7 +113,7 @@ typedef struct set_family {
     for ((i) = LOOP(p); (i) > 0;)                                  \
         for ((val) = (p)[i], (base) = --(i) << LOGBPI; (val) != 0; \
              (base)++, (val) >>= 1)                                \
-            if ((val)&1)
+            if ((val) & 1)
 
 /* Return a pointer to a given member of a set family */
 #define GETSET(family, index) ((family)->data + (family)->wsize * (index))
@@ -202,8 +202,8 @@ typedef struct set_family {
             when_false;                      \
     }
 
-#define count_ones(v)                                   \
-    (bit_count[(v)&255] + bit_count[((v) >> 8) & 255] + \
+#define count_ones(v)                                     \
+    (bit_count[(v) & 255] + bit_count[((v) >> 8) & 255] + \
      bit_count[((v) >> 16) & 255] + bit_count[((v) >> 24) & 255])
 
 /* Table for efficient bit counting */
@@ -211,7 +211,7 @@ extern int bit_count[256];
 /*----- END OF set.h ----- */
 
 /* Define a boolean type */
-#define bool int
+#define bool  int
 #define FALSE 0
 #define TRUE  1
 #define MAYBE 2

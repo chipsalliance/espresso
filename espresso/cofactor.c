@@ -79,7 +79,7 @@ pcube *cofactor(pcube *T, pcube c) {
 #endif
 
             *Tc++ = p;
-            false:;
+            false :;
         }
     }
 
