@@ -14,7 +14,7 @@ jobs:
     steps:
       - run: |
           sudo apt update
-          sudo apt install gcc-aarch64-linux-gnu ninja-build
+          sudo apt install gcc-aarch64-linux-gnu ninja-build asciidoctor
       - uses: actions/checkout@v7
       - name: Build for x86_64-linux-gnu
         run: |
@@ -38,7 +38,7 @@ jobs:
   build-macos:
     runs-on: macos-26
     steps:
-      - run: brew install ninja
+      - run: brew install ninja asciidoctor
       - uses: actions/checkout@v7
       - name: Build for x86_64-apple
         run: |
