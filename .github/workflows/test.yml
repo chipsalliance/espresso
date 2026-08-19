@@ -7,12 +7,12 @@ on:
 
 jobs:
   build-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         cc: [clang, gcc]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Build
         run: |
           sudo apt-get update
@@ -22,29 +22,29 @@ jobs:
           CC: /usr/bin/${{ matrix.cc }}
           CFLAGS: "-Wpedantic -Wall -Werror"
   run-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Build
         run: cmake -DBUILD_DOC=NO -B build && make -C build
       - name: Test
         run: cd build && ctest
   format-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install formatters
         run: |
           npm install -g prettier
-          pip install cmakelang
+          pip install --break-system-packages cmakelang
           sudo snap install shfmt
       - run: ./format.sh
       - name: Check changes
         run: git diff --quiet
   equivalence-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install fd
         run: |
           curl -OL https://github.com/sharkdp/fd/releases/download/v8.2.1/fd-musl_8.2.1_amd64.deb
