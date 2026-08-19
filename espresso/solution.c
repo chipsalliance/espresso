@@ -1,6 +1,6 @@
 #include "mincov_int.h"
 
-solution_t *solution_alloc() {
+solution_t *solution_alloc(void) {
     solution_t *sol;
 
     sol = ALLOC(solution_t, 1);

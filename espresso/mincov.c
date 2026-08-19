@@ -7,7 +7,7 @@
 #define USE_GIMPEL
 #define USE_INDEP_SET
 
-static int select_column();
+static int select_column(sm_matrix *A, int *weight, solution_t *indep);
 
 #define fail(why)                                                              \
     {                                                                          \

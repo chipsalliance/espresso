@@ -324,15 +324,15 @@ pset *sf_list(pset_family A);
 pset_family sf_unlist(pset *A1, int totcnt, int size);
 pset_family d1merge(pset_family A, int var);
 /* cubestr.c */
-void cube_setup();
-void setdown_cube();
+void cube_setup(void);
+void setdown_cube(void);
 /* cvrin.c */
 void skip_line(FILE *fpin);
 char *get_word(FILE *fp, char *word);
 void read_cube(FILE *fp, pPLA PLA);
 void parse_pla(FILE *fp, pPLA PLA);
 int read_pla(FILE *fp, pPLA *PLA_return);
-pPLA new_PLA();
+pPLA new_PLA(void);
 void free_PLA(pPLA PLA);
 /* cvrm.c */
 pset_family unravel_range(pset_family B, int start, int end);
@@ -414,7 +414,7 @@ pset_family sf_append(pset_family A, pset_family B);
 pset_family sf_new(int num, int size);
 pset_family sf_save(pset_family A);
 void sf_free(pset_family A);
-void sf_cleanup();
+void sf_cleanup(void);
 pset_family sf_addset(pset_family A, pset s);
 void set_adjcnt(pset a, int *count, int weight);
 int *sf_count(pset_family A);

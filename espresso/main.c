@@ -1,6 +1,6 @@
 #include "espresso.h"
 
-int main() {
+int main(void) {
     pPLA PLA;
 
     /* the remaining arguments are argv[optind ... argc-1] */

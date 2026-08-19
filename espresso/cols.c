@@ -4,7 +4,7 @@
 /*
  *  allocate a new col vector
  */
-sm_col *sm_col_alloc() {
+sm_col *sm_col_alloc(void) {
     sm_col *pcol;
 
 #ifdef FAST_AND_LOOSE

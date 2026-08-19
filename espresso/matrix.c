@@ -14,7 +14,7 @@ sm_row *sm_row_freelist;
 sm_col *sm_col_freelist;
 #endif
 
-sm_matrix *sm_alloc() {
+sm_matrix *sm_alloc(void) {
     sm_matrix *A;
 
     A = ALLOC(sm_matrix, 1);
@@ -215,7 +215,7 @@ void sm_delcol(sm_matrix *A, int i) {
     }
 }
 
-void sm_cleanup() {
+void sm_cleanup(void) {
 #ifdef FAST_AND_LOOSE
     sm_element *p, *pnext;
     sm_row *prow, *pnextrow;

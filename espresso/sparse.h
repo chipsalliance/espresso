@@ -86,17 +86,17 @@ struct sm_matrix_struct {
     for (p = prow->first_col; p != 0; p = p->next_col)
 
 /* matrix.c */
-sm_matrix *sm_alloc();
+sm_matrix *sm_alloc(void);
 void sm_free(sm_matrix *A);
 sm_matrix *sm_dup(sm_matrix *A);
 void sm_resize(sm_matrix *A, int row, int col);
 sm_element *sm_insert(sm_matrix *A, int row, int col);
 void sm_delrow(sm_matrix *A, int i);
 void sm_delcol(sm_matrix *A, int i);
-void sm_cleanup();
+void sm_cleanup(void);
 
 /* rows.c */
-sm_row *sm_row_alloc();
+sm_row *sm_row_alloc(void);
 void sm_row_free(sm_row *prow);
 sm_row *sm_row_dup(sm_row *prow);
 sm_element *sm_row_insert(sm_row *prow, int col);
@@ -105,7 +105,7 @@ int sm_row_contains(sm_row *p1, sm_row *p2);
 int sm_row_intersects(sm_row *p1, sm_row *p2);
 
 /* cols.c */
-sm_col *sm_col_alloc();
+sm_col *sm_col_alloc(void);
 void sm_col_free(sm_col *pcol);
 int sm_col_contains(sm_col *p1, sm_col *p2);
 /* dominate.c */

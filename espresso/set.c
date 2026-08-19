@@ -255,7 +255,7 @@ void sf_free(pset_family A) {
 }
 
 /* sf_cleanup -- free all of the set families from the garbage list */
-void sf_cleanup() {
+void sf_cleanup(void) {
     pset_family p, pnext;
     for (p = set_family_garbage; p != (pset_family)NULL; p = pnext) {
         pnext = p->next;

@@ -24,7 +24,7 @@ sm_row *sm_minimum_cover(sm_matrix *A, int *weight, int heuristic);
 solution_t *sm_mincov(sm_matrix *A, solution_t *select, int *weight, int lb,
                       int bound, int depth, stats_t *stats);
 /* solution.c */
-solution_t *solution_alloc();
+solution_t *solution_alloc(void);
 void solution_free(solution_t *sol);
 solution_t *solution_dup(solution_t *sol);
 void solution_add(solution_t *sol, int *weight, int col);
