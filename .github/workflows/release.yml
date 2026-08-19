@@ -31,7 +31,7 @@ jobs:
           mv build/espresso aarch64-linux-gnu-espresso
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "*espresso"
+          artifacts: "*-espresso"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
           draft: true
@@ -55,7 +55,7 @@ jobs:
           mv build/espresso arm64-apple-macos-espresso
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "*espresso"
+          artifacts: "*-espresso"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
           draft: true
