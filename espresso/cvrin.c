@@ -290,7 +290,7 @@ int read_pla(FILE *fp, pPLA *PLA_return) {
     return 1;
 }
 
-pPLA new_PLA() {
+pPLA new_PLA(void) {
     pPLA PLA;
 
     PLA = ALLOC(PLA_t, 1);

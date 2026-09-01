@@ -4,7 +4,7 @@
 /*
  *  allocate a new row vector
  */
-sm_row *sm_row_alloc() {
+sm_row *sm_row_alloc(void) {
     sm_row *prow;
 
 #ifdef FAST_AND_LOOSE

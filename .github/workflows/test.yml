@@ -7,12 +7,12 @@ on:
 
 jobs:
   build-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         cc: [clang, gcc]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Build
         run: |
           sudo apt-get update
@@ -22,29 +22,42 @@ jobs:
           CC: /usr/bin/${{ matrix.cc }}
           CFLAGS: "-Wpedantic -Wall -Werror"
   run-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Build
         run: cmake -DBUILD_DOC=NO -B build && make -C build
       - name: Test
         run: cd build && ctest
   format-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
+    env:
+      PRETTIER_VERSION: 3.9.6
+      CMAKELANG_VERSION: 0.6.13
+      CLANG_FORMAT_VERSION: 18.1.8
+      SHFMT_VERSION: 3.12.0
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install formatters
         run: |
-          npm install -g prettier
-          pip install cmakelang
-          sudo snap install shfmt
+          npm install -g prettier@$PRETTIER_VERSION
+          pip install --break-system-packages cmakelang==$CMAKELANG_VERSION clang-format==$CLANG_FORMAT_VERSION
+          sudo curl -sSLo /usr/local/bin/shfmt https://github.com/mvdan/sh/releases/download/v$SHFMT_VERSION/shfmt_v${SHFMT_VERSION}_linux_amd64
+          sudo chmod +x /usr/local/bin/shfmt
+          echo "$HOME/.local/bin" >>"$GITHUB_PATH"
+      - name: Check formatter versions
+        run: |
+          clang-format --version
+          cmake-format --version
+          shfmt --version
+          prettier --version
       - run: ./format.sh
       - name: Check changes
-        run: git diff --quiet
+        run: git --no-pager diff --exit-code
   equivalence-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install fd
         run: |
           curl -OL https://github.com/sharkdp/fd/releases/download/v8.2.1/fd-musl_8.2.1_amd64.deb
