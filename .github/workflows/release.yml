@@ -29,23 +29,22 @@ jobs:
           ninja -C build
           aarch64-linux-gnu-strip build/espresso
           mv build/espresso aarch64-linux-gnu-espresso
-      - uses: ncipollo/release-action@v1
+      - uses: actions/upload-artifact@v7
         with:
-          artifacts: "*-espresso"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
-          draft: true
+          name: linux
+          path: "*-espresso"
+          if-no-files-found: error
   build-macos:
     runs-on: macos-26
     steps:
       - run: brew install ninja asciidoctor
       - uses: actions/checkout@v7
-      - name: Build for x86_64-apple
+      - name: Build for x86_64-apple-macos
         run: |
           cmake -G Ninja -B build -DCMAKE_C_COMPILER_TARGET=x86_64-apple-macos
           ninja -C build
           strip build/espresso
-          mv build/espresso x86_64-apple-espresso
+          mv build/espresso x86_64-apple-macos-espresso
           rm -rf build
       - name: Build for arm64-apple-macos
         run: |
@@ -53,9 +52,21 @@ jobs:
           ninja -C build
           strip build/espresso
           mv build/espresso arm64-apple-macos-espresso
+      - uses: actions/upload-artifact@v7
+        with:
+          name: macos
+          path: "*-espresso"
+          if-no-files-found: error
+  release:
+    needs: [build-linux, build-macos]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          merge-multiple: true
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "*-espresso"
           token: ${{ secrets.GITHUB_TOKEN }}
-          allowUpdates: true
+          generateReleaseNotes: true
           draft: true
