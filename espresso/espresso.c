@@ -72,12 +72,14 @@ begin:
             F = reduce(F, D);
             F = expand(F, R, FALSE);
             F = irredundant(F, D);
+            cover_cost(F, &cost);
         } while (cost.cubes < best_cost.cubes);
 
         /* Perturb solution to see if we can continue to iterate */
         copy_cost(&cost, &best_cost);
 
         F = last_gasp(F, D, R);
+        cover_cost(F, &cost);
 
     } while (cost.cubes < best_cost.cubes ||
              (cost.cubes == best_cost.cubes && cost.total < best_cost.total));
