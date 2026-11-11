@@ -86,7 +86,7 @@ int rm_equal(pset *A1, /* updated in place */
 /* rm_contain -- perform containment over a sorted array of set pointers */
 int rm_contain(pset *A1 /* updated in place */
 ) {
-    pset *pa, *pb, *pcheck, a, b;
+    pset *pa, *pb, *pcheck = A1, a, b;
     pset *pdest = A1;
     int last_size = -1;
 
@@ -112,7 +112,7 @@ int rm_contain(pset *A1 /* updated in place */
 /* rm_rev_contain -- perform rcontainment over a sorted array of set pointers */
 int rm_rev_contain(pset *A1 /* updated in place */
 ) {
-    pset *pa, *pb, *pcheck, a, b;
+    pset *pa, *pb, *pcheck = A1, a, b;
     pset *pdest = A1;
     int last_size = -1;
 
