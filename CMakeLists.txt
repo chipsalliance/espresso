@@ -229,3 +229,15 @@ foreach(
            "./espresso < ${CMAKE_CURRENT_SOURCE_DIR}/examples/${PLA}")
   set_tests_properties(run_${PLA} PROPERTIES TIMEOUT 10)
 endforeach()
+
+# Exercise optimizer quality and truth tables without the command-line driver.
+get_target_property(ESPRESSO_TEST_SOURCES espresso SOURCES)
+list(REMOVE_ITEM ESPRESSO_TEST_SOURCES espresso/main.c)
+add_executable(optimization_cost_test tests/optimization_cost.c
+                                      ${ESPRESSO_TEST_SOURCES})
+target_include_directories(optimization_cost_test PRIVATE espresso)
+set_property(TARGET optimization_cost_test PROPERTY C_STANDARD 99)
+add_test(NAME optimization_iteration COMMAND optimization_cost_test iteration)
+add_test(NAME optimization_sparse COMMAND optimization_cost_test sparse)
+set_tests_properties(optimization_iteration optimization_sparse
+                     PROPERTIES TIMEOUT 10)
